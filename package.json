@@ -1,0 +1,50 @@
+{
+  "name": "simulagpu",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "description": "Plataforma educativa estatica para aprender programacion GPU y paralela en espanol.",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "pnpm run anki:build && pnpm --filter @simulagpu/docs run dev",
+    "build": "pnpm run anki:build && pnpm --filter @simulagpu/docs run build",
+    "preview": "pnpm --filter @simulagpu/docs run preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json && pnpm --filter @simulagpu/docs run typecheck",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "anki:build": "node anki/scripts/build-anki.mjs",
+    "native:configure": "cmake -S native -B native/build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    "native:build": "cmake --build native/build",
+    "native:test": "ctest --test-dir native/build --output-on-failure",
+    "native:verify": "pnpm run native:configure && pnpm run native:build && pnpm run native:test",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run native:verify"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/test-utils": "^2.4.11",
+    "eslint": "^10.8.0",
+    "eslint-plugin-vue": "^10.10.0",
+    "globals": "^17.9.0",
+    "happy-dom": "^20.11.1",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.9.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.65.0",
+    "vite": "^7.3.1",
+    "vitest": "^4.1.10",
+    "vue": "^3.5.40",
+    "vue-eslint-parser": "^10.4.1",
+    "vue-tsc": "^3.3.9"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

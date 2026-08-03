@@ -1,0 +1,169 @@
+# Tarjetas Anki de la lección 01 — Del índice global a la suma de vectores.
+#
+# Formato descrito en ../schema/card.schema.json y ../README.md.
+# El TSV importable se genera con `pnpm anki:build`; no se versiona.
+
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /leccion/indice-global-suma-vectores
+
+cards:
+  # --- Conceptual ----------------------------------------------------------
+  - id: idx-001
+    tipo: conceptual
+    anverso: '¿Qué parte del programa decide <strong>cuántos</strong> hilos se lanzan: el host (CPU) o el device (GPU)?'
+    reverso: |
+      El host. La CPU elige `gridDim.x` y `blockDim.x` en la línea de lanzamiento
+      `kernel<<<gridDim, blockDim>>>(...)`. La GPU no negocia: crea exactamente los
+      hilos que le pidieron.
+    etiquetas: [conceptual, jerarquia]
+
+  - id: idx-003
+    tipo: conceptual
+    anverso: '¿Qué sabe un hilo CUDA sobre sí mismo cuando empieza a ejecutarse?'
+    reverso: |
+      Solo sus coordenadas: `threadIdx.x` (su posición dentro del bloque),
+      `blockIdx.x` (qué bloque es el suyo) y las dimensiones `blockDim.x` y
+      `gridDim.x`. No sabe qué dato le toca: eso lo deduce él mismo con la
+      fórmula del índice global.
+    etiquetas: [conceptual, indice]
+
+  # --- Cálculo del índice --------------------------------------------------
+  - id: idx-010
+    tipo: calculo
+    anverso: 'Escribe la fórmula del índice global 1D.'
+    reverso: '<code>int i = blockIdx.x * blockDim.x + threadIdx.x;</code>'
+    etiquetas: [indice, formula]
+
+  - id: idx-011
+    tipo: calculo
+    anverso: '`blockIdx.x = 3`, `blockDim.x = 32`, `threadIdx.x = 5`. ¿Cuánto vale `i`?'
+    reverso: '`i = 3 * 32 + 5 = 101`'
+    etiquetas: [indice, calculo]
+
+  - id: idx-013
+    tipo: calculo
+    anverso: 'Un hilo calcula `i = 4098` y `n = 4096`. ¿Qué debe hacer?'
+    reverso: |
+      Nada. `4098 >= 4096`, así que el guard `if (i < n)` lo descarta. Existe solo
+      porque el número de bloques se redondeó hacia arriba.
+    etiquetas: [indice, frontera]
+
+  # --- Condiciones de frontera ---------------------------------------------
+  - id: idx-020
+    tipo: frontera
+    anverso: '¿Por qué hace falta `if (i < n)` dentro del kernel?'
+    reverso: |
+      Porque `gridDim.x * blockDim.x` casi nunca es exactamente `n`: al redondear
+      hacia arriba sobran hilos. Sin el guard, esos hilos escriben más allá del
+      final del arreglo — acceso ilegal a memoria, o corrupción silenciosa.
+    etiquetas: [frontera, guard]
+
+  - id: idx-021
+    tipo: frontera
+    anverso: '`n = 1000`, `blockDim.x = 256`. ¿Cuántos hilos se crean y cuántos quedan inactivos?'
+    reverso: |
+      `gridDim.x = ceil(1000 / 256) = 4`, luego `4 * 256 = 1024` hilos.
+      Inactivos: `1024 - 1000 = 24`.
+    etiquetas: [frontera, calculo]
+
+  - id: idx-022
+    tipo: frontera
+    anverso: '¿En qué bloque están siempre los hilos inactivos de un lanzamiento 1D?'
+    reverso: |
+      En el último, el de índice `gridDim.x - 1`. Los bloques anteriores están
+      completos por construcción.
+    etiquetas: [frontera]
+
+  # --- Configuración del lanzamiento ---------------------------------------
+  - id: idx-030
+    tipo: lanzamiento
+    anverso: '¿Cómo se calcula `gridDim.x` para cubrir `n` elementos?'
+    reverso: |
+      Con división redondeada hacia arriba:<br>
+      <code>int blocks = n / block_size + (n % block_size != 0 ? 1 : 0);</code><br>
+      La forma clásica <code>(n + block_size - 1) / block_size</code> da lo mismo,
+      pero se desborda si `n` está cerca del máximo del tipo.
+    etiquetas: [lanzamiento, formula]
+
+  - id: idx-031
+    tipo: lanzamiento
+    anverso: '¿Qué significan los dos argumentos de `kernel<<<A, B>>>(...)`?'
+    reverso: |
+      `A` es `gridDim`: cuántos bloques. `B` es `blockDim`: cuántos hilos por
+      bloque. El total de hilos creados es `A * B`.
+    etiquetas: [lanzamiento]
+
+  # --- Transferencias de memoria -------------------------------------------
+  - id: idx-040
+    tipo: memoria
+    anverso: '¿Puede un kernel leer un puntero devuelto por `malloc`?'
+    reverso: |
+      No. Ese puntero apunta a memoria del host. El kernel solo puede
+      dereferenciar memoria de device, reservada con `cudaMalloc`. Los datos hay
+      que copiarlos antes.
+    etiquetas: [memoria]
+
+  - id: idx-041
+    tipo: memoria
+    anverso: '¿Qué dirección lleva `cudaMemcpyHostToDevice` y cuándo se usa en la suma de vectores?'
+    reverso: |
+      Copia de CPU a GPU. Se usa al principio, para subir los vectores de entrada
+      `a` y `b` a la memoria del device.
+    etiquetas: [memoria, transferencia]
+
+  - id: idx-042
+    tipo: memoria
+    anverso: 'El kernel terminó sin error y el resultado en el host sigue siendo cero. ¿Qué falta?'
+    reverso: |
+      La copia de vuelta: `cudaMemcpy(host_c, device_c, bytes, cudaMemcpyDeviceToHost)`.
+      El kernel escribió en memoria de device; el host nunca la leyó.
+    etiquetas: [memoria, transferencia, errores]
+
+  # --- Medición y errores comunes ------------------------------------------
+  - id: idx-050
+    tipo: medicion
+    anverso: '¿Qué diferencia hay entre el tiempo "solo kernel" y el tiempo extremo a extremo?'
+    reverso: |
+      "Solo kernel" mide la ejecución del kernel (eventos CUDA alrededor del
+      lanzamiento). Extremo a extremo incluye `cudaMalloc`, las dos
+      transferencias y `cudaFree`. Para un cálculo tan barato como la suma de
+      vectores, las transferencias dominan: informar solo el tiempo de kernel
+      exagera la ganancia.
+    etiquetas: [medicion]
+
+  - id: idx-051
+    tipo: medicion
+    anverso: '¿Por qué medir un kernel con un cronómetro del host sin sincronizar da un tiempo absurdamente corto?'
+    reverso: |
+      Porque el lanzamiento es asíncrono: `kernel<<<...>>>()` vuelve enseguida y
+      el host mide solo el coste de encolar el trabajo. Hay que sincronizar
+      (`cudaDeviceSynchronize`) o usar eventos CUDA.
+    etiquetas: [medicion, errores]
+
+  - id: idx-060
+    tipo: errores
+    anverso: 'Error común: la suma funciona con `n = 1024` pero falla con `n = 1000`. ¿Qué se rompió?'
+    reverso: |
+      El manejo del último bloque parcial: falta el guard `if (i < n)`, o
+      `gridDim.x` se calculó con división entera. Con `n = 1024` y bloques de 256
+      la división es exacta y el fallo queda oculto.
+    etiquetas: [errores, frontera]
+
+  - id: idx-061
+    tipo: errores
+    anverso: 'Error común: todos los hilos escriben en `c[0]`. ¿Qué línea está mal?'
+    reverso: |
+      La del índice: se usó `threadIdx.x` solo, o se olvidó multiplicar por
+      `blockDim.x`. Sin `blockIdx.x * blockDim.x` todos los bloques se pisan entre
+      sí.
+    etiquetas: [errores, indice]
+
+  - id: idx-062
+    tipo: errores
+    anverso: '¿Por qué no basta con que el kernel "no dé error" para dar el resultado por bueno?'
+    reverso: |
+      Porque una escritura fuera de rango puede no reportarse, y un kernel que no
+      calcula nada tampoco falla. La única prueba es comparar contra una
+      referencia secuencial de CPU, elemento por elemento.
+    etiquetas: [errores, verificacion]
