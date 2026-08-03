@@ -1,0 +1,13 @@
+{
+  "name": "@simulagpu/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-dependency TypeScript contracts shared by SimulaGPU teaching models and visualizations.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ]
+}

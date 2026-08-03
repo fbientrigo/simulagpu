@@ -1,0 +1,16 @@
+{
+  "name": "@simulagpu/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure deterministic teaching models for SimulaGPU. No Vue, no VitePress, no DOM.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@simulagpu/contracts": "workspace:*"
+  }
+}

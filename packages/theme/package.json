@@ -1,0 +1,13 @@
+{
+  "name": "@simulagpu/theme",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared CSS custom properties for SimulaGPU visualizations.",
+  "exports": {
+    "./tokens.css": "./src/tokens.css"
+  },
+  "files": [
+    "src"
+  ]
+}

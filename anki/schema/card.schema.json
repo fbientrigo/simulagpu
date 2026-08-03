@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/fbientrigo/simulagpu/anki/schema/card.schema.json",
+  "title": "SimulaGPU Anki deck source",
+  "description": "Shape of a file in anki/cards/. Validated by anki/scripts/build-anki.mjs; this document is the reference the script implements and the contract an editor can use for completion.",
+  "type": "object",
+  "required": ["deck", "notetype", "leccion", "cards"],
+  "additionalProperties": false,
+  "properties": {
+    "deck": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Anki deck name. '::' separates subdecks."
+    },
+    "notetype": {
+      "type": "string",
+      "enum": ["Basic"],
+      "description": "Anki note type. Only 'Basic' (front/back) is supported in v0.1."
+    },
+    "leccion": {
+      "type": "string",
+      "pattern": "^/",
+      "description": "Site-relative path of the lesson these cards belong to."
+    },
+    "cards": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/card" }
+    }
+  },
+  "$defs": {
+    "card": {
+      "type": "object",
+      "required": ["id", "tipo", "anverso", "reverso", "etiquetas"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+-[0-9]{3}$",
+          "description": "Stable identifier, e.g. 'idx-011'. Never reused, never renumbered: it is what keeps a learner's review history attached to the card. Also the sort key of the generated TSV."
+        },
+        "tipo": {
+          "type": "string",
+          "enum": ["conceptual", "calculo", "frontera", "lanzamiento", "memoria", "medicion", "errores"],
+          "description": "Category of the question. Used to check the deck covers every required area."
+        },
+        "anverso": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Question side. Spanish, learner-facing."
+        },
+        "reverso": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Answer side. Spanish, learner-facing. Limited HTML is allowed (<code>, <br>, <strong>)."
+        },
+        "etiquetas": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "description": "Anki tags. Lowercase, no spaces, no accents."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+/*
+ * SimulaGPU design tokens.
+ *
+ * Only custom properties live here. Components own their own layout; this file
+ * owns the vocabulary they share, so a second visualization can look like the
+ * first without either importing the other.
+ *
+ * Colours are declared for the light theme and overridden under
+ * `.dark`, which is the class VitePress toggles on <html>.
+ */
+
+:root {
+  /* Semantic colours for the thread-index model. */
+  --sgpu-active-bg: #dcfce7;
+  --sgpu-active-border: #16a34a;
+  --sgpu-active-text: #14532d;
+
+  --sgpu-inactive-bg: #f1f5f9;
+  --sgpu-inactive-border: #cbd5e1;
+  --sgpu-inactive-text: #64748b;
+
+  --sgpu-selected-border: #7c3aed;
+  --sgpu-selected-ring: rgba(124, 58, 237, 0.35);
+
+  --sgpu-boundary-accent: #f59e0b;
+
+  --sgpu-surface: #ffffff;
+  --sgpu-surface-muted: #f8fafc;
+  --sgpu-border: #e2e8f0;
+  --sgpu-text: #0f172a;
+  --sgpu-text-muted: #475569;
+
+  /* Spacing and shape. */
+  --sgpu-radius-sm: 4px;
+  --sgpu-radius-md: 8px;
+  --sgpu-gap-xs: 2px;
+  --sgpu-gap-sm: 6px;
+  --sgpu-gap-md: 12px;
+  --sgpu-gap-lg: 20px;
+
+  /* Typography. */
+  --sgpu-font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --sgpu-font-size-xs: 0.7rem;
+  --sgpu-font-size-sm: 0.82rem;
+  --sgpu-font-size-md: 0.95rem;
+}
+
+.dark {
+  --sgpu-active-bg: #14532d;
+  --sgpu-active-border: #4ade80;
+  --sgpu-active-text: #dcfce7;
+
+  --sgpu-inactive-bg: #1e293b;
+  --sgpu-inactive-border: #475569;
+  --sgpu-inactive-text: #94a3b8;
+
+  --sgpu-selected-border: #a78bfa;
+  --sgpu-selected-ring: rgba(167, 139, 250, 0.4);
+
+  --sgpu-boundary-accent: #fbbf24;
+
+  --sgpu-surface: #0f172a;
+  --sgpu-surface-muted: #1e293b;
+  --sgpu-border: #334155;
+  --sgpu-text: #e2e8f0;
+  --sgpu-text-muted: #94a3b8;
+}

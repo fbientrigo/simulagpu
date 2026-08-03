@@ -1,0 +1,21 @@
+{
+  "name": "@simulagpu/visuals",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reusable Vue visualizations for SimulaGPU. They read snapshots and never mutate models.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@simulagpu/contracts": "workspace:*",
+    "@simulagpu/core": "workspace:*",
+    "@simulagpu/theme": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  }
+}

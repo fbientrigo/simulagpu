@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Web build output
+apps/docs/.vitepress/dist/
+apps/docs/.vitepress/cache/
+*.tsbuildinfo
+
+# Generated content.
+# The Anki TSV is produced by `pnpm anki:build` from anki/cards/*.yaml. It is a
+# build artifact of the docs site, not a source file: committing it would mean
+# reviewing a generated diff on every card change.
+apps/docs/public/descargas/*.tsv
+
+# Native build directories
+native/build*/
+native/exercises/*/starter/build*/
+native/exercises/*/solution/build*/
+CMakeUserPresets.json
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "paths": {
+      "@simulagpu/contracts": ["./packages/contracts/src/index.ts"],
+      "@simulagpu/core": ["./packages/core/src/index.ts"],
+      "@simulagpu/visuals": ["./packages/visuals/src/index.ts"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.vue",
+    "tests/**/*.ts",
+    "vitest.config.ts",
+    "eslint.config.js"
+  ],
+  "exclude": ["**/node_modules", "**/dist", "apps/docs/.vitepress/cache"]
+}
