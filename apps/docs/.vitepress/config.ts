@@ -36,6 +36,7 @@ export default defineConfig({
     lastUpdatedText: 'Última actualización',
 
     nav: [
+      { text: 'Clase 0', link: '/clase-0/modelo-mental-gpu' },
       { text: 'Lección', link: '/leccion/indice-global-suma-vectores' },
       { text: 'Guía', link: '/guia/instalacion' },
       { text: 'Referencia', link: '/referencia/arquitectura' },
@@ -49,6 +50,10 @@ export default defineConfig({
           { text: 'Instalación', link: '/guia/instalacion' },
           { text: 'Comandos', link: '/guia/comandos' },
         ],
+      },
+      {
+        text: 'Clase 0 — Modelo mental',
+        items: [{ text: 'El modelo mental de una GPU', link: '/clase-0/modelo-mental-gpu' }],
       },
       {
         text: 'Lección 01 — Índice global',

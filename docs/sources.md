@@ -112,6 +112,21 @@ Concrete expression is. Everything below is on the ideas side of that line.
 - **Status:** informs `docs/roadmap.md` only. No code inspected beyond the
   topic each directory covers.
 
+### S-9 — Clase 0: grid / block / thread terminology
+
+- **Reused:** the same standard Spanish and English vocabulary for grid /
+  block (bloque) / thread (hilo), host and device already recorded in S-7,
+  reused consistently in the new introductory Clase 0.
+- **Status:** standard CUDA terminology from the NVIDIA programming guide,
+  same as S-7. No attribution obligation; recorded for traceability.
+- **Note:** the byte/chunk framing (`número de chunks = ceil(bytes totales /
+  bytes por chunk)`), the ten-step guided sequence, and the
+  `SimuladorIsometricoGPU` visualization are original to SimulaGPU. Neither
+  reference repository frames the introduction to GPU parallelism in terms of
+  splitting a byte buffer into chunks before assigning it to threads; that
+  framing, the pedagogical sequence, and every line of the `chunk-flow` model
+  and component were designed from scratch for this repository.
+
 ---
 
 ## From `csc2026_e1`
@@ -195,6 +210,9 @@ repository:
   `packages/visuals`, `packages/theme`, `apps/docs`;
 - the deterministic thread-index teaching model and its URL serialization;
 - the `ExploradorIndiceGlobal` visualization;
+- the deterministic chunk-flow teaching model (`packages/core/src/chunk-flow`)
+  behind Clase 0, its byte/chunk framing, its ten-step guided sequence, and
+  the `SimuladorIsometricoGPU` visualization;
 - all Spanish lesson content;
 - the Anki deck, its YAML schema and the generator;
 - `native/common`, `native/examples/vector-add`,

@@ -37,6 +37,15 @@ como red de seguridad didáctica.
 
 Tampoco se copió código de ahí.
 
+## De dónde viene la Clase 0
+
+La Clase 0 reutiliza la misma terminología estándar de grid, bloque, hilo,
+host y device que la lección 01 (vocabulario estándar de CUDA, sin obligación
+de atribución). El resto — dividir un buffer de bytes en chunks, las dos
+fórmulas, la secuencia guiada de diez pasos y el simulador isométrico— es
+original de SimulaGPU: ninguno de los repositorios de referencia enseña la
+introducción a la GPU con esta metáfora.
+
 ## Qué es original
 
 Todo el contenido de este sitio, el código de `native/`, `packages/` y `apps/`,

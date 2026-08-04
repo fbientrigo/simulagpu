@@ -4,8 +4,9 @@ Plataforma educativa estática para aprender **programación GPU y paralela en
 español**: documentación, visualizaciones interactivas deterministas, código C++
 y CUDA ejecutable, ejercicios con pruebas, y tarjetas Anki.
 
-> **v0.1 — fundación.** La arquitectura está completa y hay **una** lección
-> terminada de principio a fin: *Del índice global a la suma de vectores*.
+> **v0.1 — fundación.** La arquitectura está completa, hay una introducción
+> interactiva sin prerrequisitos (*Clase 0*) y **una** lección terminada de
+> principio a fin: *Del índice global a la suma de vectores*.
 
 ## Empezar
 
@@ -51,6 +52,24 @@ simulagpu/
 ├── docs/               documentación de ingeniería y ADRs
 └── tests/              pruebas transversales
 ```
+
+## Clase 0 — El modelo mental de una GPU
+
+Introducción interactiva, sin prerrequisitos y sin código, a cómo una GPU
+divide datos en chunks y los reparte entre bloques e hilos. Enseña las dos
+fórmulas centrales (`número de chunks = ceil(bytes totales / bytes por
+chunk)`, `número de bloques = ceil(número de chunks / hilos por bloque)`) con
+una secuencia guiada de diez pasos y un ejercicio de comprobación.
+
+| Pieza | Dónde |
+| --- | --- |
+| Lección | [`apps/docs/clase-0/modelo-mental-gpu.md`](apps/docs/clase-0/modelo-mental-gpu.md) |
+| Visualización | [`packages/visuals/src/SimuladorIsometricoGPU.vue`](packages/visuals/src/SimuladorIsometricoGPU.vue) |
+| Modelo | [`packages/core/src/chunk-flow/`](packages/core/src/chunk-flow/) |
+
+Deliberadamente sin código ejecutable ni ejercicio nativo: es una introducción
+conceptual, no una lección completa según el contrato de `AGENTS.md`. El
+código C++ y CUDA real empieza en la Lección 01.
 
 ## Lección 01 — Del índice global a la suma de vectores
 

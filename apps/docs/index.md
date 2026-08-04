@@ -7,7 +7,10 @@ hero:
   tagline: Modelos deterministas que puedes manipular, código que puedes ejecutar y ejercicios que puedes verificar — sin necesitar una GPU para empezar.
   actions:
     - theme: brand
-      text: Empezar por la lección 01
+      text: Empezar por la Clase 0
+      link: /clase-0/modelo-mental-gpu
+    - theme: alt
+      text: Lección 01
       link: /leccion/indice-global-suma-vectores
     - theme: alt
       text: Instalación
@@ -35,9 +38,12 @@ paralela. Cada lección enlaza cinco piezas que tratan del mismo tema:
 
 ## Estado: v0.1
 
-Esta versión contiene la arquitectura completa y **una** lección terminada de
-principio a fin:
+Esta versión contiene la arquitectura completa, una introducción interactiva
+sin prerrequisitos, y **una** lección terminada de principio a fin:
 
+- [Clase 0: el modelo mental de una GPU](/clase-0/modelo-mental-gpu) — sin
+  prerrequisitos, sin código, solo el modelo conceptual de chunks, bloques e
+  hilos.
 - [Del índice global a la suma de vectores](/leccion/indice-global-suma-vectores)
 - [Ejercicio 01](/leccion/ejercicio-01-suma-de-vectores)
 - [Tarjetas Anki](/leccion/anki)

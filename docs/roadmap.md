@@ -18,8 +18,13 @@ Architecture plus one complete vertical slice.
 
 - pnpm workspace: `contracts` → `core` → `visuals` → `theme` → `apps/docs`
 - CMake tree: `common` → `examples` → `exercises`, with optional CUDA detection
+- Clase 0, *El modelo mental de una GPU* — a prerequisite-free, code-free
+  introduction to chunks, blocks, threads and the grid. Deliberately not a
+  full vertical slice: no native code, no exercise, no Anki cards, by design
+  (see `AGENTS.md` and the lesson's own scope note).
 - Lesson 01, *Del índice global a la suma de vectores*
 - `ExploradorIndiceGlobal`, deterministic, URL-serializable, unit-tested
+- `SimuladorIsometricoGPU`, deterministic, URL-serializable, unit-tested
 - `native/examples/vector-add`: CPU implementation, CUDA implementation,
   comparison, error handling, kernel-only and end-to-end timing
 - `native/exercises/01-vector-add`: 8 TODOs, 4 of them verifiable without a GPU
