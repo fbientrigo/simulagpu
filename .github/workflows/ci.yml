@@ -31,26 +31,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Temporary review aid: format the three new source files in the runner,
-      # then expose the exact Prettier output as an artifact. The branch will be
-      # updated with those bytes and this step removed before the PR is ready.
-      - name: Format lesson 02 web sources
-        run: |
-          pnpm exec prettier --write \
-            packages/core/src/reduction/model.ts \
-            packages/visuals/src/LaboratorioReduccion.test.ts \
-            packages/visuals/src/LaboratorioReduccion.vue
-
-      - name: Upload formatted lesson 02 sources
-        uses: actions/upload-artifact@v4
-        with:
-          name: formatted-lesson-02-sources
-          path: |
-            packages/core/src/reduction/model.ts
-            packages/visuals/src/LaboratorioReduccion.test.ts
-            packages/visuals/src/LaboratorioReduccion.vue
-          retention-days: 1
-
       - name: Lint
         run: pnpm lint
 
