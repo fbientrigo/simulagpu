@@ -46,9 +46,7 @@ describe('LaboratorioReduccion', () => {
   it('passes after selecting the three correct fragments', async () => {
     const wrapper = mountLab();
     await wrapper.get('[data-test="left-expression"]').setValue('2 * out');
-    await wrapper
-      .get('[data-test="right-expression"]')
-      .setValue('left + 1 < n ? input[left + 1] : 0.0f');
+    await wrapper.get('[data-test="right-expression"]').setValue('left + 1 < n ? input[left + 1] : 0.0f');
     await wrapper.get('[data-test="write-expression"]').setValue('output[out]');
     await wrapper.get('[data-test="run-tests"]').trigger('click');
 
