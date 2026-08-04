@@ -118,7 +118,10 @@ function buildPass(input: readonly number[], pass: number, config: ReductionConf
   });
 }
 
-function diagnosticsFor(config: ReductionConfig, passes: readonly ReductionPassSnapshot[]): readonly string[] {
+function diagnosticsFor(
+  config: ReductionConfig,
+  passes: readonly ReductionPassSnapshot[],
+): readonly string[] {
   const diagnostics: string[] = [];
 
   if (config.indexStrategy === 'pares-solapados') {
@@ -217,7 +220,8 @@ function evaluateOnePass(
   if (submission.writeExpression !== 'output[out]') {
     return {
       actual: null,
-      message: 'Cada hilo debe escribir en output[out]; usar left crea huecos y escrituras fuera del arreglo de salida.',
+      message:
+        'Cada hilo debe escribir en output[out]; usar left crea huecos y escrituras fuera del arreglo de salida.',
     };
   }
 
