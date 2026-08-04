@@ -1,0 +1,107 @@
+# Tarjetas Anki de la lección 02 — Reducción paralela.
+#
+# El mazo mantiene temporalmente el nombre histórico de v0.1 para que el
+# generador actual produzca un único TSV. La migración a un mazo raíz común se
+# documenta en el PR y no cambia los identificadores permanentes de las notas.
+
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /leccion/reduccion-paralela
+
+cards:
+  - id: red-001
+    tipo: conceptual
+    anverso: '¿Por qué `*sum += input[i]` es incorrecto cuando lo ejecutan muchos hilos?'
+    reverso: |
+      Porque leer, sumar y escribir son operaciones separadas. Dos hilos pueden
+      leer el mismo valor anterior y una escritura pisa a la otra: hay una
+      carrera de datos.
+    etiquetas: [reduccion, carrera]
+
+  - id: red-002
+    tipo: conceptual
+    anverso: '¿Qué transforma una reducción en árbol en cada pasada?'
+    reverso: |
+      Combina pares disjuntos y produce aproximadamente la mitad de valores.
+      Las pasadas se repiten hasta quedar un solo resultado.
+    etiquetas: [reduccion, arbol]
+
+  - id: red-010
+    tipo: calculo
+    anverso: 'En una pasada por pares, ¿qué entradas procesa el hilo con índice de salida `out`?'
+    reverso: |
+      `left = 2 * out`. Procesa `input[left]` y, si existe,
+      `input[left + 1]`.
+    etiquetas: [reduccion, indice]
+
+  - id: red-011
+    tipo: calculo
+    anverso: '`n = 7`. ¿Cuántos elementos produce una pasada de reducción?'
+    reverso: |
+      `ceil(7 / 2) = 4`. Tres salidas vienen de pares completos y la cuarta
+      conserva el elemento sin pareja.
+    etiquetas: [reduccion, calculo, frontera]
+
+  - id: red-020
+    tipo: frontera
+    anverso: '¿Cómo debe tratarse el último elemento cuando `n` es impar?'
+    reverso: |
+      Se suma con la identidad aditiva: `0.0f`. Descartarlo pierde información;
+      duplicarlo cambia la suma; leer un vecino inexistente sale del arreglo.
+    etiquetas: [reduccion, frontera]
+
+  - id: red-021
+    tipo: frontera
+    anverso: '¿Qué tres tamaños mínimos deben probarse en una pasada de reducción?'
+    reverso: |
+      Un elemento, un tamaño par y un tamaño impar. Después conviene añadir un
+      tamaño justo por encima de un bloque y uno grande no potencia de dos.
+    etiquetas: [reduccion, frontera, pruebas]
+
+  - id: red-030
+    tipo: lanzamiento
+    anverso: '¿Por qué hay que recalcular la grilla después de cada pasada?'
+    reverso: |
+      Porque la siguiente entrada tiene `ceil(n / 2)` valores. El trabajo cae
+      aproximadamente a la mitad en cada nivel del árbol.
+    etiquetas: [reduccion, lanzamiento]
+
+  - id: red-031
+    tipo: lanzamiento
+    anverso: '¿Puede `__syncthreads()` sincronizar bloques distintos?'
+    reverso: |
+      No. Solo es una barrera entre hilos del mismo bloque. Un nuevo lanzamiento
+      de kernel puede separar globalmente dos pasadas.
+    etiquetas: [reduccion, sincronizacion]
+
+  - id: red-040
+    tipo: memoria
+    anverso: '¿Para qué se usa memoria compartida en una reducción por bloque?'
+    reverso: |
+      Para reutilizar parciales dentro del bloque sin volver a memoria global en
+      cada nivel. Las etapas deben separarse con barreras correctamente ubicadas.
+    etiquetas: [reduccion, memoria, sincronizacion]
+
+  - id: red-050
+    tipo: medicion
+    anverso: '¿Por qué una reducción GPU puede diferir algunos bits de una suma CPU secuencial?'
+    reverso: |
+      La suma de `float` no es asociativa. El árbol cambia el orden de las
+      operaciones y cada suma intermedia redondea.
+    etiquetas: [reduccion, flotante, medicion]
+
+  - id: red-060
+    tipo: errores
+    anverso: 'Síntoma: aparecen pares `(0,1), (1,2), (2,3)`. ¿Qué fórmula está mal?'
+    reverso: |
+      Se usó `left = out`. Debe ser `left = 2 * out` para que los pares sean
+      disjuntos: `(0,1), (2,3), (4,5)`.
+    etiquetas: [reduccion, errores, indice]
+
+  - id: red-061
+    tipo: errores
+    anverso: '¿Por qué `atomicAdd` puede ser correcto pero lento para sumar millones de elementos?'
+    reverso: |
+      Todos los hilos compiten por una sola dirección y la actualización se
+      serializa. Es mejor reducir localmente y usar pocos atómicos sobre parciales.
+    etiquetas: [reduccion, errores, atomicos]
