@@ -75,8 +75,8 @@ function formatVector(values: readonly number[] | null): string {
   <section class="sgpu-reduccion" aria-labelledby="sgpu-reduccion-titulo">
     <h3 id="sgpu-reduccion-titulo" class="sgpu-reduccion__titulo">Laboratorio de reducción paralela</h3>
     <p class="sgpu-reduccion__aviso">
-      Este laboratorio ejecuta un <strong>modelo CPU determinista</strong> de una pasada de reducción y sus pruebas.
-      No compila CUDA, no usa una GPU y no predice rendimiento.
+      Este laboratorio ejecuta un <strong>modelo CPU determinista</strong> de una pasada de reducción y sus
+      pruebas. No compila CUDA, no usa una GPU y no predice rendimiento.
     </p>
 
     <div class="sgpu-reduccion__controles" role="group" aria-label="Configuración del árbol de reducción">
@@ -87,7 +87,9 @@ function formatVector(values: readonly number[] | null): string {
           data-test="preset"
           @change="updateConfig({ preset: ($event.target as HTMLSelectElement).value as ReductionPreset })"
         >
-          <option v-for="preset in PRESETS" :key="preset.value" :value="preset.value">{{ preset.label }}</option>
+          <option v-for="preset in PRESETS" :key="preset.value" :value="preset.value">
+            {{ preset.label }}
+          </option>
         </select>
       </label>
 
@@ -113,7 +115,9 @@ function formatVector(values: readonly number[] | null): string {
           :value="config.tailStrategy"
           data-test="tail-strategy"
           @change="
-            updateConfig({ tailStrategy: ($event.target as HTMLSelectElement).value as ReductionTailStrategy })
+            updateConfig({
+              tailStrategy: ($event.target as HTMLSelectElement).value as ReductionTailStrategy,
+            })
           "
         >
           <option value="sumar-cero">Conservar: sumar con 0</option>
@@ -189,8 +193,8 @@ function formatVector(values: readonly number[] | null): string {
 
     <h4>Ejercicio guiado: completa una pasada</h4>
     <p>
-      Empieza con líneas incorrectas. Cambia los tres fragmentos y pulsa <strong>Ejecutar pruebas</strong>. El runner
-      comprueba tamaños par, impar y unitario contra un oráculo CPU.
+      Empieza con líneas incorrectas. Cambia los tres fragmentos y pulsa <strong>Ejecutar pruebas</strong>. El
+      runner comprueba tamaños par, impar y unitario contra un oráculo CPU.
     </p>
 
     <div class="sgpu-editor" aria-label="Editor guiado de una pasada de reducción">
@@ -198,7 +202,11 @@ function formatVector(values: readonly number[] | null): string {
       <div><code>&nbsp;&nbsp;const int out = blockIdx.x * blockDim.x + threadIdx.x;</code></div>
       <label class="sgpu-editor__linea">
         <code>&nbsp;&nbsp;const int left = </code>
-        <select v-model="leftExpression" data-test="left-expression" aria-label="Expresión del índice izquierdo">
+        <select
+          v-model="leftExpression"
+          data-test="left-expression"
+          aria-label="Expresión del índice izquierdo"
+        >
           <option value="out">out</option>
           <option value="2 * out">2 * out</option>
         </select>
@@ -207,16 +215,28 @@ function formatVector(values: readonly number[] | null): string {
       <div><code>&nbsp;&nbsp;if (left &lt; n) {</code></div>
       <label class="sgpu-editor__linea">
         <code>&nbsp;&nbsp;&nbsp;&nbsp;const float right = </code>
-        <select v-model="rightExpression" data-test="right-expression" aria-label="Lectura del operando derecho">
+        <select
+          v-model="rightExpression"
+          data-test="right-expression"
+          aria-label="Lectura del operando derecho"
+        >
           <option value="input[left + 1]">input[left + 1]</option>
-          <option value="left + 1 < n ? input[left + 1] : input[left]">left + 1 &lt; n ? input[left + 1] : input[left]</option>
-          <option value="left + 1 < n ? input[left + 1] : 0.0f">left + 1 &lt; n ? input[left + 1] : 0.0f</option>
+          <option value="left + 1 < n ? input[left + 1] : input[left]">
+            left + 1 &lt; n ? input[left + 1] : input[left]
+          </option>
+          <option value="left + 1 < n ? input[left + 1] : 0.0f">
+            left + 1 &lt; n ? input[left + 1] : 0.0f
+          </option>
         </select>
         <code>;</code>
       </label>
       <label class="sgpu-editor__linea">
         <code>&nbsp;&nbsp;&nbsp;&nbsp;</code>
-        <select v-model="writeExpression" data-test="write-expression" aria-label="Índice del arreglo de salida">
+        <select
+          v-model="writeExpression"
+          data-test="write-expression"
+          aria-label="Índice del arreglo de salida"
+        >
           <option value="output[left]">output[left]</option>
           <option value="output[out]">output[out]</option>
         </select>
