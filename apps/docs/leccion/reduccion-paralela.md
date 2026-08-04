@@ -1,6 +1,6 @@
 ---
 title: De una suma secuencial a una reducción paralela
-description: Clase 02 de SimulaGPU: carreras de datos, reducción en árbol, tamaños impares, sincronización, memoria compartida y punto flotante.
+description: 'Clase 02 de SimulaGPU: carreras de datos, reducción en árbol, tamaños impares, sincronización, memoria compartida y punto flotante.'
 ---
 
 # De una suma secuencial a una reducción paralela
