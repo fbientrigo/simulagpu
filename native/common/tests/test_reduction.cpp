@@ -28,18 +28,20 @@ int main() {
   SIMULAGPU_CHECK(suite, simulagpu::reduction_pass(singleton) == singleton);
   SIMULAGPU_CHECK(suite, simulagpu::reduce_pairwise(singleton) == 7.0F);
 
-  const std::vector<float> cancellation{100000000.0F, 1.0F, -100000000.0F, 3.0F, 0.25F, 0.25F, 0.5F};
+  const std::vector<float> cancellation{100000000.0F, 1.0F, -100000000.0F, 3.0F,
+                                         0.25F,       0.25F, 0.5F};
   const float tree = simulagpu::reduce_pairwise(cancellation);
   const double reference = simulagpu::sum_kahan_reference(cancellation);
   SIMULAGPU_CHECK(suite, simulagpu::within_tolerance(tree, reference, 4.0, 1.0e-6));
   SIMULAGPU_CHECK(suite, !simulagpu::within_tolerance(tree, reference, 0.0, 0.0));
 
-  SIMULAGPU_CHECK(suite,
-                  !simulagpu::within_tolerance(std::numeric_limits<float>::quiet_NaN(), reference, 1.0, 1.0));
+  SIMULAGPU_CHECK(
+      suite,
+      !simulagpu::within_tolerance(std::numeric_limits<float>::quiet_NaN(), reference, 1.0, 1.0));
 
   bool threw = false;
   try {
-    static_cast<void>(simulagpu::reduce_pairwise({}));
+    static_cast<void>(simulagpu::reduce_pairwise(std::vector<float>{}));
   } catch (const std::invalid_argument&) {
     threw = true;
   }
