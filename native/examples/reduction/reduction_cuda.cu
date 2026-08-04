@@ -1,6 +1,8 @@
 #include "reduction_cuda.hpp"
 
+#include <cstddef>
 #include <cstdio>
+#include <cstdlib>
 #include <utility>
 
 #include "simulagpu/cuda_check.cuh"
