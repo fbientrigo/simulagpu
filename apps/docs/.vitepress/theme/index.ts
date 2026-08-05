@@ -1,6 +1,6 @@
 import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
-import { ExploradorIndiceGlobal, LaboratorioReduccion } from '@simulagpu/visuals';
+import { ExploradorIndiceGlobal, LaboratorioReduccion, SimuladorIsometricoGPU } from '@simulagpu/visuals';
 
 /**
  * The documentation application is the only layer allowed to wire
@@ -10,6 +10,7 @@ const theme: Theme = {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
+    app.component('SimuladorIsometricoGPU', SimuladorIsometricoGPU);
     app.component('LaboratorioReduccion', LaboratorioReduccion);
   },
 };

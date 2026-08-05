@@ -2,7 +2,12 @@
 
 Plataforma educativa estática para aprender **programación GPU y paralela en español** mediante documentación, modelos interactivos deterministas, código C++/CUDA ejecutable, ejercicios con pruebas y tarjetas Anki.
 
-> **Dos clases verticales completas.** La Clase 01 introduce el índice global con suma de vectores. La Clase 02 introduce carreras de datos y reducción paralela con un laboratorio donde el alumno modifica fragmentos del kernel mediante `select` y ejecuta pruebas guiadas en el navegador.
+> **Clase 0 y dos clases verticales completas.** La Clase 0 es una introducción
+> interactiva sin prerrequisitos ni código al modelo mental de chunks, bloques
+> e hilos. La Clase 01 introduce el índice global con suma de vectores. La
+> Clase 02 introduce carreras de datos y reducción paralela con un laboratorio
+> donde el alumno modifica fragmentos del kernel mediante `select` y ejecuta
+> pruebas guiadas en el navegador.
 
 ## Empezar
 
@@ -49,6 +54,24 @@ simulagpu/
 ├── docs/               arquitectura, roadmap, ADRs y atribución
 └── tests/              pruebas transversales de enlaces y artefactos
 ```
+
+## Clase 0 — El modelo mental de una GPU
+
+Introducción interactiva, sin prerrequisitos y sin código, a cómo una GPU
+divide datos en chunks y los reparte entre bloques e hilos. Enseña las dos
+fórmulas centrales (`número de chunks = ceil(bytes totales / bytes por
+chunk)`, `número de bloques = ceil(número de chunks / hilos por bloque)`) con
+una secuencia guiada de diez pasos y un ejercicio de comprobación.
+
+| Pieza | Dónde |
+| --- | --- |
+| Lección | [`apps/docs/clase-0/modelo-mental-gpu.md`](apps/docs/clase-0/modelo-mental-gpu.md) |
+| Visualización | [`packages/visuals/src/SimuladorIsometricoGPU.vue`](packages/visuals/src/SimuladorIsometricoGPU.vue) |
+| Modelo | [`packages/core/src/chunk-flow/`](packages/core/src/chunk-flow/) |
+
+Deliberadamente sin código ejecutable ni ejercicio nativo: es una introducción
+conceptual, no una lección completa según el contrato de `AGENTS.md`. El
+código C++ y CUDA real empieza en la Clase 01.
 
 ## Clase 01 — Índice global y suma de vectores
 

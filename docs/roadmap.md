@@ -22,6 +22,14 @@ Stages are ordered by learning dependency, not by date.
 - starter/solution exercise and 18 Anki cards
 - GitHub Pages and CPU-safe CI
 
+## Class 0 — GPU mental model — complete
+
+- Clase 0, *El modelo mental de una GPU* — a prerequisite-free, code-free
+  introduction to chunks, blocks, threads and the grid. Deliberately not a
+  full vertical slice: no native code, no exercise, no Anki cards, by design
+  (see `AGENTS.md` and the lesson's own scope note).
+- `SimuladorIsometricoGPU`, deterministic, URL-serializable, unit-tested
+
 ## Class 02 — parallel reduction — complete in this change
 
 This class follows the second concrete exercise in the CERN STEAM Academy 2026

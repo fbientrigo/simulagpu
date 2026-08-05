@@ -7,7 +7,10 @@ hero:
   tagline: Manipula modelos, completa kernels con controles guiados y ejecuta pruebas de corrección antes de necesitar una GPU.
   actions:
     - theme: brand
-      text: Empezar por la Clase 01
+      text: Empezar por la Clase 0
+      link: /clase-0/modelo-mental-gpu
+    - theme: alt
+      text: Clase 01
       link: /leccion/indice-global-suma-vectores
     - theme: alt
       text: Abrir laboratorio de reducción
@@ -33,6 +36,13 @@ Cada clase enlaza cinco piezas sobre el mismo concepto:
 5. **tarjetas Anki** para repaso espaciado.
 
 ## Clases disponibles
+
+### Clase 0 — El modelo mental de una GPU
+
+Sin prerrequisitos y sin código: cómo se dividen los datos en chunks y se
+reparten entre bloques e hilos, antes de ver una sola línea de CUDA.
+
+- [Clase 0](/clase-0/modelo-mental-gpu)
 
 ### Clase 01 — Índice global
 

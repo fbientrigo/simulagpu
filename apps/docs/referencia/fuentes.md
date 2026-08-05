@@ -21,6 +21,15 @@ SimulaGPU usa de este curso la progresión conceptual:
 - memoria compartida y reducción optimizada como siguiente nivel;
 - algoritmos irregulares y casos aplicados más adelante.
 
+### Clase 0
+
+La Clase 0 reutiliza únicamente la terminología estándar de grid, bloque,
+hilo, host y device (vocabulario estándar de CUDA, sin obligación de
+atribución). El resto — dividir un buffer de bytes en chunks, las dos
+fórmulas, la secuencia guiada de diez pasos y el simulador isométrico — es
+original de SimulaGPU: ninguno de los repositorios de referencia enseña la
+introducción a la GPU con esta metáfora.
+
 ### Clase 01
 
 De `1-vector-add/` vienen la selección del problema y los conceptos de índice

@@ -115,6 +115,21 @@ implementation with its own tests and explanation.
   `__syncthreads`, and atomics.
 - **Status:** standard platform terminology; recorded for traceability.
 
+### S-11 — Clase 0: grid / block / thread terminology
+
+- **Reused:** the same standard Spanish and English vocabulary for grid /
+  block (bloque) / thread (hilo), host and device already recorded in S-10,
+  reused consistently in the new introductory Clase 0.
+- **Status:** standard CUDA terminology from the NVIDIA programming guide,
+  same as S-10. No attribution obligation; recorded for traceability.
+- **Note:** the byte/chunk framing (`número de chunks = ceil(bytes totales /
+  bytes por chunk)`), the ten-step guided sequence, and the
+  `SimuladorIsometricoGPU` visualization are original to SimulaGPU. Neither
+  reference repository frames the introduction to GPU parallelism in terms of
+  splitting a byte buffer into chunks before assigning it to threads; that
+  framing, the pedagogical sequence, and every line of the `chunk-flow` model
+  and component were designed from scratch for this repository.
+
 ---
 
 ## From `csc2026_e1`
@@ -175,6 +190,9 @@ reference:
 
 - the one-way web architecture: `contracts → core → visuals → apps/docs`;
 - the deterministic, immutable thread-index and reduction teaching models;
+- the deterministic chunk-flow teaching model (`packages/core/src/chunk-flow`)
+  behind Clase 0, its byte/chunk framing, its ten-step guided sequence, and
+  the `SimuladorIsometricoGPU` visualization;
 - `ExploradorIndiceGlobal` and `LaboratorioReduccion`;
 - the select-based guided kernel editor and its browser-side CPU test runner;
 - all Spanish lesson and exercise text;
