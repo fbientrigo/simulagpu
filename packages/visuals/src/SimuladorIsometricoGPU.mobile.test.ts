@@ -22,6 +22,17 @@ describe('SimuladorIsometricoGPU mobile-first guided layout', () => {
     expect(progreso.get('.sim-progreso__relleno').attributes('style')).toContain('width: 20%');
   });
 
+  it('keeps the explanatory-model boundary visible before the interactive scene', () => {
+    const wrapper = montar();
+    const aviso = wrapper.get('[data-test="aviso"]');
+
+    expect(aviso.text()).toContain('modelo explicativo determinista');
+    expect(aviso.text()).toContain('No ejecuta CUDA');
+    expect(aviso.element.compareDocumentPosition(wrapper.get('[data-test="escena-interactiva"]').element)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
   it('keeps configuration compact while preserving all controls', () => {
     const wrapper = montar();
     const configuracion = wrapper.get('[data-test="configuracion"]');
