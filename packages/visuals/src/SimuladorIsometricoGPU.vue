@@ -166,6 +166,10 @@ function estadoRespuesta(preguntaId: string, correcta: number): 'sin-responder' 
   return respuesta === correcta ? 'correcta' : 'incorrecta';
 }
 
+function textoRespuesta(preguntaId: string, correcta: number): string {
+  return estadoRespuesta(preguntaId, correcta) === 'correcta' ? '¡Correcto!' : 'No es correcto.';
+}
+
 /**
  * Vue and Vite load these bindings through the external SFC template. Current
  * static analyzers do not follow `template src`, so this explicit read keeps
@@ -187,6 +191,7 @@ const externalTemplateBindings = {
   claseBloque,
   responder,
   estadoRespuesta,
+  textoRespuesta,
 };
 void externalTemplateBindings;
 </script>
