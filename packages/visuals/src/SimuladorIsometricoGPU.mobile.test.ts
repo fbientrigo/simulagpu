@@ -32,6 +32,16 @@ describe('SimuladorIsometricoGPU mobile-first guided layout', () => {
     expect(configuracion.findAll('select')).toHaveLength(4);
   });
 
+  it('keeps the calculated counts and substituted formulas visible without opening configuration', () => {
+    const wrapper = montar();
+
+    expect(wrapper.get('[data-test="chunk-count"]').text()).toBe('6');
+    expect(wrapper.get('[data-test="block-count"]').text()).toBe('2');
+    expect(wrapper.get('[data-test="inactive-threads"]').text()).toBe('2');
+    expect(wrapper.get('[data-test="chunk-substituted"]').text()).toContain('ceil(96 / 16)');
+    expect(wrapper.get('[data-test="block-substituted"]').text()).toContain('ceil(6 / 4)');
+  });
+
   it('visibly changes the focused stage as the guided sequence advances', async () => {
     const wrapper = montar();
     const escena = wrapper.get('[data-test="escena-interactiva"] .sim-escena');
