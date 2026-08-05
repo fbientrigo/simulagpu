@@ -1,0 +1,31 @@
+name: Format Class 0
+
+on:
+  push:
+    branches:
+      - clase0/mobile-interactive-redesign
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: >-
+          pnpm exec prettier --write
+          packages/visuals/src/SimuladorIsometricoGPU.css
+          packages/visuals/src/SimuladorIsometricoGPU.template.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: formatted-class0
+          path: |
+            packages/visuals/src/SimuladorIsometricoGPU.css
+            packages/visuals/src/SimuladorIsometricoGPU.template.html
