@@ -1,0 +1,40 @@
+name: Fix Class 0 Disclaimer
+
+on:
+  push:
+    branches:
+      - clase0/mobile-interactive-redesign
+
+permissions:
+  contents: write
+
+jobs:
+  fix-disclaimer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: clase0/mobile-interactive-redesign
+      - name: Make the disclaimer a complete Spanish sentence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('packages/visuals/src/SimuladorIsometricoGPU.template.html')
+          text = path.read_text()
+          old = '<strong>Modelo explicativo determinista.</strong>'
+          new = 'Este es un <strong>modelo explicativo determinista.</strong>'
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected one disclaimer, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+      - name: Remove this temporary workflow
+        run: rm .github/workflows/fix-class0-disclaimer.yml
+      - name: Commit the targeted fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/visuals/src/SimuladorIsometricoGPU.template.html
+          git add .github/workflows/fix-class0-disclaimer.yml
+          git commit -m "fix(class-0): clarify explanatory-model disclaimer"
+          git push
