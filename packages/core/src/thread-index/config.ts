@@ -13,6 +13,22 @@ export const DEFAULT_THREAD_INDEX_CONFIG: ThreadIndexConfig = Object.freeze({
   selectedThread: 5,
 });
 
+/**
+ * Where the guided walkthrough starts.
+ *
+ * Twelve threads across three blocks: the whole launch fits on a phone screen
+ * at once, and `10 % 4 !== 0` means the last block is partial from the first
+ * step, so the guard has something to do. Deliberately not the default config —
+ * `DEFAULT_THREAD_INDEX_CONFIG` is what an empty or unparseable query decodes
+ * to, and that is part of the URL contract.
+ */
+export const GUIDED_THREAD_INDEX_CONFIG: ThreadIndexConfig = Object.freeze({
+  n: 10,
+  blockSize: 4,
+  selectedBlock: 0,
+  selectedThread: 0,
+});
+
 function toInteger(value: unknown, fallback: number): number {
   if (typeof value === 'number' && Number.isFinite(value)) {
     return Math.trunc(value);

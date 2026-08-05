@@ -110,9 +110,9 @@ hilo.** El reparto es una biyección. Por eso no hace falta ningún tipo de
 coordinación entre hilos: cada uno tiene su elemento y nadie pisa a nadie.
 
 ::: tip Cámbialo y míralo
-En el [explorador](#el-explorador-del-indice-global) de más abajo, mueve
-"bloque seleccionado" y "hilo seleccionado" y observa cómo se sustituyen los
-valores en la fórmula.
+En el [explorador](#el-explorador-del-indice-global) de más abajo, toca
+cualquier hilo de la grilla y mira cómo se sustituyen sus coordenadas en la
+fórmula. El recorrido guiado te lo pregunta antes de enseñártelo.
 :::
 
 ## 4. Por qué hace falta `if (i < n)`
@@ -199,9 +199,22 @@ van juntas.
 
 ## 6. El explorador del índice global {#el-explorador-del-indice-global}
 
-Mueve los controles y mira qué le toca a cada hilo. Empieza con `n = 100` y
-bloques de 32: los 28 hilos con borde punteado del último bloque son los que el
-guard descarta.
+El explorador abre en **recorrido guiado**: seis pasos cortos con un ejemplo
+diminuto, `n = 10` y bloques de 4, que cabe entero en la pantalla de un
+teléfono. Cada paso te pregunta antes de responderte, y solo enseña un dato
+nuevo cuando ya tiene sentido:
+
+1. cuántos elementos hay y de qué tamaño son los bloques;
+2. cuántos bloques hacen falta (`gridDim.x`, redondeando hacia arriba);
+3. qué hilo eres — lo eliges tocándolo en la grilla;
+4. qué índice global te toca (`i = blockIdx.x * blockDim.x + threadIdx.x`);
+5. si pasas el guard `if (i < n)`;
+6. qué elemento acabas procesando, o por qué no procesas ninguno.
+
+Mientras tanto, una sola tarjeta resume el hilo actual: `blockIdx.x`,
+`threadIdx.x`, `i`, si está activo o descartado, y la operación que ejecuta. Los
+valores aparecen con un `?` hasta el paso que los explica, así que la grilla no
+te adelanta la respuesta que te acaba de preguntar.
 
 <ExploradorIndiceGlobal />
 
@@ -211,10 +224,14 @@ reparto de elementos entre hilos. No ejecuta CUDA, no simula el hardware y no
 dice nada sobre el orden de ejecución ni sobre el rendimiento.
 
 Su estado se guarda en la URL (`?n=100&bs=32&b=3&t=5`), así que puedes copiar
-la dirección y compartir exactamente la configuración que estás viendo.
+la dirección y compartir exactamente la configuración que estás viendo. El modo
+y el paso en que vas no viajan en la dirección: son cómo estás mirando el
+modelo, no qué modelo estás mirando.
 :::
 
-Tres cosas que vale la pena probar:
+Cuando termines el recorrido, el botón te deja en **exploración libre**: los
+mismos números sin pasos, con el resumen completo del lanzamiento. Tres cosas
+que vale la pena probar ahí:
 
 1. `n = 100`, bloques de 32 → 4 bloques, 128 hilos, 28 inactivos.
 2. `n = 128`, bloques de 32 → 4 bloques, 128 hilos, **0** inactivos. Ningún

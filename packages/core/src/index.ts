@@ -1,6 +1,13 @@
-export { DEFAULT_THREAD_INDEX_CONFIG, ceilDiv, normalizeThreadIndexConfig } from './thread-index/config.js';
+export {
+  DEFAULT_THREAD_INDEX_CONFIG,
+  GUIDED_THREAD_INDEX_CONFIG,
+  ceilDiv,
+  normalizeThreadIndexConfig,
+} from './thread-index/config.js';
 
 export { buildThreadIndexSnapshot, globalIndex, isActive } from './thread-index/snapshot.js';
+
+export { buildGuidedTour } from './thread-index/guided.js';
 
 export { decodeThreadIndexConfig, encodeThreadIndexConfig } from './thread-index/serialize.js';
 

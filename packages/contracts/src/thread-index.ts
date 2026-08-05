@@ -92,6 +92,59 @@ export interface GridSizeExpression {
 }
 
 /**
+ * One step of the guided walkthrough, in the order a learner meets the ideas:
+ * the problem, how many blocks it needs, which thread we are, the index that
+ * thread computes, the guard it evaluates, and the work it ends up doing.
+ */
+export type GuidedStepId = 'problem' | 'grid' | 'thread' | 'index' | 'guard' | 'element';
+
+/**
+ * One answer offered by a checkpoint. Exactly one option per checkpoint has
+ * `correct: true`.
+ */
+export interface GuidedOption {
+  /** Stable identifier, unique inside its checkpoint. */
+  readonly id: string;
+  /** What the learner reads on the button (Spanish). */
+  readonly label: string;
+  readonly correct: boolean;
+  /** Why that answer is right or wrong, shown after it is chosen (Spanish). */
+  readonly feedback: string;
+}
+
+/** A micro-quiz attached to a step. */
+export interface GuidedCheckpoint {
+  readonly id: string;
+  /** The question, with the current configuration substituted in (Spanish). */
+  readonly question: string;
+  readonly options: readonly GuidedOption[];
+}
+
+/**
+ * A step of the walkthrough with the current configuration already substituted
+ * into its text. The step *content* is model output; which step is on screen is
+ * view state and stays in the component.
+ */
+export interface GuidedStep {
+  readonly id: GuidedStepId;
+  /** 1-based, so a view can render "paso 2 de 6" without arithmetic. */
+  readonly position: number;
+  /** Short heading (Spanish). */
+  readonly title: string;
+  /** One or two sentences of teaching text (Spanish). */
+  readonly prompt: string;
+  /** The arithmetic of this step on a single line, or `null` when it has none. */
+  readonly detail: string | null;
+  readonly checkpoint: GuidedCheckpoint | null;
+}
+
+/** The whole walkthrough for one configuration. */
+export interface GuidedTour {
+  readonly steps: readonly GuidedStep[];
+  readonly totalSteps: number;
+}
+
+/**
  * The immutable, JSON-serializable result of running the teaching model.
  *
  * Produced by `buildThreadIndexSnapshot` in `@simulagpu/core`. Visualizations
