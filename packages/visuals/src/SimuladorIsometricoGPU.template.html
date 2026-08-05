@@ -353,8 +353,7 @@
             data-test="pregunta-feedback"
             role="status"
           >
-            {{ estadoRespuesta(pregunta.id, pregunta.correctValue) === 'correcta' ? '¡Correcto!' : 'No es
-            correcto.' }} {{ pregunta.explanation }}
+            {{ textoRespuesta(pregunta.id, pregunta.correctValue) }} {{ pregunta.explanation }}
           </p>
         </div>
       </article>
