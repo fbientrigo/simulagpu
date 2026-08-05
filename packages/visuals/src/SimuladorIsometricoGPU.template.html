@@ -30,7 +30,8 @@
     <summary>
       <span class="sim-configuracion__titulo">Configurar escena</span>
       <span class="sim-configuracion__resumen">
-        {{ config.totalBytes }} B · {{ config.bytesPerChunk }} B/chunk · {{ config.threadsPerBlock }} hilos/bloque
+        {{ config.totalBytes }} B · {{ config.bytesPerChunk }} B/chunk · {{ config.threadsPerBlock }}
+        hilos/bloque
       </span>
     </summary>
 
@@ -244,7 +245,11 @@
     </div>
   </section>
 
-  <nav class="sim-navegacion-pasos" aria-label="Navegación de la secuencia guiada" data-test="navegacion-pasos">
+  <nav
+    class="sim-navegacion-pasos"
+    aria-label="Navegación de la secuencia guiada"
+    data-test="navegacion-pasos"
+  >
     <button
       type="button"
       class="sim-nav-boton"
@@ -311,8 +316,8 @@
         data-test="ejercicio-caso"
       >
         <h5>
-          {{ caso.totalBytes }} bytes totales, chunks de {{ caso.bytesPerChunk }} bytes,
-          {{ caso.threadsPerBlock }} hilos por bloque
+          {{ caso.totalBytes }} bytes totales, chunks de {{ caso.bytesPerChunk }} bytes, {{
+          caso.threadsPerBlock }} hilos por bloque
         </h5>
 
         <div
@@ -348,12 +353,8 @@
             data-test="pregunta-feedback"
             role="status"
           >
-            {{
-              estadoRespuesta(pregunta.id, pregunta.correctValue) === 'correcta'
-                ? '¡Correcto!'
-                : 'No es correcto.'
-            }}
-            {{ pregunta.explanation }}
+            {{ estadoRespuesta(pregunta.id, pregunta.correctValue) === 'correcta' ? '¡Correcto!' : 'No es
+            correcto.' }} {{ pregunta.explanation }}
           </p>
         </div>
       </article>

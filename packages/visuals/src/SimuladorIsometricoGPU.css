@@ -6,7 +6,11 @@
   border-radius: 14px;
   padding: clamp(10px, 2.5vw, 20px);
   background:
-    radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--sim-purple) 12%, transparent), transparent 28rem),
+    radial-gradient(
+      circle at 90% 0%,
+      color-mix(in srgb, var(--sim-purple) 12%, transparent),
+      transparent 28rem
+    ),
     var(--sgpu-surface);
   color: var(--sgpu-text);
   overflow: clip;
@@ -227,7 +231,11 @@
   border: 1px solid var(--sgpu-border);
   border-radius: 10px;
   background: var(--sgpu-surface);
-  transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .sim-stage--cpu,
@@ -356,7 +364,10 @@
   border-radius: 7px;
   font-family: var(--sgpu-font-mono);
   cursor: pointer;
-  transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease;
 }
 
 .sim-tile:hover,
