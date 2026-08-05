@@ -56,7 +56,7 @@
           :value="config.bytesPerChunk"
           aria-label="Bytes por chunk"
           data-test="control-bytes-per-chunk"
-          @change="actualizar({ bytesPerChunk: alNumero($event) as ChunkFlowConfig['bytesPerChunk'] })"
+          @change="actualizar({ bytesPerChunk: alNumero($event) })"
         >
           <option v-for="opcion in CHUNK_FLOW_LIMITS.bytesPerChunkOptions" :key="opcion" :value="opcion">
             {{ opcion }}
@@ -70,7 +70,7 @@
           :value="config.threadsPerBlock"
           aria-label="Hilos por bloque"
           data-test="control-threads-per-block"
-          @change="actualizar({ threadsPerBlock: alNumero($event) as ChunkFlowConfig['threadsPerBlock'] })"
+          @change="actualizar({ threadsPerBlock: alNumero($event) })"
         >
           <option v-for="opcion in CHUNK_FLOW_LIMITS.threadsPerBlockOptions" :key="opcion" :value="opcion">
             {{ opcion }}
