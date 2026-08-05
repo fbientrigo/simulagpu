@@ -29,6 +29,7 @@ const props = withDefaults(
 const config = ref<ChunkFlowConfig>(decodeChunkFlowConfig(props.initialQuery));
 const snapshot = computed(() => buildChunkFlowSnapshot(config.value));
 
+/* Normalize every value crossing the untyped external HTML template boundary. */
 function actualizar(cambio: Partial<ChunkFlowConfig>): void {
   config.value = normalizeChunkFlowConfig({ ...config.value, ...cambio });
 }
