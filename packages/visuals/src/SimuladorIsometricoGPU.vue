@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars -- bindings are consumed by the external SFC template. */
 /**
  * Clase 0: mobile-first interactive mental model for chunk/block/thread work
  * distribution. The component renders immutable snapshots from core; guided
