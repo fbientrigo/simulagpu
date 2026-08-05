@@ -61,6 +61,14 @@ describe('SimuladorIsometricoGPU mobile-first guided layout', () => {
     expect(wrapper.get('[data-test="seleccion-descripcion"]').text()).toContain('Chunk 3');
   });
 
+  it('keeps inactive slots explicit inside the compact block grid', () => {
+    const wrapper = montar();
+
+    expect(wrapper.findAll('.sim-hilo--activo')).toHaveLength(6);
+    expect(wrapper.findAll('.sim-hilo--inactivo')).toHaveLength(2);
+    expect(wrapper.findAll('.sim-bloque-contenedor')).toHaveLength(2);
+  });
+
   it('provides a compact four-action guided navigation bar', () => {
     const wrapper = montar();
     const navegacion = wrapper.get('[data-test="navegacion-pasos"]');
