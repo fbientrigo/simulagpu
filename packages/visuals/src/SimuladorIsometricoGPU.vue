@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars -- bindings are consumed by the external SFC template. */
 /**
  * Clase 0: mobile-first interactive mental model for chunk/block/thread work
  * distribution. The component renders immutable snapshots from core; guided
@@ -166,6 +165,30 @@ function estadoRespuesta(preguntaId: string, correcta: number): 'sin-responder' 
   if (respuesta === null || respuesta === undefined) return 'sin-responder';
   return respuesta === correcta ? 'correcta' : 'incorrecta';
 }
+
+/**
+ * Vue and Vite load these bindings through the external SFC template. Current
+ * static analyzers do not follow `template src`, so this explicit read keeps
+ * `noUnusedLocals` and ESLint honest without weakening either project rule.
+ */
+const externalTemplateBindings = {
+  alNumero,
+  seleccionar,
+  seleccionEtiqueta,
+  pasoActual,
+  progreso,
+  pasoSiguiente,
+  pasoAnterior,
+  reiniciar,
+  chunksOcultos,
+  bloquesOcultos,
+  claseChunk,
+  claseHilo,
+  claseBloque,
+  responder,
+  estadoRespuesta,
+};
+void externalTemplateBindings;
 </script>
 
 <template src="./SimuladorIsometricoGPU.template.html"></template>
