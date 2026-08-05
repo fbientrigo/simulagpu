@@ -1,62 +1,82 @@
 ---
 title: Fuentes y atribución
-description: De dónde vienen los conceptos de SimulaGPU y qué se reutilizó de cada fuente.
+description: De dónde vienen los conceptos de SimulaGPU, qué se reutilizó y qué se reescribió desde cero.
 ---
 
 # Fuentes y atribución
 
-Esta página es el resumen para lectores. El registro completo, entrada por
-entrada, está en
+El registro técnico completo, con cada ruta consultada, está en
 [`docs/sources.md`](https://github.com/fbientrigo/simulagpu/blob/main/docs/sources.md).
 
-## De dónde viene la lección 01
+## Curso GPU Programming — CERN STEAM Academy 2026
 
-**Curso GPU Programming, CERN STEAM Academy 2026**
-([CERN-STEAM-Academy/26-GPU-PROGRAMMING](https://github.com/CERN-STEAM-Academy/26-GPU-PROGRAMMING)),
-por Anton Wijs y Jan Heemstra (Eindhoven University of Technology).
+Repositorio:
+[CERN-STEAM-Academy/26-GPU-PROGRAMMING](https://github.com/CERN-STEAM-Academy/26-GPU-PROGRAMMING).
 Licencia: **GPL-3.0**.
 
-De ahí vienen la elección de la suma de vectores como primer ejercicio, la
-secuencia de conceptos —índice global, guard de límites, división redondeada
-hacia arriba, transferencias, verificación contra CPU—, la idea de entregar un
-kernel deliberadamente roto para que el estudiante lo arregle, y la lista de
-temas posteriores con los que esta base debe seguir siendo compatible.
+SimulaGPU usa de este curso la progresión conceptual:
 
-**No se copió ningún archivo de código.** La GPL-3.0 es una licencia copyleft:
-reutilizar su código obligaría a licenciar SimulaGPU bajo los mismos términos.
-Todos los ejemplos de este repositorio están reescritos desde cero.
+- suma de vectores para aprender índice global y límites;
+- reducción para pasar de trabajo independiente a un resultado compartido;
+- memoria compartida y reducción optimizada como siguiente nivel;
+- algoritmos irregulares y casos aplicados más adelante.
 
-**CSC Latin America 2026 — HEP Computing Exercises** (`csc2026_e1`).
-Sin archivo de licencia, es decir, todos los derechos reservados.
+### Clase 0
 
-De ahí vienen patrones pedagógicos, no código: "primero correcto, después
-paralelo, después rápido"; ejercicios autocontenidos con su propio
-`CMakeLists.txt`; código de partida deliberadamente incorrecto en vez de
-archivos que faltan; CMake con Ninja como flujo de trabajo documentado; y CI
-como red de seguridad didáctica.
-
-Tampoco se copió código de ahí.
-
-## De dónde viene la Clase 0
-
-La Clase 0 reutiliza la misma terminología estándar de grid, bloque, hilo,
-host y device que la lección 01 (vocabulario estándar de CUDA, sin obligación
-de atribución). El resto — dividir un buffer de bytes en chunks, las dos
-fórmulas, la secuencia guiada de diez pasos y el simulador isométrico— es
+La Clase 0 reutiliza únicamente la terminología estándar de grid, bloque,
+hilo, host y device (vocabulario estándar de CUDA, sin obligación de
+atribución). El resto — dividir un buffer de bytes en chunks, las dos
+fórmulas, la secuencia guiada de diez pasos y el simulador isométrico — es
 original de SimulaGPU: ninguno de los repositorios de referencia enseña la
 introducción a la GPU con esta metáfora.
 
-## Qué es original
+### Clase 01
 
-Todo el contenido de este sitio, el código de `native/`, `packages/` y `apps/`,
-las tarjetas de Anki y las visualizaciones se escribieron para SimulaGPU.
+De `1-vector-add/` vienen la selección del problema y los conceptos de índice
+global, guard de límites, división redondeada hacia arriba, transferencias y
+validación contra CPU.
 
-## Advertencia sobre CUDA
+### Clase 02
 
-El código CUDA de este repositorio **no ha sido compilado ni ejecutado**: la
-v0.1 se escribió en una máquina sin GPU y sin `nvcc`. Está aislado detrás de
-detección opcional de CMake, revisado a mano y basado en la API documentada,
-pero no verificado en hardware.
+De `2-reduction/reduction.cu` vienen el problema de sumar muchos valores en
+paralelo, la reducción por pares en varias pasadas, el cuidado con tamaños
+impares y la necesidad de comparar contra una referencia numérica más fiable.
 
-Si lo ejecutas y encuentras un error,
-[abre un issue](https://github.com/fbientrigo/simulagpu/issues).
+**No se copió código del curso.** La GPL-3.0 es copyleft; todos los ejemplos,
+pruebas, visualizaciones y explicaciones de SimulaGPU están reescritos desde
+cero. El laboratorio con editor guiado y `select` es original de este proyecto.
+
+## CSC Latin America 2026 — HEP Computing Exercises
+
+Repositorio de referencia: `csc2026_e1`. No contiene archivo `LICENSE`, por lo
+que no concede permiso para copiar.
+
+Se reutilizaron únicamente patrones pedagógicos:
+
+- primero corrección, después paralelismo, después rendimiento;
+- starter que compila pero está deliberadamente equivocado;
+- ejercicio autocontenido con CMake y pruebas;
+- el mismo contrato de pruebas para starter y solución;
+- CI como red de seguridad didáctica.
+
+Tampoco se copió código de este repositorio.
+
+## Qué ejecuta realmente el sitio
+
+Las visualizaciones y el laboratorio ejecutan modelos aritméticos
+deterministas en el navegador. El botón **Ejecutar pruebas** de la Clase 02
+comprueba un subconjunto guiado del kernel mediante un oráculo CPU para tamaños
+par, impar y unitario.
+
+No contienen `nvcc`, no compilan CUDA, no usan una GPU y no predicen
+rendimiento. La ejecución CUDA real vive en `native/` y requiere CUDA Toolkit
+más una GPU NVIDIA.
+
+## Estado de verificación
+
+El CI estándar construye y prueba toda la configuración CPU-only. Los archivos
+`.cu` están aislados detrás de detección opcional de CMake, pero no son parte
+del build obligatorio porque el runner no tiene `nvcc` ni hardware GPU.
+
+SimulaGPU no publica cifras de rendimiento que no haya medido en la máquina que
+las produjo.

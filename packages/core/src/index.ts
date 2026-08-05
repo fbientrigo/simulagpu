@@ -13,3 +13,12 @@ export { decodeChunkFlowConfig, encodeChunkFlowConfig } from './chunk-flow/seria
 export { buildExerciseCases } from './chunk-flow/exercise.js';
 
 export { STEP_COUNT, buildStepSnapshots } from './chunk-flow/steps.js';
+export {
+  DEFAULT_REDUCTION_CONFIG,
+  DEFAULT_REDUCTION_SUBMISSION,
+  buildReductionSnapshot,
+  evaluateReductionSubmission,
+  normalizeReductionConfig,
+  renderReductionSubmission,
+  sumFloat32Sequential,
+} from './reduction/model.js';

@@ -85,16 +85,18 @@ jobs:
       - name: Test
         run: ctest --test-dir native/build --output-on-failure
 
-      - name: Run the vector-add example
-        run: ./native/build/examples/vector-add/vector_add_example
+      - name: Run the lesson examples
+        run: |
+          ./native/build/examples/vector-add/vector_add_example
+          ./native/build/examples/reduction/reduction_example
 
   exercise-starter:
-    name: Native — the exercise starter fails as designed
+    name: Native — exercise starters fail as designed
     runs-on: ubuntu-latest
 
-    # The starter ships deliberately wrong code. If its tests ever pass, either
-    # someone committed the answers or the tests stopped checking anything --
-    # both are bugs, and both are invisible without this job.
+    # Each starter ships deliberately wrong code. If its tests ever pass,
+    # someone committed the answers or the tests stopped checking the intended
+    # failure. Both are regressions.
     steps:
       - uses: actions/checkout@v4
 
@@ -103,18 +105,22 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build
 
-      - name: Build the starter
+      - name: Build the starters
         run: |
-          cmake -S native/exercises/01-vector-add/starter -B /tmp/starter-build -G Ninja
-          cmake --build /tmp/starter-build
+          cmake -S native/exercises/01-vector-add/starter -B /tmp/starter-01 -G Ninja
+          cmake --build /tmp/starter-01
+          cmake -S native/exercises/02-reduction/starter -B /tmp/starter-02 -G Ninja
+          cmake --build /tmp/starter-02
 
-      - name: Expect the starter tests to fail
+      - name: Expect starter tests to fail
         run: |
-          if ctest --test-dir /tmp/starter-build --output-on-failure; then
-            echo "::error::The exercise starter passes its tests. It is supposed to fail." >&2
-            exit 1
-          fi
-          echo "Starter tests fail, as intended."
+          for build in /tmp/starter-01 /tmp/starter-02; do
+            if ctest --test-dir "$build" --output-on-failure; then
+              echo "::error::$build passes its tests. It is supposed to fail." >&2
+              exit 1
+            fi
+          done
+          echo "Both starter test suites fail, as intended."
 
 # A CUDA compile job is deliberately absent. Compiling the .cu files needs the
 # CUDA Toolkit, and running them needs a physical device; neither is available

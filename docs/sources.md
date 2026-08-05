@@ -3,24 +3,26 @@
 Engineering document (English). The learner-facing summary is at
 [`apps/docs/referencia/fuentes.md`](../apps/docs/referencia/fuentes.md).
 
-Every concept or pattern SimulaGPU took from somewhere else is recorded here,
-with what was reused and whether any code was copied. **In v0.1, no source file
-from any reference repository was copied, adapted line by line, or vendored.**
+This document records the external ideas used by SimulaGPU, the exact source
+paths consulted, and whether source code was copied. **No source file from a
+reference repository has been copied, translated, adapted line by line, or
+vendored.** Concepts were studied and every implementation was rewritten from
+scratch.
 
 ---
 
 ## Reference repositories
 
-| Repository | Role | License | Copying allowed? |
+| Repository | Role | License | Source reuse |
 | --- | --- | --- | --- |
-| [`CERN-STEAM-Academy/26-GPU-PROGRAMMING`](https://github.com/CERN-STEAM-Academy/26-GPU-PROGRAMMING) | GPU concepts, exercise design, terminology, topic progression | **GPL-3.0** (`LICENSE`, GNU GPL v3 verbatim) | No — copyleft would propagate to SimulaGPU |
-| `csc2026_e1` (CSC Latin America 2026, HEP Computing Exercises) | Pedagogical and engineering patterns | **No LICENSE file** → all rights reserved | No — no grant to copy exists |
+| [`CERN-STEAM-Academy/26-GPU-PROGRAMMING`](https://github.com/CERN-STEAM-Academy/26-GPU-PROGRAMMING) | GPU concepts, terminology, exercise sequence and common learner mistakes | **GPL-3.0** | Concepts only; no code copied |
+| `csc2026_e1` (CSC Latin America 2026 HEP Computing Exercises) | Pedagogical and engineering patterns | **No LICENSE file** → all rights reserved | Patterns only; no code copied |
 
-Both licenses were checked before any adaptation. In both cases the conclusion
-was the same: reuse the *ideas*, write the *code* from scratch.
-
-Ideas, teaching sequences, and facts about CUDA are not protected by copyright.
-Concrete expression is. Everything below is on the ideas side of that line.
+The licenses were checked before implementation. The GPL source cannot be
+copied into SimulaGPU without propagating its terms, and the unlicensed source
+grants no permission to copy. Ideas and facts were therefore separated from
+expression: understand the concept, close the reference, and write a different
+implementation with its own tests and explanation.
 
 ---
 
@@ -29,96 +31,97 @@ Concrete expression is. Everything below is on the ideas side of that line.
 ### S-1 — Vector addition as the first exercise
 
 - **Source path:** `1-vector-add/`
-- **Reused:** the choice of vector addition as the entry point to CUDA, and the
-  learning outcomes attached to it (thread indexing, bounds guard, launch
-  configuration, transfers, validation against a CPU reference).
-- **Status:** concept only. Rewritten from first principles.
-- **Note:** the concept is standard across the CUDA literature; this repository
-  is where SimulaGPU took it from.
+- **Reused:** vector addition as the entry point to CUDA; global indexing,
+  bounds guards, launch configuration, transfers, and validation against a CPU
+  reference.
+- **Status:** concept only; rewritten from scratch in lesson 01.
 
-### S-2 — The deliberately broken kernel
+### S-2 — A deliberately broken index
 
 - **Source path:** `1-vector-add/vector_add.cu`
-- **Reused:** the pedagogical device of shipping a kernel whose index line is
-  wrong (`int i = 0;   // Oops! Something is not right here, please fix it!`)
-  and asking the student to derive the correct expression.
-- **Status:** concept only. SimulaGPU's starter
-  (`native/exercises/01-vector-add/starter/`) is a different program with a
-  different structure, and extends the idea: in the original, only the index
-  line is broken and the guard and the ceiling division are handed to the
-  student. SimulaGPU breaks all four so each one is actually exercised, and
-  makes them host-testable so they can be checked without a GPU.
+- **Reused:** the teaching device of providing code that runs but contains an
+  incorrect thread-index expression.
+- **Status:** concept only. SimulaGPU independently expands the exercise to
+  cover index arithmetic, ceiling division, the boundary guard, and host-side
+  tests that run without CUDA.
 
-### S-3 — Validating against a sequential CPU function
-
-- **Source path:** `1-vector-add/vector_add.cu` (`vec_add`, `compare_arrays`)
-- **Reused:** the principle that a GPU result is only trustworthy when compared
-  element by element against a sequential CPU implementation.
-- **Status:** concept only. `native/common/src/vector_add_cpu.cpp` was written
-  from scratch. Two deliberate differences: the reference compares with a ULP
-  distance computed by type-punning through `unsigned int*`, which is undefined
-  behaviour in C++ and unnecessary here — plain `a + b` is a single correctly
-  rounded IEEE-754 operation, so the tolerance is exactly zero and a plain
-  comparison suffices. SimulaGPU also handles NaN explicitly.
-
-### S-4 — Individual CUDA error checks
+### S-3 — CPU oracle before performance
 
 - **Source path:** `1-vector-add/vector_add.cu`
-- **Reused:** the practice of checking the return code of every CUDA runtime
-  call, and of calling `cudaGetLastError()` after a launch.
-- **Status:** concept only, with a deliberate policy change. The reference
-  prints to `stderr` and continues. SimulaGPU aborts
-  (`native/common/include/simulagpu/cuda_check.cuh`); see
-  [ADR-0003](adr/0003-cuda-error-handling.md). SimulaGPU also checks
-  `cudaDeviceSynchronize()` after the launch, which the reference does not — it
-  synchronizes for timing, but does not inspect the result.
+- **Reused:** compare the device result against an obviously correct sequential
+  implementation before interpreting timings.
+- **Status:** concept only. SimulaGPU's CPU helpers, NaN handling and tests are
+  original.
 
-### S-5 — Ceiling division for the grid size
+### S-4 — CUDA error checks
 
 - **Source path:** `1-vector-add/vector_add.cu`
-  (`int nblocks = int(ceilf(n/(float)block_size));`)
-- **Reused:** the requirement itself.
-- **Status:** rewritten differently on purpose. SimulaGPU uses integer
-  arithmetic (`n / b + (n % b != 0)`) rather than a float round trip, which
-  loses precision above 2^24. The float form is not taught as an option.
+- **Reused:** inspect every CUDA runtime return value and check a kernel launch.
+- **Status:** concept only, with a different policy. SimulaGPU reports the file,
+  line and call, then stops instead of continuing after a failed allocation or
+  launch. It also checks asynchronous execution failures.
 
-### S-6 — Kernel timing
+### S-5 — Ceiling division
 
-- **Source path:** `1-vector-add/timer.h`, `1-vector-add/timer.cc`
-- **Reused:** the idea of separating "time the CPU function" from "time the GPU
-  function", and of synchronizing around the launch.
-- **Status:** **not reused as code.** The reference timer is a GPL-licensed
-  `rdtsc`-based class with inline x86/PPC assembly that `#error`s on
-  unrecognized architectures. SimulaGPU uses `std::chrono::steady_clock` on the
-  host and CUDA events on the device
-  (`native/common/include/simulagpu/timing.hpp`,
-  `native/common/include/simulagpu/cuda_check.cuh`). SimulaGPU additionally
-  reports end-to-end time, which the reference never measures.
+- **Source path:** `1-vector-add/vector_add.cu`
+- **Reused:** a grid must round upward so every input element has a thread.
+- **Status:** rewritten using integer arithmetic instead of a floating-point
+  `ceilf` round trip.
 
-### S-7 — Terminology
+### S-6 — Timing boundaries
 
-- **Reused:** Spanish and English vocabulary for grid / block / thread,
-  `blockIdx.x`, `blockDim.x`, `threadIdx.x`, host, device, kernel.
-- **Status:** standard CUDA terminology from the NVIDIA programming guide. No
-  attribution obligation; recorded for traceability.
+- **Source paths:** `1-vector-add/timer.h`, `1-vector-add/timer.cc`
+- **Reused:** distinguish CPU work from GPU work and synchronize before reading
+  a device timing.
+- **Status:** no code reused. SimulaGPU uses `std::chrono::steady_clock` and CUDA
+  events, and reports kernel-only and end-to-end time separately.
 
-### S-8 — Topic progression
+### S-7 — Reduction as the second concrete GPU problem
 
-- **Source paths:** `2-reduction/`, `3-bfs/`, `4-reduction_fast/`,
-  `5-matrix_sum/`, `6-garbage-collection/`, `7-puzzle/`
-- **Reused:** the ordering of later topics — naive reduction, optimized
-  reduction, 2D indexing, graph search, applied symbolic reasoning — as the
-  compatibility target the v0.1 foundation must not paint itself out of.
-- **Status:** informs `docs/roadmap.md` only. No code inspected beyond the
-  topic each directory covers.
+- **Source path:** `2-reduction/reduction.cu`
+- **Reused:** move from independent element-wise work to a many-to-one sum;
+  reduce adjacent pairs over repeated passes; preserve an odd tail; validate
+  against a more reliable CPU sum; and make the student implement the missing
+  reduction kernel.
+- **Status:** concept only; **rewritten from scratch**. SimulaGPU uses different
+  APIs, file layout, test cases, error handling and teaching code. Its browser
+  laboratory is a deterministic CPU model that does not exist in the source.
 
-### S-9 — Clase 0: grid / block / thread terminology
+### S-8 — Floating-point reduction needs a real reference
+
+- **Source path:** `2-reduction/reduction.cu` (`sum_floats_kahan` and result
+  comparison).
+- **Reused:** a parallel reduction changes addition order, so validation should
+  not assume bitwise equality with a naive sequential float accumulation.
+- **Status:** concept only. SimulaGPU independently implements a Kahan-style
+  double reference, explicit finite-value checks, and absolute-plus-relative
+  tolerance helpers.
+
+### S-9 — Topic progression and optimized reduction vocabulary
+
+- **Source paths:** `2-reduction/`, `4-reduction_fast/`, `5-matrix_sum/`,
+  `3-bfs/`, `6-garbage-collection/`, `7-puzzle/`
+- **Reused:** the course progression from introductory reduction toward memory
+  hierarchy, optimized reductions, multidimensional indexing and irregular
+  algorithms.
+- **Status:** curriculum guidance only. Lesson 02 discusses shared memory and
+  synchronization as the next optimization layer, but its introductory CUDA
+  implementation deliberately uses one global-memory pass per launch so
+  correctness remains visible.
+
+### S-10 — Standard CUDA terminology
+
+- **Reused:** grid, block, thread, host, device, kernel, shared memory,
+  `__syncthreads`, and atomics.
+- **Status:** standard platform terminology; recorded for traceability.
+
+### S-11 — Clase 0: grid / block / thread terminology
 
 - **Reused:** the same standard Spanish and English vocabulary for grid /
-  block (bloque) / thread (hilo), host and device already recorded in S-7,
+  block (bloque) / thread (hilo), host and device already recorded in S-10,
   reused consistently in the new introductory Clase 0.
 - **Status:** standard CUDA terminology from the NVIDIA programming guide,
-  same as S-7. No attribution obligation; recorded for traceability.
+  same as S-10. No attribution obligation; recorded for traceability.
 - **Note:** the byte/chunk framing (`número de chunks = ceil(bytes totales /
   bytes por chunk)`), the ten-step guided sequence, and the
   `SimuladorIsometricoGPU` visualization are original to SimulaGPU. Neither
@@ -131,117 +134,99 @@ Concrete expression is. Everything below is on the ideas side of that line.
 
 ## From `csc2026_e1`
 
-### S-20 — "Correctness first, then parallelism, then performance"
+### S-20 — Correctness, then parallelism, then performance
 
 - **Source path:** `README.md`
-- **Reused:** the ordering principle, and the decision to make it an explicit
-  rule rather than an implicit habit.
-- **Status:** concept only. Restated in `AGENTS.md` and
-  `docs/architecture.md`.
+- **Reused:** the ordering principle used throughout lessons and reviews.
+- **Status:** concept only.
 
 ### S-21 — Self-contained exercise layout
 
 - **Source paths:** `exercises/SD-E1-parallel-event-processing/`,
   `exercises/TT-E1-debugging-sanitizers/`
-- **Reused:** the structure — an exercise directory with a `README.md` covering
-  learning objectives, a timebox, success criteria and exact commands, plus a
-  `starter/` that is its own CMake project with its own tests.
-- **Status:** structural pattern only. SimulaGPU's
-  `native/exercises/01-vector-add/` was written from scratch and differs in one
-  respect: starter and solution share a single test file, so "the same tests now
-  pass" is the literal success criterion.
+- **Reused:** an exercise README with objectives, exact commands and success
+  criteria; a standalone starter CMake project; and tests that provide a clear
+  completion condition.
+- **Status:** structural pattern only. SimulaGPU's exercises share one test file
+  between starter and solution and have independently written code.
 
-### S-22 — Deliberately incorrect starter code
+### S-22 — Deliberately incorrect but runnable starter
 
 - **Source path:** `exercises/SD-E1-parallel-event-processing/starter/README.md`
-  ("This project contains a deliberately incorrect parallel implementation.")
-- **Reused:** the principle that a starter should compile and run while being
-  wrong, rather than be a skeleton with missing files.
-- **Status:** concept only. Independently reinforced by S-2.
+- **Reused:** start from plausible wrong behavior rather than missing files or
+  functions that do not link.
+- **Status:** concept only. Lesson 02's starter overlaps pairs, mishandles the
+  odd tail, and still compiles so each failure can be diagnosed.
 
-### S-23 — CMake + Ninja workflow
+### S-23 — CMake, Ninja and CTest workflow
 
-- **Source paths:** `CMakeLists.txt`, `exercises/*/starter/CMakeLists.txt`
-- **Reused:** feature `option()`s with sensible defaults, a shared warning
-  variable applied to project targets only (not to dependencies),
-  `include(CTest)` with one test executable per unit, and
-  `cmake -B build -G Ninja` as the documented workflow.
-- **Status:** these are idiomatic modern CMake conventions rather than original
-  expression. `native/CMakeLists.txt` was written from scratch. It diverges in
-  one important way: SimulaGPU has **no `FetchContent`**, so configuring needs
-  no network. See [ADR-0004](adr/0004-no-test-framework-dependency.md).
+- **Source paths:** root and exercise `CMakeLists.txt` files
+- **Reused:** feature options, warnings on project targets, standalone exercise
+  builds, and CTest as the success signal.
+- **Status:** idiomatic build patterns, independently implemented. SimulaGPU's
+  native tree has no third-party dependency and configures offline.
 
-### S-24 — Sanitizers as a teaching tool
-
-- **Source paths:** `CMakeLists.txt` (`ENABLE_SANITIZERS`),
-  `.github/workflows/ci.yml`
-- **Reused:** exposing ASan + UBSan behind a single CMake option so students can
-  reproduce a memory bug on demand.
-- **Status:** concept only, and reduced in scope. SimulaGPU exposes
-  `SIMULAGPU_ENABLE_SANITIZERS` but does not run a sanitizer job in CI: v0.1 has
-  no memory-bug exercise for it to guard.
-
-### S-25 — CI as a teaching guardrail
+### S-24 — CI as a teaching guardrail
 
 - **Source path:** `.github/workflows/ci.yml`
-- **Reused:** the idea that CI teaches by failing — build, test, lint and docs
-  as separate visible steps.
-- **Status:** concept only. `.github/workflows/ci.yml` was written from
-  scratch and is much smaller: no ROOT container, no Python, no benchmark job,
-  no clang-tidy. v0.1 has nothing for those to check.
+- **Reused:** CI should not only build the solution; it should also ensure a
+  deliberately incorrect starter still fails for the intended reason.
+- **Status:** concept only. SimulaGPU's workflow is independently written and
+  CPU-safe.
 
-### S-26 — Reproducible benchmarks
+### S-25 — Reproducible performance claims
 
-- **Source paths:** `benchmarks/`, the `benchmarks` CI job
-- **Reused:** the principle that a performance claim needs a reproducible
-  measurement behind it.
-- **Status:** **adopted as a constraint, not as a feature.** SimulaGPU v0.1 has
-  no benchmark harness, and therefore publishes no performance numbers. The
-  example measures itself and prints what it measured on the machine it ran on.
+- **Source paths:** benchmark configuration and CI
+- **Reused:** a performance claim needs a reproducible measurement behind it.
+- **Status:** adopted as a constraint. Examples print local timings, but the
+  repository publishes no hardware-independent speedup claim.
 
 ---
 
 ## Original to SimulaGPU
 
-Written from scratch, with no source-level counterpart in either reference
-repository:
+Written for this repository with no source-level counterpart copied from either
+reference:
 
-- the whole web stack: `packages/contracts`, `packages/core`,
-  `packages/visuals`, `packages/theme`, `apps/docs`;
-- the deterministic thread-index teaching model and its URL serialization;
-- the `ExploradorIndiceGlobal` visualization;
+- the one-way web architecture: `contracts → core → visuals → apps/docs`;
+- the deterministic, immutable thread-index and reduction teaching models;
 - the deterministic chunk-flow teaching model (`packages/core/src/chunk-flow`)
   behind Clase 0, its byte/chunk framing, its ten-step guided sequence, and
   the `SimuladorIsometricoGPU` visualization;
-- all Spanish lesson content;
-- the Anki deck, its YAML schema and the generator;
-- `native/common`, `native/examples/vector-add`,
-  `native/exercises/01-vector-add`;
-- the header-only test helper (`test_assert.hpp`);
-- all CMake and CI configuration.
+- `ExploradorIndiceGlobal` and `LaboratorioReduccion`;
+- the select-based guided kernel editor and its browser-side CPU test runner;
+- all Spanish lesson and exercise text;
+- the C++ CPU helpers, native examples, CUDA implementations and tests;
+- the starter/solution exercises for vector addition and reduction;
+- the Anki YAML sources, schema and deterministic TSV generator;
+- all CMake, CI and documentation configuration.
 
 ## Third-party runtime and build dependencies
 
-Web (see `pnpm-lock.yaml` for exact versions): Vue, VitePress, Vite, Vitest,
-TypeScript, ESLint, Prettier, `js-yaml`, `@vue/test-utils`, `happy-dom`. All MIT
-or similarly permissive; none is vendored into the repository.
+Web dependencies are recorded exactly in `pnpm-lock.yaml`: Vue, VitePress,
+Vite, Vitest, TypeScript, ESLint, Prettier, `js-yaml`, Vue Test Utils and
+`happy-dom`. None is vendored.
 
-Native: **none.** `native/` compiles with a C++17 compiler and CMake alone.
+Native dependencies: **none** beyond a C++17 compiler and CMake. CUDA files are
+included only when CMake detects or requires a CUDA compiler.
 
-## Verification status of the CUDA code
+## Verification status of CUDA code
 
-`native/examples/vector-add/vector_add_cuda.cu`,
-`native/exercises/01-vector-add/solution/src/vector_add.cu` and
-`native/exercises/01-vector-add/starter/src/vector_add.cu` have **not been
-compiled or executed**. v0.1 was authored on a machine with no NVIDIA GPU and no
-`nvcc`. They are written against the documented CUDA runtime API and reviewed by
-hand, and they are isolated behind optional CMake detection so their state
-cannot affect the CPU-only build. This is stated on the site as well, in
-`apps/docs/referencia/fuentes.md` and on the landing page.
+Standard CI builds and tests the complete CPU-only configuration. It does not
+install `nvcc` and has no physical GPU, so these CUDA translation units remain
+outside the gating build:
+
+- `native/examples/vector-add/vector_add_cuda.cu`;
+- `native/examples/reduction/reduction_cuda.cu`;
+- both starter and solution CUDA files under exercises 01 and 02.
+
+They are isolated behind optional CUDA detection, use the documented runtime
+API, and are reviewed as source, but no claim is made that CI compiled or ran
+them. The browser laboratory likewise does not compile CUDA or emulate GPU
+hardware.
 
 ## Licensing of SimulaGPU itself
 
-v0.1 ships **no `LICENSE` file**, which means all rights reserved by default.
-That is a decision for the repository owner, not one to be made implicitly by a
-scaffold. Until it is made, the content here should be treated as
-"viewable, not reusable". Tracked in `docs/roadmap.md`.
+The repository currently has no `LICENSE` file, so it is all rights reserved by
+default. Choosing a license remains an explicit owner decision tracked in the
+roadmap.
