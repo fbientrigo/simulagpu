@@ -68,6 +68,38 @@ describe('lección 01', () => {
     }
   });
 
+  it('describes the guided walkthrough the explorer opens on', () => {
+    expect(lesson01).toContain('recorrido guiado');
+    // The preset the component starts from, so the prose and the screen agree.
+    expect(lesson01).toContain('`n = 10` y bloques de 4');
+    expect(lesson01).toContain('exploración libre');
+  });
+
+  it('lists the guided steps in the order the model builds them', () => {
+    const positions = [
+      'cuántos elementos hay',
+      'cuántos bloques hacen falta',
+      'qué hilo eres',
+      'qué índice global te toca',
+      'si pasas el guard',
+      'qué elemento acabas procesando',
+    ].map((fragment) => {
+      const at = lesson01.indexOf(fragment);
+      expect(at, `la lección no describe el paso: ${fragment}`).toBeGreaterThan(-1);
+      return at;
+    });
+    expect(positions).toEqual([...positions].sort((left, right) => left - right));
+  });
+
+  it('describes files that exist', () => {
+    for (const path of [
+      'packages/visuals/src/ExploradorIndiceGlobal.vue',
+      'packages/core/src/thread-index/guided.ts',
+    ]) {
+      expect(existsSync(repoPath(path)), `${path} no existe en el repositorio`).toBe(true);
+    }
+  });
+
   it('does not claim the visualization executes CUDA', () => {
     expect(lesson01).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
   });
