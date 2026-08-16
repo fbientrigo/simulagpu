@@ -1,0 +1,51 @@
+/*
+ * Landing-page-only tokens and layout overrides.
+ *
+ * Scoped defensively: every selector below either targets `--sgpu-landing-*`
+ * custom properties (a namespace no lesson visualization uses) or the
+ * VitePress home-layout class, so this file cannot bleed into lesson pages.
+ */
+
+:root {
+  --sgpu-landing-accent: #7c3aed;
+  --sgpu-landing-accent-contrast: #ffffff;
+  --sgpu-landing-accent-shadow: rgba(124, 58, 237, 0.45);
+
+  --sgpu-landing-pill-bg: #f3e8ff;
+  --sgpu-landing-pill-border: #d8b4fe;
+  --sgpu-landing-pill-text: #6d28d9;
+
+  --sgpu-landing-chip-package: #ffffff;
+  --sgpu-landing-chip-package-border: #e9d5ff;
+  --sgpu-landing-chip-die: #f3e8ff;
+  --sgpu-landing-chip-die-border: #c4b5fd;
+  --sgpu-landing-chip-core: #a78bfa;
+  --sgpu-landing-chip-cache: #c4b5fd;
+  --sgpu-landing-chip-memory: #ddd6fe;
+  --sgpu-landing-chip-memory-border: #a78bfa;
+  --sgpu-landing-chip-pin: #c4b5fd;
+
+  --sgpu-landing-bg-opacity: 0.08;
+}
+
+.dark {
+  --sgpu-landing-accent: #a78bfa;
+  --sgpu-landing-accent-contrast: #1e1033;
+  --sgpu-landing-accent-shadow: rgba(167, 139, 250, 0.35);
+
+  --sgpu-landing-pill-bg: #2e1065;
+  --sgpu-landing-pill-border: #6d28d9;
+  --sgpu-landing-pill-text: #ddd6fe;
+
+  --sgpu-landing-chip-package: #1e1033;
+  --sgpu-landing-chip-package-border: #4c1d95;
+  --sgpu-landing-chip-die: #2e1065;
+  --sgpu-landing-chip-die-border: #6d28d9;
+  --sgpu-landing-chip-core: #a78bfa;
+  --sgpu-landing-chip-cache: #6d28d9;
+  --sgpu-landing-chip-memory: #4c1d95;
+  --sgpu-landing-chip-memory-border: #8b5cf6;
+  --sgpu-landing-chip-pin: #6d28d9;
+
+  --sgpu-landing-bg-opacity: 0.14;
+}

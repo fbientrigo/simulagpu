@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "vite/client"],
     "paths": {
       "@simulagpu/contracts": ["./packages/contracts/src/index.ts"],
       "@simulagpu/core": ["./packages/core/src/index.ts"],
