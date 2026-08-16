@@ -17,8 +17,7 @@ const emit = defineEmits<{ enter: [] }>();
         desde dentro de la GPU.
       </h1>
       <p class="intro__sub">
-        Ve hilos, memoria y sincronización como operaciones que puedes inspeccionar,
-        no como una caja negra.
+        Ve hilos, memoria y sincronización como operaciones que puedes inspeccionar, no como una caja negra.
       </p>
       <button
         type="button"

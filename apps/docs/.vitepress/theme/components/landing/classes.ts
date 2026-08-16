@@ -34,7 +34,8 @@ export const landingClasses: LandingClass[] = [
     id: 'indice-global',
     eyebrow: 'Clase 01',
     title: 'Índice global',
-    description: 'Cómo una grilla reparte un vector entre hilos: guard de límites y división redondeada hacia arriba.',
+    description:
+      'Cómo una grilla reparte un vector entre hilos: guard de límites y división redondeada hacia arriba.',
     href: '/leccion/indice-global-suma-vectores',
     secondary: { label: 'Ejercicio 01', href: '/leccion/ejercicio-01-suma-de-vectores' },
   },
