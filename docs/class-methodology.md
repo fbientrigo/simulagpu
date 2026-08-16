@@ -8,6 +8,16 @@ reference implementation of the SimulaGPU interactive primitive engine. This
 document freezes the behavioral, architectural, and visual contract for future
 CUDA primitives without prematurely extracting a generic UI framework.
 
+`ClaseCudaMalloc` is also the canonical interaction/visual reference for every
+interactive teaching component in this repository, not only future
+single-primitive lessons. Older visualizations (e.g. `ExploradorIndiceGlobal`,
+`LaboratorioReduccion`) are sources of pedagogical intent and deterministic
+model truth only — never of visual language. When replacing or migrating a
+legacy visualization, preserve its correct model truth and learning intent,
+but present it with the canonical grammar in section 4 below (index/value
+separation, explicit semantic states, stable index order, before/action/after,
+mobile-first, no hover) rather than that component's original presentation.
+
 ---
 
 ## 1. Engine Purpose and Mental Model
