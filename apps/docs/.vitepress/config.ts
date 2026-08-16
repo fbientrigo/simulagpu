@@ -36,7 +36,7 @@ export default defineConfig({
     lastUpdatedText: 'Última actualización',
 
     nav: [
-      { text: 'Lección', link: '/leccion/indice-global-suma-vectores' },
+      { text: 'Clases', link: '/clases/cuda-malloc' },
       { text: 'Guía', link: '/guia/instalacion' },
       { text: 'Referencia', link: '/referencia/arquitectura' },
     ],
@@ -49,6 +49,10 @@ export default defineConfig({
           { text: 'Instalación', link: '/guia/instalacion' },
           { text: 'Comandos', link: '/guia/comandos' },
         ],
+      },
+      {
+        text: 'Clases — una primitiva cada vez',
+        items: [{ text: 'Clase 01: cudaMalloc', link: '/clases/cuda-malloc' }],
       },
       {
         text: 'Lección 01 — Índice global',

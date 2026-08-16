@@ -1,0 +1,31 @@
+# Repaso corto de la clase cudaMalloc.
+# Estos ids también identifican las tarjetas de la minisession local.
+
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /clases/cuda-malloc
+
+cards:
+  - id: malloc-001
+    tipo: memoria
+    anverso: '¿`cudaMalloc` inicializa la memoria del device?'
+    reverso: 'No. Solo reserva la asignación; su contenido queda indefinido.'
+    etiquetas: [cuda-malloc, memoria, inicializacion]
+
+  - id: malloc-002
+    tipo: memoria
+    anverso: '¿Qué modifica `cudaMalloc(&d_A, bytes)` cuando tiene éxito?'
+    reverso: 'Escribe en `d_A` un puntero a una nueva asignación de `bytes` en el device.'
+    etiquetas: [cuda-malloc, memoria, punteros]
+
+  - id: malloc-003
+    tipo: memoria
+    anverso: '¿`cudaMalloc` cambia o elimina el arreglo `h_A` del host?'
+    reverso: 'No. `h_A` y sus valores permanecen iguales.'
+    etiquetas: [cuda-malloc, memoria, host-device]
+
+  - id: malloc-004
+    tipo: errores
+    anverso: '¿Qué debes hacer con el resultado de `cudaMalloc`?'
+    reverso: 'Comprobar el código de error y, si tuvo éxito, liberar después con `cudaFree`.'
+    etiquetas: [cuda-malloc, errores, cuda-free]

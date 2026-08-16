@@ -118,6 +118,25 @@ Encoding and decoding live in `packages/core`. Reading and writing
 that touches a browser global, guarded with `typeof window === 'undefined'` so
 that VitePress's SSR pass renders the component server-side.
 
+### 1.5 Primitive classes and local learner state
+
+A class is a smaller pedagogical unit inside a complete lesson: one CUDA
+primitive or core concept following `SEE -> PREDICT -> EXECUTE -> EXPLAIN ->
+QUIRK -> CHECK -> RETAIN`. The first implementation and acceptance contract are
+recorded in [`docs/class-methodology.md`](class-methodology.md).
+
+The `cudaMalloc` class adds a second teaching model, not a visualization
+framework. Its config contains only the element count; the snapshot contains
+both before and after truth. The selected frame, prediction, quiz answers, and
+review position remain Vue presentation state.
+
+Learner progress is compact application state under the versioned browser key
+`simulagpu:v1:learner`. Browser access and schema fallback live in the
+class-specific visuals module. `packages/contracts` and `packages/core` remain
+free of `window`, `localStorage`, and all other platform APIs. Storage failure
+returns a fresh in-memory state and never blocks the class. This is deliberately
+not a global store: no second component consumes the state.
+
 ---
 
 ## 2. Native layer

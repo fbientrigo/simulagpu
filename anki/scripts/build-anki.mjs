@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Build the importable Anki TSV from the YAML sources in anki/cards/.
  *

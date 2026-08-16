@@ -7,8 +7,8 @@ hero:
   tagline: Modelos deterministas que puedes manipular, código que puedes ejecutar y ejercicios que puedes verificar — sin necesitar una GPU para empezar.
   actions:
     - theme: brand
-      text: Empezar por la lección 01
-      link: /leccion/indice-global-suma-vectores
+      text: Empezar por cudaMalloc
+      link: /clases/cuda-malloc
     - theme: alt
       text: Instalación
       link: /guia/instalacion
@@ -35,9 +35,10 @@ paralela. Cada lección enlaza cinco piezas que tratan del mismo tema:
 
 ## Estado: v0.1
 
-Esta versión contiene la arquitectura completa y **una** lección terminada de
-principio a fin:
+Esta versión conserva la lección vertical completa y añade la primera clase corta
+de la metodología **una primitiva por clase**:
 
+- [Clase 01: `cudaMalloc`](/clases/cuda-malloc) — predicción, transición, comprobaciones y repaso local
 - [Del índice global a la suma de vectores](/leccion/indice-global-suma-vectores)
 - [Ejercicio 01](/leccion/ejercicio-01-suma-de-vectores)
 - [Tarjetas Anki](/leccion/anki)

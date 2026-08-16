@@ -4,8 +4,9 @@ Plataforma educativa estática para aprender **programación GPU y paralela en
 español**: documentación, visualizaciones interactivas deterministas, código C++
 y CUDA ejecutable, ejercicios con pruebas, y tarjetas Anki.
 
-> **v0.1 — fundación.** La arquitectura está completa y hay **una** lección
-> terminada de principio a fin: *Del índice global a la suma de vectores*.
+> **v0.1 — fundación.** La arquitectura está completa, hay **una** lección
+> terminada de principio a fin y una primera clase interactiva de metodología
+> v2: *cudaMalloc: reservar no es inicializar*.
 
 ## Empezar
 
@@ -51,6 +52,25 @@ simulagpu/
 ├── docs/               documentación de ingeniería y ADRs
 └── tests/              pruebas transversales
 ```
+
+## Clase 01 — `cudaMalloc`: reservar no es inicializar
+
+Primera demostración de la metodología **una primitiva por clase**. Empieza con
+una predicción, recorre `ANTES → ACCIÓN → DESPUÉS`, separa lo que cambió de lo
+que no cambió, termina con tres comprobaciones y cuatro tarjetas. El progreso se
+guarda solo en `localStorage`, sin cuenta ni seguimiento.
+
+| Pieza | Dónde |
+| --- | --- |
+| Clase | [`apps/docs/clases/cuda-malloc.md`](apps/docs/clases/cuda-malloc.md) |
+| Visualización | [`packages/visuals/src/ClaseCudaMalloc.vue`](packages/visuals/src/ClaseCudaMalloc.vue) |
+| Modelo | [`packages/core/src/cuda-malloc/`](packages/core/src/cuda-malloc/) |
+| Tarjetas | [`anki/cards/01-cuda-malloc.yaml`](anki/cards/01-cuda-malloc.yaml) |
+| Metodología | [`docs/class-methodology.md`](docs/class-methodology.md) |
+
+La clase reutiliza el ejemplo y el ejercicio de suma de vectores como contexto
+ejecutable; no duplica código nativo para una reserva que no tiene un núcleo
+CPU equivalente útil.
 
 ## Lección 01 — Del índice global a la suma de vectores
 

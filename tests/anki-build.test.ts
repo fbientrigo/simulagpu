@@ -15,9 +15,8 @@ interface Row {
 const deck = loadCards() as { rows: Row[]; deck: string };
 
 describe('anki deck sources', () => {
-  it('builds a deck of the size the lesson promises', () => {
-    expect(deck.rows.length).toBeGreaterThanOrEqual(12);
-    expect(deck.rows.length).toBeLessThanOrEqual(18);
+  it('builds the 22 cards promised by the class and lesson pages', () => {
+    expect(deck.rows).toHaveLength(22);
   });
 
   it('covers every required area', () => {
@@ -33,6 +32,15 @@ describe('anki deck sources', () => {
     ]) {
       expect(tipos, `falta el tipo ${required}`).toContain(required);
     }
+  });
+
+  it('includes exactly the four permanent cudaMalloc class cards', () => {
+    expect(deck.rows.filter((row) => row.id.startsWith('malloc-')).map((row) => row.id)).toEqual([
+      'malloc-001',
+      'malloc-002',
+      'malloc-003',
+      'malloc-004',
+    ]);
   });
 
   it('gives every card a unique id', () => {

@@ -1,6 +1,6 @@
 ---
 title: Tarjetas Anki — Índice global
-description: Mazo de 18 tarjetas de repaso espaciado para la lección del índice global y la suma de vectores.
+description: Mazo de 22 tarjetas de repaso espaciado para la clase cudaMalloc y la lección del índice global.
 ---
 
 <script setup>
@@ -11,7 +11,7 @@ import { withBase } from 'vitepress';
 
 # Tarjetas Anki — Índice global
 
-Mazo de repaso espaciado de la lección
+Mazo de repaso espaciado de la [clase `cudaMalloc`](../clases/cuda-malloc) y de la lección
 [Del índice global a la suma de vectores](./indice-global-suma-vectores).
 
 <a :href="withBase('/descargas/simulagpu-anki.tsv')" download class="descarga-anki">
@@ -20,10 +20,12 @@ Mazo de repaso espaciado de la lección
 
 ## Qué contiene
 
-18 tarjetas, agrupadas por lo que preguntan:
+22 tarjetas: cuatro respuestas rápidas para cerrar la clase `cudaMalloc` y las
+18 tarjetas existentes de la lección amplia.
 
 | Área | Tarjetas | Ejemplo |
 | --- | --- | --- |
+| `cudaMalloc` | 4 | por qué reservar no inicializa ni cambia `h_A` |
 | Conceptual | 2 | qué sabe un hilo sobre sí mismo al arrancar |
 | Cálculo de índices | 3 | `blockIdx.x = 3`, `blockDim.x = 32`, `threadIdx.x = 5` → `i` |
 | Condiciones de frontera | 3 | cuántos hilos sobran con `n = 1000` y bloques de 256 |

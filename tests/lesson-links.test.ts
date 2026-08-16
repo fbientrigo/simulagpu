@@ -12,7 +12,33 @@ const repoPath = (path: string) => fileURLToPath(new URL(`../${path}`, import.me
 const read = (path: string) => readFileSync(repoPath(path), 'utf8');
 
 const LESSON = 'apps/docs/leccion/indice-global-suma-vectores.md';
+const CUDA_MALLOC_CLASS = 'apps/docs/clases/cuda-malloc.md';
 const lesson = read(LESSON);
+const cudaMallocClass = read(CUDA_MALLOC_CLASS);
+
+describe('clase cudaMalloc', () => {
+  it('embeds the focused interactive class', () => {
+    expect(cudaMallocClass).toContain('<ClaseCudaMalloc');
+    expect(read('apps/docs/.vitepress/theme/index.ts')).toContain("app.component('ClaseCudaMalloc'");
+  });
+
+  it('reuses the existing runnable example and exercise instead of duplicating native code', () => {
+    for (const path of ['native/examples/vector-add/vector_add_cuda.cu', 'native/exercises/01-vector-add']) {
+      expect(cudaMallocClass).toContain(path);
+      expect(existsSync(repoPath(path)), `${path} no existe`).toBe(true);
+    }
+  });
+
+  it('links to the broad lesson and downloadable Anki review', () => {
+    expect(cudaMallocClass).toContain('../leccion/indice-global-suma-vectores');
+    expect(cudaMallocClass).toContain('../leccion/anki');
+  });
+
+  it('states the model boundary and the allocation-not-initialization idea', () => {
+    expect(cudaMallocClass).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
+    expect(cudaMallocClass).toMatch(/reservar memoria no es inicializarla|no inicializa/i);
+  });
+});
 
 describe('lección 01', () => {
   it('embeds the interactive visualization', () => {

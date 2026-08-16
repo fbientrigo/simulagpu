@@ -89,6 +89,53 @@ regression.
 
 ---
 
+## Interactive primitive engine contract
+
+Authoritative contract for single-primitive interactive classes (`apps/docs/clases/`).
+Full detail in [`docs/class-methodology.md`](docs/class-methodology.md).
+
+- **Reference implementation:** `ClaseCudaMalloc.vue` (`packages/visuals/src/ClaseCudaMalloc.vue`)
+  with model in `packages/core/src/cuda-malloc/`.
+- **Learner flow:** `SEE → PREDICT → EXECUTE → EXPLAIN → QUIRK → CHECK → RETAIN`.
+- **Behavioral contract is frozen; abstractions are NOT:** Do not build a generic
+  primitive framework or universal schema from one instance. Extract shared
+  components only when a second real primitive demonstrates genuine repetition.
+- **Visual semantics vs theme:** Semantic state (`host`, `device`, `valid`, `empty`,
+  `undefined`, `changing`, `selected`, `invalid`) is contract; visual styling
+  (colors, spacing, typography) remains replaceable via `tokens.css`.
+
+### Protected invariants
+
+1. **Model:**
+   - Same normalized config produces deeply equal frozen snapshots.
+   - Zero clocks, `Math.random()`, I/O, or browser APIs in `contracts` and `core`.
+   - Model truth is independent of teaching step or visual replay.
+   - Visuals never mutate snapshots.
+2. **Pedagogical:**
+   - Visualizations are deterministic explanatory models, never CUDA/hardware simulators.
+   - Animations cannot contradict static state.
+   - Changing presentation cannot alter computed model truth.
+   - No performance claims without local measurement on the executing machine.
+   - Index and stored value are visually and conceptually distinct.
+   - *"Did not change"* is a first-class teaching outcome.
+3. **UI & Accessibility:**
+   - Primary path functions down to ~360 px without horizontal page scroll.
+   - No interaction requires hover.
+   - State never relies on color alone (must include label, symbol, or border cue).
+   - Touch targets ≥ 44 px, full keyboard navigability, and visible focus.
+   - `prefers-reduced-motion` eliminates animations while keeping state transitions.
+   - Primary scenes display at most 8 individual elements per conceptual layer.
+4. **Persistence:**
+   - Local learner cache is non-authoritative convenience under `simulagpu:v1:learner`.
+   - Storage failures fall back gracefully to in-memory state without breaking the lesson.
+   - No backend, authentication, or analytics required.
+   - Resetting local progress touches only the versioned key.
+
+Agents must run `pnpm test`, `pnpm lint`, `pnpm typecheck`, and native verification
+before modifying any engine behavior or adding new primitives.
+
+---
+
 ## Language policy
 
 **Spanish — learner-facing.** Everything a student reads:

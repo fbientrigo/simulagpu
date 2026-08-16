@@ -195,6 +195,9 @@ repository:
   `packages/visuals`, `packages/theme`, `apps/docs`;
 - the deterministic thread-index teaching model and its URL serialization;
 - the `ExploradorIndiceGlobal` visualization;
+- the class methodology v2 (`docs/class-methodology.md`), deterministic
+  `cudaMalloc` transition model, `ClaseCudaMalloc` interaction, local learner
+  cache, and four-card mini-review;
 - all Spanish lesson content;
 - the Anki deck, its YAML schema and the generator;
 - `native/common`, `native/examples/vector-add`,

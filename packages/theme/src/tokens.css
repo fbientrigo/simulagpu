@@ -24,6 +24,26 @@
 
   --sgpu-boundary-accent: #f59e0b;
 
+  --sgpu-host-bg: #e0f2fe;
+  --sgpu-host-border: #0284c7;
+  --sgpu-host-text: #0c4a6e;
+
+  --sgpu-device-bg: #f3e8ff;
+  --sgpu-device-border: #9333ea;
+  --sgpu-device-text: #581c87;
+
+  --sgpu-undefined-bg: #fef3c7;
+  --sgpu-undefined-border: #d97706;
+  --sgpu-undefined-text: #78350f;
+
+  --sgpu-changing-bg: #fffbeb;
+  --sgpu-changing-border: #f59e0b;
+  --sgpu-changing-text: #78350f;
+
+  --sgpu-invalid-bg: #fee2e2;
+  --sgpu-invalid-border: #dc2626;
+  --sgpu-invalid-text: #7f1d1d;
+
   --sgpu-surface: #ffffff;
   --sgpu-surface-muted: #f8fafc;
   --sgpu-border: #e2e8f0;
@@ -58,6 +78,26 @@
   --sgpu-selected-ring: rgba(167, 139, 250, 0.4);
 
   --sgpu-boundary-accent: #fbbf24;
+
+  --sgpu-host-bg: #082f49;
+  --sgpu-host-border: #38bdf8;
+  --sgpu-host-text: #e0f2fe;
+
+  --sgpu-device-bg: #3b0764;
+  --sgpu-device-border: #c084fc;
+  --sgpu-device-text: #f3e8ff;
+
+  --sgpu-undefined-bg: #451a03;
+  --sgpu-undefined-border: #fbbf24;
+  --sgpu-undefined-text: #fef3c7;
+
+  --sgpu-changing-bg: #422006;
+  --sgpu-changing-border: #fbbf24;
+  --sgpu-changing-text: #fef3c7;
+
+  --sgpu-invalid-bg: #450a0a;
+  --sgpu-invalid-border: #f87171;
+  --sgpu-invalid-text: #fee2e2;
 
   --sgpu-surface: #0f172a;
   --sgpu-surface-muted: #1e293b;
