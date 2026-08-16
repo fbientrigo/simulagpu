@@ -33,21 +33,12 @@ defineExpose({ focusHeading });
     </div>
 
     <ul class="class-map__grid">
-      <li
-        v-for="(item, i) in items"
-        :key="item.id"
-        class="class-map__item"
-        :style="{ '--i': i }"
-      >
+      <li v-for="(item, i) in items" :key="item.id" class="class-map__item" :style="{ '--i': i }">
         <a class="class-map__card" :href="item.href" data-test="class-card">
           <span class="class-map__eyebrow">{{ item.eyebrow }}</span>
           <span class="class-map__card-title">{{ item.title }}</span>
           <span class="class-map__desc">{{ item.description }}</span>
-          <span
-            v-if="item.secondary"
-            class="class-map__secondary"
-            data-test="class-card-secondary"
-          >
+          <span v-if="item.secondary" class="class-map__secondary" data-test="class-card-secondary">
             {{ item.secondary.label }} →
           </span>
         </a>
@@ -82,7 +73,9 @@ defineExpose({ focusHeading });
   color: var(--sgpu-text-muted);
   font-size: var(--sgpu-font-size-sm, 0.82rem);
   cursor: pointer;
-  transition: border-color 200ms ease, color 200ms ease;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease;
 }
 
 .class-map__back:hover,

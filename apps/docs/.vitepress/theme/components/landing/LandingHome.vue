@@ -34,9 +34,7 @@ const resolvedClasses = computed(() =>
   landingClasses.map((item) => ({
     ...item,
     href: withSiteBase(item.href),
-    secondary: item.secondary
-      ? { ...item.secondary, href: withSiteBase(item.secondary.href) }
-      : undefined,
+    secondary: item.secondary ? { ...item.secondary, href: withSiteBase(item.secondary.href) } : undefined,
   })),
 );
 
