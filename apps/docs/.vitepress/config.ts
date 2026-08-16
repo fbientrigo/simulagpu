@@ -36,7 +36,10 @@ export default defineConfig({
     lastUpdatedText: 'Última actualización',
 
     nav: [
+      { text: 'Clase 0', link: '/clase-0/modelo-mental-gpu' },
       { text: 'Clases', link: '/clases/cuda-malloc' },
+      { text: 'Clases', link: '/leccion/indice-global-suma-vectores' },
+      { text: 'Laboratorio de reducción', link: '/leccion/reduccion-paralela#laboratorio-interactivo' },
       { text: 'Guía', link: '/guia/instalacion' },
       { text: 'Referencia', link: '/referencia/arquitectura' },
     ],
@@ -51,16 +54,31 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Clases — una primitiva cada vez',
+        text: 'Clase complementaria — cudaMalloc',
         items: [{ text: 'Clase 01: cudaMalloc', link: '/clases/cuda-malloc' }],
       },
       {
-        text: 'Lección 01 — Índice global',
+        text: 'Clase 0 — Modelo mental',
+        items: [{ text: 'El modelo mental de una GPU', link: '/clase-0/modelo-mental-gpu' }],
+      },
+      {
+        text: 'Clase 01 — Índice global',
         items: [
           { text: 'Del índice global a la suma de vectores', link: '/leccion/indice-global-suma-vectores' },
           { text: 'Ejercicio 01: suma de vectores', link: '/leccion/ejercicio-01-suma-de-vectores' },
-          { text: 'Tarjetas Anki', link: '/leccion/anki' },
         ],
+      },
+      {
+        text: 'Clase 02 — Reducción paralela',
+        items: [
+          { text: 'De la suma a una reducción en árbol', link: '/leccion/reduccion-paralela' },
+          { text: 'Laboratorio interactivo', link: '/leccion/reduccion-paralela#laboratorio-interactivo' },
+          { text: 'Ejercicio 02: una pasada', link: '/leccion/ejercicio-02-reduccion' },
+        ],
+      },
+      {
+        text: 'Repaso',
+        items: [{ text: 'Tarjetas Anki — Clases 01 y 02', link: '/leccion/anki' }],
       },
       {
         text: 'Referencia',
@@ -75,7 +93,7 @@ export default defineConfig({
 
     footer: {
       message: 'Contenido educativo escrito para SimulaGPU. Ver la página de fuentes y atribución.',
-      copyright: 'SimulaGPU v0.1',
+      copyright: 'SimulaGPU',
     },
   },
 });

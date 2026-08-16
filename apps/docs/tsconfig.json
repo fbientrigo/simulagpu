@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["vite/client"]
   },
-  "include": [".vitepress/**/*.ts", ".vitepress/**/*.vue"],
+  "include": ["env.d.ts", ".vitepress/**/*.ts", ".vitepress/**/*.vue"],
   "exclude": [".vitepress/cache", ".vitepress/dist"]
 }

@@ -52,11 +52,13 @@ dependencies, `core` depends only on `contracts`, `visuals` depends on
    snapshot.
 
 4. **Presentation stages change what is shown, never what is computed.** The
-   explorer's `vista` (`estructura` / `indices` / `memoria`) lives in the Vue
-   component and is absent from `ThreadIndexConfig` and `ThreadIndexSnapshot`.
-   Two tests enforce this: one asserts the snapshot exposes no view-related
-   property, another switches stages and asserts every rendered number is
-   unchanged.
+   explorer's `vista` (`estructura` / `indices` / `memoria`), its mode
+   (`guiado` / `libre`), the step it is on and the checkpoints answered so far
+   all live in the Vue component. None of them appears in `ThreadIndexConfig`,
+   `ThreadIndexSnapshot`, `GuidedTour` or the URL. Tests enforce this from both
+   sides: the model tests assert no view-related property leaks into a snapshot
+   or a tour, and the component test switches stages and asserts every rendered
+   number is unchanged.
 
 5. **Snapshots are immutable and JSON-serializable.** `Object.freeze` at every
    level; `JSON.parse(JSON.stringify(snapshot))` deep-equals the original. No
@@ -107,11 +109,58 @@ The `maxRenderedBlocks` limit is a rendering budget, not a model limit. The
 snapshot always contains every block; the component draws the first 64 and says
 how many it left out.
 
+### 1.3.1 The guided walkthrough
+
+```
+ThreadIndexSnapshot
+        │ buildGuidedTour     pure, frozen, JSON-serializable
+        ▼
+GuidedTour               six steps, each with its numbers already substituted
+```
+
+The walkthrough is the default experience of the explorer, and its **content**
+is model output, not view code: `packages/core/src/thread-index/guided.ts` turns
+a snapshot into the six steps a learner reads — the problem, `gridDim.x`, which
+thread we are, the global index, the guard, the element — plus four checkpoints
+whose questions, options and feedback are all derived from the same snapshot.
+A checkpoint's distractors are the mistakes students actually make (floor
+division instead of ceiling; `blockIdx.x + threadIdx.x`; forgetting to add
+`threadIdx.x`), so a wrong answer can be answered with a reason rather than a
+buzzer.
+
+This is a second module, not a generalization: there is no tour framework, no
+step registry, no reusable quiz engine. It builds one specific walkthrough for
+one specific model.
+
+Two boundaries keep it on the right side of rule 4:
+
+- **Content is computed; progress is not.** Which step is on screen and which
+  checkpoints have been answered live in the component, exactly like `vista`.
+  `GuidedTour` has no notion of "current".
+- **The component owns disclosure, the model owns truth.** The walkthrough
+  reveals a fact only once the learner has met the step that introduces it —
+  the grid does not display global indices while the learner is being asked to
+  compute one. That is a rendering decision; every number it eventually shows
+  still comes from the snapshot, unchanged.
+
+Because every number a checkpoint depends on is written into its question text,
+the component keys answers by question rather than by checkpoint id. Changing
+`n` retires the answer about `gridDim.x`; selecting a different thread does not.
+
 ### 1.4 URL state
 
 The explorer's state serializes to `?n=100&bs=32&b=3&t=5`. Keys are short and
 frozen: once a lesson or a lecturer's slide links to one of these URLs, it must
-keep resolving.
+keep resolving. The mode and the current step are deliberately *not* in there:
+they are how someone is looking at the model, not which model they are looking
+at, and rule 4 keeps them out.
+
+An empty query is the one case where the component does not use
+`DEFAULT_THREAD_INDEX_CONFIG`: with nothing to restore it starts the walkthrough
+on `GUIDED_THREAD_INDEX_CONFIG` (`n = 10`, `blockDim.x = 4`), which is twelve
+threads across three blocks — small enough to read whole on a phone, and already
+short by two. The default config stays what an empty or unparseable query
+*decodes* to, so the URL contract is unchanged.
 
 Encoding and decoding live in `packages/core`. Reading and writing
 `window.location` lives in the Vue component — the only place in the web layer

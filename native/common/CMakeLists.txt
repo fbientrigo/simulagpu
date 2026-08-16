@@ -13,7 +13,7 @@ target_compile_options(simulagpu_common PRIVATE ${SIMULAGPU_WARNINGS})
 add_library(simulagpu::common ALIAS simulagpu_common)
 
 if(SIMULAGPU_BUILD_TESTS)
-  foreach(test_name launch vector_add_cpu)
+  foreach(test_name launch vector_add_cpu reduction)
     add_executable(test_${test_name} tests/test_${test_name}.cpp)
     target_link_libraries(test_${test_name} PRIVATE simulagpu_common)
     target_compile_options(test_${test_name} PRIVATE ${SIMULAGPU_WARNINGS})

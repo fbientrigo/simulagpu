@@ -1,6 +1,11 @@
 import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
-import { ClaseCudaMalloc, ExploradorIndiceGlobal } from '@simulagpu/visuals';
+import {
+  ClaseCudaMalloc,
+  ExploradorIndiceGlobal,
+  LaboratorioReduccion,
+  SimuladorIsometricoGPU,
+} from '@simulagpu/visuals';
 
 /**
  * The documentation application is the only layer allowed to wire
@@ -11,6 +16,8 @@ const theme: Theme = {
   enhanceApp({ app }) {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
+    app.component('SimuladorIsometricoGPU', SimuladorIsometricoGPU);
+    app.component('LaboratorioReduccion', LaboratorioReduccion);
   },
 };
 

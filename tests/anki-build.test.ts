@@ -15,8 +15,11 @@ interface Row {
 const deck = loadCards() as { rows: Row[]; deck: string };
 
 describe('anki deck sources', () => {
-  it('builds the 22 cards promised by the class and lesson pages', () => {
-    expect(deck.rows).toHaveLength(22);
+  it('builds the 34 cards promised by the lesson pages', () => {
+    expect(deck.rows).toHaveLength(34);
+    expect(deck.rows.filter((row) => row.id.startsWith('idx-'))).toHaveLength(18);
+    expect(deck.rows.filter((row) => row.id.startsWith('red-'))).toHaveLength(12);
+    expect(deck.rows.filter((row) => row.id.startsWith('malloc-'))).toHaveLength(4);
   });
 
   it('covers every required area', () => {

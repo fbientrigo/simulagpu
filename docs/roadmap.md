@@ -2,148 +2,159 @@
 
 Engineering document (English).
 
-The unit of progress is a **vertical slice**: documentation, a deterministic
-visualization with unit tests, runnable code, an exercise with starter and
-solution, and Anki cards — all linked together, all passing CI. A stage is not
-done until every one of those exists.
+The unit of progress is a **vertical slice**: Spanish documentation, a
+deterministic interactive model with tests, runnable CPU/CUDA code, a starter
+and solution sharing one test contract, and Anki cards. A topic is not a class
+until every piece exists and CI validates the CPU-safe path.
 
-Stages after v0.1 are ordered by dependency, not by date. No dates are given
-because none would be honest.
+Stages are ordered by learning dependency, not by date.
 
 ---
 
-## v0.1 — Foundation ✅
+## Foundation and class 01 — complete
 
-Architecture plus one complete vertical slice.
+- pnpm workspace: `contracts → core → visuals → apps/docs`
+- CMake tree: `common → examples → exercises → tests`
+- optional CUDA detection with a complete CPU-only build
+- Class 01: global thread indexing and vector addition
+- deterministic URL-serializable thread explorer
+- CPU oracle, CUDA error policy, local timing boundaries
+- starter/solution exercise and 18 Anki cards
+- GitHub Pages and CPU-safe CI
 
-- pnpm workspace: `contracts` → `core` → `visuals` → `theme` → `apps/docs`
-- CMake tree: `common` → `examples` → `exercises`, with optional CUDA detection
-- Lesson 01, *Del índice global a la suma de vectores*
-- `ExploradorIndiceGlobal`, deterministic, URL-serializable, unit-tested
-- `native/examples/vector-add`: CPU implementation, CUDA implementation,
-  comparison, error handling, kernel-only and end-to-end timing
-- `native/exercises/01-vector-add`: 8 TODOs, 4 of them verifiable without a GPU
-- 18 Anki cards, reproducible TSV generation
-- CPU-safe GitHub Actions CI, GitHub Pages deployment
+## Class 0 — GPU mental model — complete
 
-### Known gaps carried out of v0.1
+- Clase 0, *El modelo mental de una GPU* — a prerequisite-free, code-free
+  introduction to chunks, blocks, threads and the grid. Deliberately not a
+  full vertical slice: no native code, no exercise, no Anki cards, by design
+  (see `AGENTS.md` and the lesson's own scope note).
+- `SimuladorIsometricoGPU`, deterministic, URL-serializable, unit-tested
 
-| Gap | Impact | Owner decision needed? |
+## Class 02 — parallel reduction — complete in this change
+
+This class follows the second concrete exercise in the CERN STEAM Academy 2026
+GPU course while keeping SimulaGPU's stricter correctness-first contract.
+
+- Spanish lesson: races, atomics, adjacent-pair tree reduction, odd sizes,
+  barriers, shared memory and floating-point associativity
+- `LaboratorioReduccion`: deterministic pass-by-pass tree visualization
+- select-based guided kernel editor
+- browser runner for even, odd and singleton CPU-oracle cases; explicitly not a
+  CUDA compiler or GPU simulator
+- native CPU reduction helpers, Kahan-style reference and tolerance checks
+- simple multi-pass CUDA example isolated behind optional detection
+- exercise 02 with five focused TODOs and one shared CPU test file
+- 12 additional Anki cards
+- CI verifies the solution and ensures the starter remains deliberately red
+
+### Known gaps after class 02
+
+| Gap | Impact | Trigger or owner decision |
 | --- | --- | --- |
-| No `LICENSE` file | The repository is "all rights reserved" by default, so nobody may reuse the material. | **Yes.** The licence is the owner's call. |
-| CUDA code never compiled or run | The `.cu` files are reviewed by hand only. | No — needs hardware. |
-| No CUDA job in CI | Nothing catches a CUDA compile error. | No — see "CUDA compile job" below. |
-| No sanitizer job in CI | The option exists; nothing exercises it. | No — needs a memory-bug exercise first. |
+| No `LICENSE` file | External users may view but cannot safely reuse the material. | **Owner decision required.** |
+| CUDA translation units are not built in standard CI | CPU behavior is gated; `.cu` syntax and runtime remain manually reviewed. | Add a non-blocking compile job when an `nvcc` image is worth the CI cost; add runtime checks only with a GPU runner. |
+| The Anki generator supports one deck header | Class 02 cards temporarily retain the original deck header for import compatibility. | Migrate when the generator supports a root deck plus per-card lesson metadata without duplicating existing notes. |
+| No sanitizer job | Current starters fail through deterministic wrong results rather than memory bugs. | Add when a race or memory-layout exercise provides a useful failure to reproduce. |
 
 ---
 
-## Next: CPU / OpenMP / SIMD bridge
+## Next: CUDA memory access and execution
 
-**Why first:** it is the only stage that needs no GPU at all, so every student
-can complete it, and it establishes the vocabulary — *race*, *reduction*,
-*false sharing*, *memory-bound* — that every later GPU lesson leans on. It also
-answers the question a GPU course usually skips: *when is the GPU not the
-answer?*
+**Depends on:** classes 01 and 02.
 
-- Lesson: parallel loops, races, reductions, false sharing
-- Visualization: work distribution across threads, and where two threads collide
-- Native: OpenMP behind an optional CMake flag, mirroring the CUDA detection
-  already in place
-- Exercise: a deliberately racy accumulator; fix correctness first, layout
-  second
-- CI: this is where the sanitizer job earns its place (TSan for the race, ASan
-  for the layout fix)
+The next class should make hardware-relevant memory behavior visible without
+pretending a browser model predicts timing.
 
-## CUDA memory and execution
+- Lesson: global, shared, register and constant memory; warps; coalescing;
+  divergence; occupancy as a resource constraint rather than a score
+- Visualization: addresses requested by one warp for coalesced versus strided
+  patterns, with transaction assumptions stated explicitly
+- Native: 2D matrix indexing and a shared-memory tile
+- Exercise: repair a transposed or strided access; correctness tests run on CPU,
+  while the performance comparison is local-only on actual hardware
+- Required design decision: define the exact simplified memory-transaction model
+  before drawing it
 
-**Depends on:** v0.1.
+## Then: optimized reductions
 
-- Lesson: memory hierarchy (global, shared, registers, constant), coalescing,
-  occupancy
-- Visualization: coalesced versus strided access, and what a warp actually
-  reads in one transaction — the first visualization that must model warps, and
-  must say so
-- Native: 2D indexing (matrix addition), shared-memory tiling
-- Exercise: fix an uncoalesced access pattern; measure before and after **on
-  your own hardware**
+**Depends on:** memory access and execution.
 
-## Reductions
+Class 02 deliberately teaches one global-memory pass per launch. The optimized
+follow-up can now explain why the correct baseline is slow.
 
-**Depends on:** CUDA memory and execution. This is the first lesson where the
-CPU oracle and the GPU result legitimately differ, so it is also the lesson
-about floating-point associativity.
+- shared-memory block reduction
+- barrier placement and the requirement that all participating threads reach it
+- power-of-two assumptions and non-power-of-two extensions
+- bank conflicts and sequential-addressing variants
+- warp-level primitives such as shuffle reduction
+- comparison against a library implementation when available
+- no published speedup without machine, compiler, GPU and command provenance
 
-- Lesson: tree reduction, why the naive version is slow, warp-level primitives
-- Visualization: the reduction tree, step by step, with the active thread set at
-  each level
-- Native: naive reduction → shared-memory reduction → warp shuffle
-- Exercise: implement the tree; handle an odd number of elements correctly
-- Note: `first_mismatch` gains a real reason to take a non-zero tolerance here
+## CPU / OpenMP / SIMD bridge
+
+**Can run before or after CUDA memory.**
+
+- parallel loops, races, reductions and false sharing
+- OpenMP behind optional CMake detection
+- deliberately racy accumulator repaired for correctness first and layout second
+- ThreadSanitizer job if runner support is reliable
+- explicit answer to “when is the GPU not the right tool?”
 
 ## Irregular algorithms and graphs
 
-**Depends on:** reductions.
+**Depends on:** memory behavior and reductions.
 
-- Lesson: why data-dependent parallelism is hard, warp divergence, load
-  imbalance, frontier-based BFS
-- Visualization: divergence within a warp; frontier growth on a small graph
-- Native: BFS on a CSR graph, with a CPU BFS as the oracle
-- Exercise: the frontier expansion step
+- frontier-based BFS on CSR
+- warp divergence and load imbalance
+- visualization of one warp taking different branches and a frontier growing
+- CPU BFS oracle and a frontier-expansion exercise
 
-## Libraries: Thrust and friends
+## Libraries: Thrust and vendor primitives
 
-**Depends on:** reductions.
+**Depends on:** optimized reductions.
 
-- Lesson: when to stop writing kernels; `thrust::reduce`, `transform`, `sort`
-- Native: the same reduction three ways — hand-written, Thrust, cuBLAS —
-  compared for correctness first
-- Exercise: replace a hand-written kernel and justify the change with a
-  measurement
-- Constraint: Thrust ships with the CUDA Toolkit, so this adds no new
-  dependency to the CPU-only build
+- `thrust::reduce`, transformations and sorting
+- compare hand-written, Thrust and vendor-library implementations for
+  correctness before timing
+- exercise: replace a custom kernel and justify the maintenance/performance
+  tradeoff with a local measurement
 
 ## Applied scientific cases
 
 **Depends on:** memory and reductions.
 
-- Lesson: a real numerical kernel — stencil, N-body, or histogramming
-- Visualization: halo exchange, or the atomics contention pattern in a histogram
-- Native: a complete case with a CPU oracle and an error budget
-- Exercise: extend the case to a boundary condition it does not yet handle
+Candidate vertical slices:
 
-## Advanced ML / CUDA case
+- histogramming with atomic contention;
+- stencil with halo/boundary conditions;
+- N-body tiling;
+- scientific event filtering and compacting.
 
-**Depends on:** everything above.
+Each case needs a CPU oracle, explicit numerical error budget, boundary cases
+and an abstention from universal performance claims.
 
-- Lesson: tiled matrix multiplication, the arithmetic-intensity argument, and
-  where tensor cores change it
-- Native: naive → tiled → library, correctness-checked at every step
-- Explicitly out of scope: training a model, or claiming to beat cuBLAS
+## Advanced ML/CUDA case
 
-## Anki APKG and printable cheat sheets
+**Depends on:** all foundations above.
 
-**Independent of the lesson sequence.** Deferred, not abandoned.
-
-- APKG generation, gated on finding a well-maintained pure-JS writer that needs
-  no binary template committed to Git. If it needs one, the TSV stays the only
-  format.
-- Printable A4 cheat sheet per lesson, generated from the same YAML the cards
-  come from, so it cannot drift.
+- naive and tiled matrix multiplication
+- arithmetic intensity and data reuse
+- where tensor cores change precision and layout requirements
+- compare against a library; never claim to beat it without reproducible
+  evidence
 
 ---
 
-## Infrastructure, when it is justified
-
-Each item names the trigger that would justify it. Until the trigger fires, the
-item stays on this list.
+## Infrastructure triggers
 
 | Item | Trigger |
 | --- | --- |
-| `LICENSE` | Immediate — this one is blocked only on the owner's decision. |
-| CUDA compile job in CI | A self-hosted GPU runner, or a container with `nvcc` where compile-only checking is worth the minutes. Compile-only, never gating. |
-| Sanitizer job in CI | The OpenMP stage lands a memory-bug exercise. |
-| Shared visualization primitives | A **second** visualization needs the same primitive. Not before. |
-| Global state store | Two components on one page need to share state. |
-| Search on the docs site | More than ~10 lesson pages. |
-| i18n infrastructure | Someone commits to maintaining a second language. |
-| Benchmark harness | A lesson makes a performance claim that has to survive review. |
+| `LICENSE` | Immediate owner decision |
+| CUDA compile-only CI | A stable toolkit image and acceptable CI minutes |
+| GPU runtime CI | A maintained GPU runner |
+| Shared visualization primitives | A third component genuinely repeats the same interaction/layout primitive |
+| Global state store | Two components on one page need synchronized state |
+| Search | More than roughly ten lesson pages |
+| i18n | Someone commits to maintaining another learner-facing language |
+| Benchmark harness | A class makes a performance claim that must survive review |
+| Multi-deck Anki output | A migration plan preserves existing card identities and review histories |

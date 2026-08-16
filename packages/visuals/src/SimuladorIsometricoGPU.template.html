@@ -1,0 +1,367 @@
+<section class="sim-simulador" aria-labelledby="sim-titulo">
+  <header class="sim-cabecera-guia">
+    <div class="sim-cabecera-guia__contexto">
+      <span class="sim-etiqueta-clase">Clase 0</span>
+      <span class="sim-paso-indicador" data-test="paso-indicador" aria-live="polite">
+        Paso {{ currentStepIndex + 1 }} de {{ STEP_COUNT }}
+      </span>
+    </div>
+    <h3 id="sim-titulo" class="sim-titulo">Simulador isométrico de GPU — Clase 0</h3>
+    <p class="sim-cabecera-guia__paso" data-test="paso-titulo">{{ pasoActual?.titulo }}</p>
+    <div
+      class="sim-progreso"
+      role="progressbar"
+      :aria-valuenow="currentStepIndex + 1"
+      aria-valuemin="1"
+      :aria-valuemax="STEP_COUNT"
+      :aria-label="`Avance de la Clase 0: paso ${currentStepIndex + 1} de ${STEP_COUNT}`"
+      data-test="paso-progreso"
+    >
+      <span class="sim-progreso__relleno" :style="{ width: `${progreso}%` }"></span>
+    </div>
+  </header>
+
+  <p class="sim-aviso" data-test="aviso">
+    Este es un <strong>modelo explicativo determinista.</strong> No ejecuta CUDA, no emula el hardware interno
+    de una GPU y no mide rendimiento real.
+  </p>
+
+  <details class="sim-configuracion" data-test="configuracion">
+    <summary>
+      <span class="sim-configuracion__titulo">Configurar escena</span>
+      <span class="sim-configuracion__resumen">
+        {{ config.totalBytes }} B · {{ config.bytesPerChunk }} B/chunk · {{ config.threadsPerBlock }}
+        hilos/bloque
+      </span>
+    </summary>
+
+    <div class="sim-controles" role="group" aria-label="Controles de la configuración">
+      <label class="sim-control">
+        <span class="sim-control__etiqueta">Bytes totales</span>
+        <select
+          :value="config.totalBytes"
+          aria-label="Bytes totales"
+          data-test="control-total-bytes"
+          @change="actualizar({ totalBytes: alNumero($event) })"
+        >
+          <option v-for="opcion in CHUNK_FLOW_LIMITS.totalBytesOptions" :key="opcion" :value="opcion">
+            {{ opcion }}
+          </option>
+        </select>
+      </label>
+
+      <label class="sim-control">
+        <span class="sim-control__etiqueta">Bytes por chunk</span>
+        <select
+          :value="config.bytesPerChunk"
+          aria-label="Bytes por chunk"
+          data-test="control-bytes-per-chunk"
+          @change="actualizar({ bytesPerChunk: alNumero($event) })"
+        >
+          <option v-for="opcion in CHUNK_FLOW_LIMITS.bytesPerChunkOptions" :key="opcion" :value="opcion">
+            {{ opcion }}
+          </option>
+        </select>
+      </label>
+
+      <label class="sim-control">
+        <span class="sim-control__etiqueta">Hilos por bloque</span>
+        <select
+          :value="config.threadsPerBlock"
+          aria-label="Hilos por bloque"
+          data-test="control-threads-per-block"
+          @change="actualizar({ threadsPerBlock: alNumero($event) })"
+        >
+          <option v-for="opcion in CHUNK_FLOW_LIMITS.threadsPerBlockOptions" :key="opcion" :value="opcion">
+            {{ opcion }}
+          </option>
+        </select>
+      </label>
+
+      <label class="sim-control">
+        <span class="sim-control__etiqueta">Modo</span>
+        <select v-model="modo" aria-label="Modo de reproducción" data-test="control-modo">
+          <option value="paso">Paso a paso</option>
+          <option value="auto">Automático</option>
+        </select>
+      </label>
+    </div>
+  </details>
+
+  <dl class="sim-resumen" aria-label="Resumen de la configuración calculada">
+    <div class="sim-resumen__dato">
+      <dt>Chunks</dt>
+      <dd data-test="chunk-count">{{ snapshot.chunkCount }}</dd>
+    </div>
+    <div class="sim-resumen__dato">
+      <dt>Bloques</dt>
+      <dd data-test="block-count">{{ snapshot.blockCount }}</dd>
+    </div>
+    <div class="sim-resumen__dato">
+      <dt>Hilos inactivos</dt>
+      <dd data-test="inactive-threads">{{ snapshot.inactiveThreads }}</dd>
+    </div>
+  </dl>
+
+  <section class="sim-escena-tarjeta" aria-labelledby="sim-escena-titulo" data-test="escena-interactiva">
+    <div class="sim-escena-cabecera">
+      <div>
+        <h4 id="sim-escena-titulo">Escena: CPU → GPU</h4>
+        <p>Selecciona un chunk, bloque o hilo para inspeccionarlo.</p>
+      </div>
+      <span class="sim-insignia-conceptual">conceptual</span>
+    </div>
+
+    <div class="sim-escena" :class="`sim-escena--foco-${pasoActual?.foco ?? 'ninguno'}`">
+      <section class="sim-stage sim-stage--cpu" aria-labelledby="sim-estacion-cpu-titulo">
+        <div class="sim-stage__cabecera">
+          <span aria-hidden="true" class="sim-stage__icono">▦</span>
+          <div>
+            <h5 id="sim-estacion-cpu-titulo">CPU / datos</h5>
+            <p>{{ config.totalBytes }} bytes en el host</p>
+          </div>
+        </div>
+
+        <ol class="sim-fila-tiles" aria-label="Lista de chunks">
+          <li v-for="chunk in chunksVisibles" :key="chunk.index">
+            <button
+              type="button"
+              class="sim-tile sim-chunk"
+              :class="claseChunk(chunk.index, chunk.isPartial)"
+              :aria-pressed="config.selectedKind === 'chunk' && config.selectedIndex === chunk.index"
+              :aria-label="`Chunk ${chunk.index}, ${chunk.byteCount} bytes${chunk.isPartial ? ', incompleto' : ''}`"
+              @click="seleccionar('chunk', chunk.index)"
+            >
+              <span aria-hidden="true">c{{ chunk.index }}</span>
+            </button>
+          </li>
+        </ol>
+        <p class="sim-stage__pie">{{ snapshot.chunkCount }} chunks preparados</p>
+        <p v-if="chunksOcultos > 0" class="sim-truncado" data-test="chunks-truncado">
+          Se muestran {{ chunksVisibles.length }} de {{ snapshot.chunkCount }} chunks.
+        </p>
+      </section>
+
+      <div class="sim-stage sim-stage--transfer" aria-label="Transferencia conceptual del host al device">
+        <span class="sim-stage-transfer__titulo">Transferencia conceptual</span>
+        <span class="sim-flujo" aria-hidden="true">
+          <span class="sim-flujo__particulas">•••</span>
+          <span class="sim-flujo__flecha">→</span>
+        </span>
+        <span class="sim-stage-transfer__etiqueta">host → device</span>
+      </div>
+
+      <section class="sim-stage sim-stage--gpu" aria-label="Grid de la GPU: bloques e hilos">
+        <div class="sim-stage__cabecera">
+          <span aria-hidden="true" class="sim-stage__icono">▦</span>
+          <div>
+            <h5>GPU / grid</h5>
+            <p>{{ snapshot.blockCount }} bloques en el device</p>
+          </div>
+        </div>
+
+        <ol class="sim-grid" aria-label="Bloques de la grid">
+          <li v-for="bloque in bloquesVisibles" :key="bloque.index" class="sim-bloque-contenedor">
+            <button
+              type="button"
+              class="sim-tile sim-bloque"
+              :class="claseBloque(bloque.index, bloque.isPartialBlock)"
+              :aria-pressed="config.selectedKind === 'block' && config.selectedIndex === bloque.index"
+              :aria-label="`Bloque ${bloque.index}: ${bloque.activeCount} de ${config.threadsPerBlock} hilos activos${bloque.isPartialBlock ? ', bloque incompleto' : ''}`"
+              @click="seleccionar('block', bloque.index)"
+            >
+              <span aria-hidden="true">b{{ bloque.index }}</span>
+              <small>{{ bloque.activeCount }}/{{ config.threadsPerBlock }} activos</small>
+            </button>
+            <ol
+              class="sim-hilos"
+              :style="{ gridTemplateColumns: `repeat(${config.threadsPerBlock}, minmax(1.85rem, 1fr))` }"
+              :aria-label="`Hilos del bloque ${bloque.index}`"
+            >
+              <li v-for="hilo in bloque.threads" :key="hilo.slot">
+                <button
+                  type="button"
+                  class="sim-tile sim-hilo"
+                  :class="claseHilo(hilo.active, hilo.slot)"
+                  :aria-pressed="config.selectedKind === 'thread' && config.selectedIndex === hilo.slot"
+                  :aria-label="
+                    hilo.active
+                      ? `Hilo ${hilo.threadIdx} del bloque ${hilo.blockIdx}: activo, procesa el chunk ${hilo.chunkIndex}`
+                      : `Hilo ${hilo.threadIdx} del bloque ${hilo.blockIdx}: inactivo`
+                  "
+                  @click="seleccionar('thread', hilo.slot)"
+                >
+                  <span aria-hidden="true">{{ hilo.active ? `c${hilo.chunkIndex}` : '—' }}</span>
+                </button>
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <p v-if="bloquesOcultos > 0" class="sim-truncado" data-test="bloques-truncado">
+          Se muestran {{ bloquesVisibles.length }} de {{ snapshot.blockCount }} bloques.
+        </p>
+      </section>
+
+      <div class="sim-stage sim-stage--result" aria-label="Resultado conceptual de vuelta en la CPU">
+        <span aria-hidden="true">↩</span>
+        <span><strong>{{ snapshot.chunkCount }} chunks procesados</strong> vuelven al host</span>
+      </div>
+    </div>
+
+    <div class="sim-leyenda" aria-label="Convenciones visuales">
+      <span><i class="sim-leyenda__activo"></i>Activo / con datos</span>
+      <span><i class="sim-leyenda__inactivo"></i>Inactivo / vacío</span>
+      <span><i class="sim-leyenda__seleccionado"></i>Seleccionado</span>
+    </div>
+  </section>
+
+  <section class="sim-panel-explicacion" aria-live="polite" data-test="explicacion-seleccion">
+    <div class="sim-panel-explicacion__encabezado">
+      <h4>¿Qué está pasando?</h4>
+      <span class="sim-seleccion-chip" data-test="seleccion-chip">Seleccionado: {{ seleccionEtiqueta }}</span>
+    </div>
+    <p class="sim-panel-explicacion__paso" data-test="paso-descripcion">{{ pasoActual?.descripcion }}</p>
+    <p class="sim-panel-explicacion__seleccion" data-test="seleccion-descripcion">
+      {{ snapshot.selected.descripcion }}
+    </p>
+    <p class="sim-panel-explicacion__ayuda">Toca otro elemento de la escena para ver su función.</p>
+  </section>
+
+  <section class="sim-formulas" aria-labelledby="sim-formulas-titulo">
+    <h4 id="sim-formulas-titulo">Fórmulas clave</h4>
+    <div class="sim-formulas__grid">
+      <article class="sim-formula">
+        <span class="sim-formula__etiqueta">Dividir datos</span>
+        <code data-test="chunk-formula">{{ snapshot.chunkCountExpression.formula }}</code>
+        <code data-test="chunk-substituted">{{ snapshot.chunkCountExpression.substituted }}</code>
+        <strong data-test="chunk-evaluated">{{ snapshot.chunkCountExpression.evaluated }}</strong>
+      </article>
+      <article class="sim-formula">
+        <span class="sim-formula__etiqueta">Agrupar hilos</span>
+        <code data-test="block-formula">{{ snapshot.blockCountExpression.formula }}</code>
+        <code data-test="block-substituted">{{ snapshot.blockCountExpression.substituted }}</code>
+        <strong data-test="block-evaluated">{{ snapshot.blockCountExpression.evaluated }}</strong>
+      </article>
+    </div>
+  </section>
+
+  <nav
+    class="sim-navegacion-pasos"
+    aria-label="Navegación de la secuencia guiada"
+    data-test="navegacion-pasos"
+  >
+    <button
+      type="button"
+      class="sim-nav-boton"
+      data-test="paso-anterior"
+      :disabled="currentStepIndex === 0"
+      @click="pasoAnterior"
+    >
+      <span aria-hidden="true">←</span>
+      <small>Anterior</small>
+    </button>
+    <button
+      v-if="!reproduciendo"
+      type="button"
+      class="sim-nav-boton sim-nav-boton--reproducir"
+      data-test="reproducir"
+      aria-label="Reproducir automáticamente"
+      @click="
+        modo = 'auto';
+        reproducir();
+      "
+    >
+      <span aria-hidden="true">▶</span>
+      <small>Reproducir</small>
+    </button>
+    <button
+      v-else
+      type="button"
+      class="sim-nav-boton sim-nav-boton--pausar"
+      data-test="pausar"
+      aria-label="Pausar reproducción automática"
+      @click="pausar"
+    >
+      <span aria-hidden="true">Ⅱ</span>
+      <small>Pausa</small>
+    </button>
+    <button
+      type="button"
+      class="sim-nav-boton sim-nav-boton--siguiente"
+      data-test="paso-siguiente"
+      :disabled="currentStepIndex === STEP_COUNT - 1"
+      @click="pasoSiguiente"
+    >
+      <span aria-hidden="true">→</span>
+      <small>Siguiente</small>
+    </button>
+    <button type="button" class="sim-nav-boton" data-test="reiniciar" @click="reiniciar">
+      <span aria-hidden="true">↻</span>
+      <small>Reiniciar</small>
+    </button>
+  </nav>
+
+  <details class="sim-ejercicio">
+    <summary>
+      <span id="sim-ejercicio-titulo">Comprueba tu modelo mental</span>
+      <span>{{ casosEjercicio.length }} casos guiados</span>
+    </summary>
+    <div class="sim-ejercicio__contenido">
+      <p>Responde con lo que calcularías tú antes de mirar la explicación.</p>
+
+      <article
+        v-for="caso in casosEjercicio"
+        :key="caso.id"
+        class="sim-ejercicio-caso"
+        data-test="ejercicio-caso"
+      >
+        <h5>
+          {{ caso.totalBytes }} bytes totales, chunks de {{ caso.bytesPerChunk }} bytes, {{
+          caso.threadsPerBlock }} hilos por bloque
+        </h5>
+
+        <div
+          v-for="pregunta in caso.questions"
+          :key="pregunta.id"
+          class="sim-pregunta"
+          role="group"
+          :aria-label="pregunta.prompt"
+        >
+          <p class="sim-pregunta__enunciado">{{ pregunta.prompt }}</p>
+          <div class="sim-pregunta__opciones">
+            <button
+              v-for="opcion in pregunta.options"
+              :key="opcion.value"
+              type="button"
+              class="sim-opcion"
+              :class="{ 'sim-opcion--elegida': respuestas[pregunta.id] === opcion.value }"
+              :aria-pressed="respuestas[pregunta.id] === opcion.value"
+              @click="responder(pregunta.id, opcion.value)"
+            >
+              {{ opcion.label }}
+            </button>
+          </div>
+          <p
+            v-if="estadoRespuesta(pregunta.id, pregunta.correctValue) !== 'sin-responder'"
+            class="sim-pregunta__feedback"
+            :class="{
+              'sim-pregunta__feedback--correcta':
+                estadoRespuesta(pregunta.id, pregunta.correctValue) === 'correcta',
+              'sim-pregunta__feedback--incorrecta':
+                estadoRespuesta(pregunta.id, pregunta.correctValue) === 'incorrecta',
+            }"
+            data-test="pregunta-feedback"
+            role="status"
+          >
+            {{ textoRespuesta(pregunta.id, pregunta.correctValue) }} {{ pregunta.explanation }}
+          </p>
+        </div>
+      </article>
+    </div>
+  </details>
+
+  <details class="sim-enlace-detalles">
+    <summary>Enlace compartible de esta configuración</summary>
+    <code data-test="enlace">{{ enlaceCompartible }}</code>
+  </details>
+</section>

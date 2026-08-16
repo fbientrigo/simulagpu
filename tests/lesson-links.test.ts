@@ -11,10 +11,13 @@ import { describe, expect, it } from 'vitest';
 const repoPath = (path: string) => fileURLToPath(new URL(`../${path}`, import.meta.url));
 const read = (path: string) => readFileSync(repoPath(path), 'utf8');
 
-const LESSON = 'apps/docs/leccion/indice-global-suma-vectores.md';
+const LESSON_01 = 'apps/docs/leccion/indice-global-suma-vectores.md';
 const CUDA_MALLOC_CLASS = 'apps/docs/clases/cuda-malloc.md';
-const lesson = read(LESSON);
+const lesson01 = read(LESSON_01);
 const cudaMallocClass = read(CUDA_MALLOC_CLASS);
+
+const LESSON_02 = 'apps/docs/leccion/reduccion-paralela.md';
+const lesson02 = read(LESSON_02);
 
 describe('clase cudaMalloc', () => {
   it('embeds the focused interactive class', () => {
@@ -42,12 +45,12 @@ describe('clase cudaMalloc', () => {
 
 describe('lección 01', () => {
   it('embeds the interactive visualization', () => {
-    expect(lesson).toContain('<ExploradorIndiceGlobal');
+    expect(lesson01).toContain('<ExploradorIndiceGlobal');
   });
 
   it('links to the exercise and to the Anki page', () => {
-    expect(lesson).toContain('./ejercicio-01-suma-de-vectores');
-    expect(lesson).toContain('./anki');
+    expect(lesson01).toContain('./ejercicio-01-suma-de-vectores');
+    expect(lesson01).toContain('./anki');
   });
 
   it('links to source files that exist', () => {
@@ -59,13 +62,13 @@ describe('lección 01', () => {
       'native/common/include/simulagpu/cuda_check.cuh',
     ];
     for (const path of referenced) {
-      expect(lesson, `la lección no menciona ${path}`).toContain(path);
+      expect(lesson01, `la lección no menciona ${path}`).toContain(path);
       expect(existsSync(repoPath(path)), `${path} no existe en el repositorio`).toBe(true);
     }
   });
 
   it('records attribution', () => {
-    expect(lesson).toContain('../referencia/fuentes');
+    expect(lesson01).toContain('../referencia/fuentes');
     expect(read('docs/sources.md')).toContain('26-GPU-PROGRAMMING');
   });
 
@@ -87,16 +90,48 @@ describe('lección 01', () => {
       ['non-divisible N', /no es múltiplo del tamaño de bloque/i],
     ];
     for (const [topic, pattern] of topics) {
-      expect(pattern.test(lesson), `la lección no cubre: ${topic}`).toBe(true);
+      expect(pattern.test(lesson01), `la lección no cubre: ${topic}`).toBe(true);
+    }
+  });
+
+  it('describes the guided walkthrough the explorer opens on', () => {
+    expect(lesson01).toContain('recorrido guiado');
+    // The preset the component starts from, so the prose and the screen agree.
+    expect(lesson01).toContain('`n = 10` y bloques de 4');
+    expect(lesson01).toContain('exploración libre');
+  });
+
+  it('lists the guided steps in the order the model builds them', () => {
+    const positions = [
+      'cuántos elementos hay',
+      'cuántos bloques hacen falta',
+      'qué hilo eres',
+      'qué índice global te toca',
+      'si pasas el guard',
+      'qué elemento acabas procesando',
+    ].map((fragment) => {
+      const at = lesson01.indexOf(fragment);
+      expect(at, `la lección no describe el paso: ${fragment}`).toBeGreaterThan(-1);
+      return at;
+    });
+    expect(positions).toEqual([...positions].sort((left, right) => left - right));
+  });
+
+  it('describes files that exist', () => {
+    for (const path of [
+      'packages/visuals/src/ExploradorIndiceGlobal.vue',
+      'packages/core/src/thread-index/guided.ts',
+    ]) {
+      expect(existsSync(repoPath(path)), `${path} no existe en el repositorio`).toBe(true);
     }
   });
 
   it('does not claim the visualization executes CUDA', () => {
-    expect(lesson).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
+    expect(lesson01).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
   });
 });
 
-describe('página del ejercicio', () => {
+describe('página del ejercicio 01', () => {
   const page = read('apps/docs/leccion/ejercicio-01-suma-de-vectores.md');
 
   it('points back to the lesson and to the cards', () => {
@@ -123,6 +158,86 @@ describe('página del ejercicio', () => {
   });
 });
 
+describe('lección 02', () => {
+  it('embeds the guided reduction laboratory', () => {
+    expect(lesson02).toContain('<LaboratorioReduccion');
+    expect(lesson02).toContain('Ejecutar pruebas');
+  });
+
+  it('links the lesson, native example, exercise and cards', () => {
+    expect(lesson02).toContain('native/examples/reduction');
+    expect(lesson02).toContain('./ejercicio-02-reduccion');
+    expect(lesson02).toContain('./anki');
+  });
+
+  it('links to every source directory that the vertical slice requires', () => {
+    for (const path of [
+      'native/examples/reduction',
+      'native/exercises/02-reduction',
+      'native/common/include/simulagpu/reduction.hpp',
+      'packages/visuals/src/LaboratorioReduccion.vue',
+      'anki/cards/02-reduccion.yaml',
+    ]) {
+      expect(existsSync(repoPath(path)), `${path} no existe en el repositorio`).toBe(true);
+    }
+  });
+
+  it('teaches the high-value reduction concepts', () => {
+    const topics: Array<[string, RegExp]> = [
+      ['data race', /carrera de datos/i],
+      ['atomics', /atomicAdd/],
+      ['adjacent-pair tree', /left = 2 \* out/],
+      ['odd tail', /tamaño es impar|tamaño impar/i],
+      ['barrier', /__syncthreads/],
+      ['shared memory', /memoria compartida/i],
+      ['floating-point associativity', /no siempre lo es|no es asociativa/i],
+      ['CPU oracle', /oráculo CPU/i],
+    ];
+    for (const [topic, pattern] of topics) {
+      expect(pattern.test(lesson02), `la lección 02 no cubre: ${topic}`).toBe(true);
+    }
+  });
+
+  it('states that the browser runner does not compile or execute CUDA', () => {
+    expect(lesson02).toMatch(/no contiene `nvcc`|no compila CUDA/i);
+    expect(lesson02).toMatch(/no usa una GPU|acceso a una GPU/i);
+  });
+
+  it('records the CERN reduction exercise and the rewritten status', () => {
+    const sources = read('docs/sources.md');
+    expect(sources).toContain('2-reduction/reduction.cu');
+    expect(sources).toMatch(/rewritten from scratch|reescrito desde cero/i);
+  });
+});
+
+describe('página del ejercicio 02', () => {
+  const page = read('apps/docs/leccion/ejercicio-02-reduccion.md');
+
+  it('points back to lesson 02 and names the starter commands', () => {
+    expect(page).toContain('./reduccion-paralela');
+    expect(page).toContain('native/exercises/02-reduction/starter');
+    expect(page).toContain('ctest');
+  });
+
+  it('describes files that exist', () => {
+    for (const path of [
+      'native/exercises/02-reduction/starter/src/reduction_step.cpp',
+      'native/exercises/02-reduction/starter/src/reduction_pass.cu',
+      'native/exercises/02-reduction/solution/src/reduction_step.cpp',
+      'native/exercises/02-reduction/tests/test_reduction_step.cpp',
+    ]) {
+      expect(existsSync(repoPath(path)), `${path} no existe`).toBe(true);
+    }
+  });
+
+  it('keeps five numbered TODOs in the starter', () => {
+    const cpu = read('native/exercises/02-reduction/starter/src/reduction_step.cpp');
+    const cuda = read('native/exercises/02-reduction/starter/src/reduction_pass.cu');
+    const todos = [...`${cpu}${cuda}`.matchAll(/TODO (\d+):/g)].map((match) => match[1]);
+    expect(todos).toEqual(['1', '2', '3', '4', '5']);
+  });
+});
+
 describe('página de tarjetas', () => {
   const page = read('apps/docs/leccion/anki.md');
 
@@ -130,5 +245,11 @@ describe('página de tarjetas', () => {
     expect(page).toContain('simulagpu-anki.tsv');
     // withBase keeps the link correct when the site is served from /simulagpu/.
     expect(page).toContain('withBase');
+  });
+
+  it('covers both lesson card sources', () => {
+    expect(read('anki/cards/01-indice-global.yaml')).toContain('idx-001');
+    expect(read('anki/cards/02-reduccion.yaml')).toContain('red-001');
+    expect(page).toContain('34 tarjetas');
   });
 });
