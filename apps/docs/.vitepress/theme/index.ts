@@ -4,7 +4,7 @@ import {
   ClaseCudaMalloc,
   ExploradorIndiceGlobal,
   LaboratorioReduccion,
-  SimuladorIsometricoGPU,
+  ModeloMentalGpu,
 } from '@simulagpu/visuals';
 import LandingHome from './components/landing/LandingHome.vue';
 import './landing.css';
@@ -18,7 +18,7 @@ const theme: Theme = {
   enhanceApp({ app }) {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
-    app.component('SimuladorIsometricoGPU', SimuladorIsometricoGPU);
+    app.component('ModeloMentalGpu', ModeloMentalGpu);
     app.component('LaboratorioReduccion', LaboratorioReduccion);
     app.component('LandingHome', LandingHome);
   },
