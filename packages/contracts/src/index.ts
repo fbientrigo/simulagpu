@@ -28,6 +28,27 @@ export type {
   CudaMallocSceneState,
   CudaMallocSnapshot,
 } from './cuda-malloc.js';
+
+export {
+  CUDA_MEMCPY_BUFFER_LENGTH,
+  CUDA_MEMCPY_BYTES_PER_ELEMENT,
+  CUDA_MEMCPY_DIRECTIONS,
+  CUDA_MEMCPY_ELEMENT_COUNTS,
+} from './cuda-memcpy.js';
+export type {
+  CudaMemcpyAction,
+  CudaMemcpyCell,
+  CudaMemcpyConfig,
+  CudaMemcpyConfigInput,
+  CudaMemcpyDirection,
+  CudaMemcpyElementCount,
+  CudaMemcpyKind,
+  CudaMemcpyLocation,
+  CudaMemcpyRegion,
+  CudaMemcpyRole,
+  CudaMemcpyScene,
+  CudaMemcpySnapshot,
+} from './cuda-memcpy.js';
 export type {
   BlockSnapshot as ChunkFlowBlockSnapshot,
   ThreadSnapshot as ChunkFlowThreadSnapshot,
