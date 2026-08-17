@@ -86,6 +86,7 @@ endif()
 
 add_subdirectory(common)
 add_subdirectory(examples/vector-add)
+add_subdirectory(examples/cuda-memcpy)
 add_subdirectory(examples/reduction)
 add_subdirectory(exercises/01-vector-add)
 add_subdirectory(exercises/02-reduction)
