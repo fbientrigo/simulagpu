@@ -88,7 +88,7 @@ una secuencia guiada de diez pasos y un ejercicio de comprobación.
 | Pieza | Dónde |
 | --- | --- |
 | Lección | [`apps/docs/clase-0/modelo-mental-gpu.md`](apps/docs/clase-0/modelo-mental-gpu.md) |
-| Visualización | [`packages/visuals/src/SimuladorIsometricoGPU.vue`](packages/visuals/src/SimuladorIsometricoGPU.vue) |
+| Visualización | [`packages/visuals/src/ModeloMentalGpu.vue`](packages/visuals/src/ModeloMentalGpu.vue) |
 | Modelo | [`packages/core/src/chunk-flow/`](packages/core/src/chunk-flow/) |
 
 Deliberadamente sin código ejecutable ni ejercicio nativo: es una introducción
