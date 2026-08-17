@@ -15,11 +15,12 @@ interface Row {
 const deck = loadCards() as { rows: Row[]; deck: string };
 
 describe('anki deck sources', () => {
-  it('builds the 34 cards promised by the lesson pages', () => {
-    expect(deck.rows).toHaveLength(34);
+  it('builds the 40 cards promised by the lesson pages', () => {
+    expect(deck.rows).toHaveLength(40);
     expect(deck.rows.filter((row) => row.id.startsWith('idx-'))).toHaveLength(18);
     expect(deck.rows.filter((row) => row.id.startsWith('red-'))).toHaveLength(12);
     expect(deck.rows.filter((row) => row.id.startsWith('malloc-'))).toHaveLength(4);
+    expect(deck.rows.filter((row) => row.id.startsWith('memcpy-'))).toHaveLength(6);
   });
 
   it('covers every required area', () => {
@@ -43,6 +44,17 @@ describe('anki deck sources', () => {
       'malloc-002',
       'malloc-003',
       'malloc-004',
+    ]);
+  });
+
+  it('includes exactly the six permanent cudaMemcpy class cards', () => {
+    expect(deck.rows.filter((row) => row.id.startsWith('memcpy-')).map((row) => row.id)).toEqual([
+      'memcpy-001',
+      'memcpy-002',
+      'memcpy-003',
+      'memcpy-004',
+      'memcpy-005',
+      'memcpy-006',
     ]);
   });
 

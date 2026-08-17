@@ -1,0 +1,43 @@
+# Repaso corto de la Primitiva B — cudaMemcpy.
+# Estos ids también identifican las tarjetas de la minisession local.
+
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /clases/cuda-memcpy
+
+cards:
+  - id: memcpy-001
+    tipo: memoria
+    anverso: '¿Cuál es la diferencia clave entre `cudaMalloc` y `cudaMemcpy`?'
+    reverso: '`cudaMalloc` reserva memoria en el device; `cudaMemcpy` copia datos entre regiones de memoria que ya existen.'
+    etiquetas: [cuda-memcpy, memoria, reserva-vs-copia]
+
+  - id: memcpy-002
+    tipo: memoria
+    anverso: 'En `cudaMemcpy(dst, src, bytes, kind)`, ¿qué contenido se sobrescribe?'
+    reverso: 'El rango indicado del destino. El contenido del origen no cambia: copiar no es mover.'
+    etiquetas: [cuda-memcpy, memoria, origen-destino]
+
+  - id: memcpy-003
+    tipo: memoria
+    anverso: '¿El tercer argumento de `cudaMemcpy` es un número de elementos?'
+    reverso: 'No. Es un número de bytes. Para `N` valores de tipo `T` se usa `N * sizeof(T)`.'
+    etiquetas: [cuda-memcpy, memoria, bytes]
+
+  - id: memcpy-004
+    tipo: memoria
+    anverso: '¿Qué describe `cudaMemcpyHostToDevice`?'
+    reverso: 'Que el origen está en memoria del host y el destino en memoria del device.'
+    etiquetas: [cuda-memcpy, memoria, host-device]
+
+  - id: memcpy-005
+    tipo: memoria
+    anverso: '¿Cómo recuperas un resultado guardado en memoria del device para usarlo en el host?'
+    reverso: 'Copiándolo a memoria del host con `cudaMemcpy(..., cudaMemcpyDeviceToHost)`.'
+    etiquetas: [cuda-memcpy, memoria, device-host]
+
+  - id: memcpy-006
+    tipo: errores
+    anverso: 'Un programa quiere copiar `N` floats pero pasa `N` como conteo de bytes de `cudaMemcpy`. ¿Cuál es el error probable?'
+    reverso: 'Confundió número de elementos con bytes; el conteo correcto es `N * sizeof(float)`.'
+    etiquetas: [cuda-memcpy, errores, bytes]

@@ -1,6 +1,6 @@
 ---
 title: Tarjetas Anki — Clases 01 y 02
-description: Mazo de 34 tarjetas para repasar cudaMalloc, índice global, suma de vectores y reducción paralela.
+description: Mazo de 40 tarjetas para repasar cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
 ---
 
 <script setup>
@@ -16,6 +16,7 @@ Mazo de repaso espaciado para:
 - [Clase 01 — Del índice global a la suma de vectores](./indice-global-suma-vectores);
 - [Clase 02 — De una suma secuencial a una reducción paralela](./reduccion-paralela).
 - [Clase complementaria — `cudaMalloc`](../clases/cuda-malloc).
+- [Clase complementaria — `cudaMemcpy`](../clases/cuda-memcpy).
 
 <a :href="withBase('/descargas/simulagpu-anki.tsv')" download class="descarga-anki">
   Descargar simulagpu-anki.tsv
@@ -23,16 +24,18 @@ Mazo de repaso espaciado para:
 
 ## Qué contiene
 
-34 tarjetas:
+40 tarjetas:
 
 | Lección | Tarjetas | Conceptos principales |
 | --- | ---: | --- |
 | Índice global y suma de vectores | 18 | grilla, bloque, guard, transferencias, errores y medición |
 | Reducción paralela | 12 | carreras, árbol, cola impar, barreras, memoria compartida y punto flotante |
 | `cudaMalloc` | 4 | reserva, contenido indefinido, punteros y liberación |
+| `cudaMemcpy` | 6 | origen y destino, dirección, bytes vs elementos, copiar no es mover |
 
 Cada tarjeta tiene un identificador permanente: `idx-*` para la Clase 01 y `red-*` para la Clase 02.
-Las cuatro tarjetas de `cudaMalloc` usan identificadores permanentes `malloc-*`.
+Las cuatro tarjetas de `cudaMalloc` usan identificadores permanentes `malloc-*` y las seis de `cudaMemcpy`
+usan `memcpy-*`.
 
 ## Cómo importarlo
 
