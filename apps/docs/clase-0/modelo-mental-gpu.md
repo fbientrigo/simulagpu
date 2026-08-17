@@ -89,14 +89,14 @@ basta con verlo: hilos que existen pero no hacen nada.
 Esta situación — la división que no cae exacta — es la norma, no la
 excepción. Por eso el simulador de abajo empieza justo en esa configuración.
 
-## El simulador guiado
+## El modelo guiado
 
-Usa los controles para cambiar la configuración, o sigue los diez pasos
-guiados con los botones de navegación. Cada chunk, cada bloque y cada hilo se
+Usa los controles para cambiar la configuración. Cada chunk y cada hilo se
 puede seleccionar — con clic o con teclado — y el panel de explicación se
-actualiza según lo que hayas elegido.
+actualiza según lo que hayas elegido. Los diez pasos guiados narran, en orden,
+por qué la división no cae exacta.
 
-<SimuladorIsometricoGPU />
+<ModeloMentalGpu />
 
 ### Cómo usar los controles
 
@@ -105,8 +105,7 @@ actualiza según lo que hayas elegido.
 | **Bytes totales** | cuántos bytes tiene el buffer que empieza en la CPU |
 | **Bytes por chunk** | el tamaño de cada pieza en la que se divide el buffer |
 | **Hilos por bloque** | cuántos hilos entran en cada bloque de la grid |
-| **Modo** | *paso a paso* (avanzas tú) o *automático* (avanza solo, y se puede pausar) |
-| **Paso anterior / Paso siguiente** | navegan la secuencia guiada de diez pasos |
+| **Anterior / Siguiente** | navegan la secuencia guiada de diez pasos |
 | **Reiniciar** | vuelve al primer paso y pausa la reproducción automática |
 
 Selecciona cualquier chunk, bloque o hilo del diagrama para ver su

@@ -15,8 +15,8 @@ const PAGE = 'apps/docs/clase-0/modelo-mental-gpu.md';
 const page = read(PAGE);
 
 describe('Clase 0 — página', () => {
-  it('embeds the isometric simulator', () => {
-    expect(page).toContain('<SimuladorIsometricoGPU');
+  it('embeds the mental-model visualization', () => {
+    expect(page).toContain('<ModeloMentalGpu');
   });
 
   it('states it has no prerequisites', () => {
@@ -74,13 +74,13 @@ describe('Clase 0 — navegación del sitio', () => {
 
   it('the component is registered on the VitePress theme', () => {
     const theme = read('apps/docs/.vitepress/theme/index.ts');
-    expect(theme).toContain('SimuladorIsometricoGPU');
+    expect(theme).toContain('ModeloMentalGpu');
   });
 });
 
 describe('Clase 0 — exports', () => {
   it('exports the component from @simulagpu/visuals', () => {
-    expect(read('packages/visuals/src/index.ts')).toContain('SimuladorIsometricoGPU');
+    expect(read('packages/visuals/src/index.ts')).toContain('ModeloMentalGpu');
   });
 
   it('exports the chunk-flow model from @simulagpu/core', () => {
