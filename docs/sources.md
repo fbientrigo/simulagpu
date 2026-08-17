@@ -201,9 +201,10 @@ reference:
 - the Anki YAML sources, schema and deterministic TSV generator;
 - all CMake, CI and documentation configuration.
 - the interactive primitive methodology (`docs/class-methodology.md`),
-  deterministic `cudaMalloc` transition model, `ClaseCudaMalloc` interaction,
-  local learner cache, and four-card mini-review;
-- the `cudaMalloc` lesson and its Spanish explanatory content.
+  deterministic `cudaMalloc` and `cudaMemcpy` transition models, `ClaseCudaMalloc`
+  and `ClaseCudaMemcpy` interactions, local learner cache, and four-card mini-reviews;
+- the `cudaMalloc` and `cudaMemcpy` lessons, their Spanish explanatory content,
+  and the native examples under `native/examples/`.
 
 ## Third-party runtime and build dependencies
 

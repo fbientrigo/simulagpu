@@ -150,7 +150,7 @@ export const CURRICULUM_MODULES = [
     kind: 'primitive',
     track: 'alphabetical-primitive',
     sequencePosition: 4,
-    status: 'planned',
+    status: 'implemented',
     centralQuestionOrSkill: 'Understand explicit host-to-device and device-to-host movement.',
     prerequisites: ['class-1'],
     concepts: [
@@ -166,8 +166,17 @@ export const CURRICULUM_MODULES = [
     learnerOutcome:
       'Name the source, destination, direction, and byte count of a synchronous copy and predict which values change.',
     unlocks: ['class-2'],
-    implementation: null,
-    scaffoldPath: 'docs/curriculum/modules/primitive-b-cuda-memcpy.md',
+    implementation: {
+      docPath: 'apps/docs/clases/cuda-memcpy.md',
+      route: '/clases/cuda-memcpy',
+      references: [
+        'packages/visuals/src/ClaseCudaMemcpy.vue',
+        'packages/core/src/cuda-memcpy',
+        'native/examples/cuda-memcpy',
+        'anki/cards/03-cuda-memcpy.yaml',
+      ],
+    },
+    scaffoldPath: null,
   },
   {
     id: 'class-2',

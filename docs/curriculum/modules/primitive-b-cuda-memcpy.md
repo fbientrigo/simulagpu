@@ -40,4 +40,12 @@ Implement a pure snapshot model and tests before a Vue component. Reuse no
 primitive abstraction from `cudaMalloc` until a second real implementation
 proves the repetition. Add a real vertical slice before changing this status.
 
-# Status: PLANNED
+# Status: IMPLEMENTED
+Shipped as a full vertical slice. See the curriculum manifest entry for the
+authoritative references:
+
+- Lesson: `apps/docs/clases/cuda-memcpy.md`
+- Model: `packages/core/src/cuda-memcpy`
+- Visual: `packages/visuals/src/ClaseCudaMemcpy.vue`
+- Native example: `native/examples/cuda-memcpy`
+- Cards: `anki/cards/03-cuda-memcpy.yaml`

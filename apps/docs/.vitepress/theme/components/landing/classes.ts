@@ -47,6 +47,14 @@ export const landingClasses: LandingClass[] = [
     href: '/clases/cuda-malloc',
   },
   {
+    id: 'cuda-memcpy',
+    eyebrow: 'Clase complementaria',
+    title: 'cudaMemcpy',
+    description:
+      'Predice qué celdas cambian tras una copia: origen intacto, destino sobrescrito, bytes no elementos.',
+    href: '/clases/cuda-memcpy',
+  },
+  {
     id: 'reduccion-paralela',
     eyebrow: 'Clase 02',
     title: 'Reducción paralela',

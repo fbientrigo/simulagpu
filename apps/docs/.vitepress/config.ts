@@ -54,8 +54,11 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Clase complementaria — cudaMalloc',
-        items: [{ text: 'Clase 01: cudaMalloc', link: '/clases/cuda-malloc' }],
+        text: 'Clases complementarias — primitivas',
+        items: [
+          { text: 'Primitiva A: cudaMalloc', link: '/clases/cuda-malloc' },
+          { text: 'Primitiva B: cudaMemcpy', link: '/clases/cuda-memcpy' },
+        ],
       },
       {
         text: 'Clase 0 — Modelo mental',

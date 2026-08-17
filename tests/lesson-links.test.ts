@@ -13,8 +13,10 @@ const read = (path: string) => readFileSync(repoPath(path), 'utf8');
 
 const LESSON_01 = 'apps/docs/leccion/indice-global-suma-vectores.md';
 const CUDA_MALLOC_CLASS = 'apps/docs/clases/cuda-malloc.md';
+const CUDA_MEMCPY_CLASS = 'apps/docs/clases/cuda-memcpy.md';
 const lesson01 = read(LESSON_01);
 const cudaMallocClass = read(CUDA_MALLOC_CLASS);
+const cudaMemcpyClass = read(CUDA_MEMCPY_CLASS);
 
 const LESSON_02 = 'apps/docs/leccion/reduccion-paralela.md';
 const lesson02 = read(LESSON_02);
@@ -40,6 +42,31 @@ describe('clase cudaMalloc', () => {
   it('states the model boundary and the allocation-not-initialization idea', () => {
     expect(cudaMallocClass).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
     expect(cudaMallocClass).toMatch(/reservar memoria no es inicializarla|no inicializa/i);
+  });
+});
+
+describe('clase cudaMemcpy', () => {
+  it('embeds the focused interactive class and registers it in VitePress', () => {
+    expect(cudaMemcpyClass).toContain('<ClaseCudaMemcpy');
+    expect(read('apps/docs/.vitepress/theme/index.ts')).toContain("app.component('ClaseCudaMemcpy'");
+  });
+
+  it('links to a runnable native round-trip example that exists', () => {
+    expect(cudaMemcpyClass).toContain('native/examples/cuda-memcpy');
+    expect(existsSync(repoPath('native/examples/cuda-memcpy')), 'el ejemplo nativo no existe').toBe(true);
+    expect(existsSync(repoPath('native/examples/cuda-memcpy/memcpy_roundtrip_cuda.cu'))).toBe(true);
+  });
+
+  it('links to the broad lesson and downloadable Anki review', () => {
+    expect(cudaMemcpyClass).toContain('../leccion/indice-global-suma-vectores');
+    expect(cudaMemcpyClass).toContain('../leccion/anki');
+  });
+
+  it('states the model boundary and the copy-is-not-allocation idea', () => {
+    expect(cudaMemcpyClass).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
+    expect(cudaMemcpyClass).toMatch(/copiar no es mover|copiar no es reservar/i);
+    expect(cudaMemcpyClass).toContain('cudaMemcpyHostToDevice');
+    expect(cudaMemcpyClass).toContain('cudaMemcpyDeviceToHost');
   });
 });
 
@@ -247,9 +274,10 @@ describe('página de tarjetas', () => {
     expect(page).toContain('withBase');
   });
 
-  it('covers both lesson card sources', () => {
+  it('covers every lesson card source', () => {
     expect(read('anki/cards/01-indice-global.yaml')).toContain('idx-001');
     expect(read('anki/cards/02-reduccion.yaml')).toContain('red-001');
-    expect(page).toContain('34 tarjetas');
+    expect(read('anki/cards/03-cuda-memcpy.yaml')).toContain('memcpy-001');
+    expect(page).toContain('40 tarjetas');
   });
 });

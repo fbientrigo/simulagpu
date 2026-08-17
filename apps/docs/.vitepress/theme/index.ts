@@ -2,6 +2,7 @@ import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
 import {
   ClaseCudaMalloc,
+  ClaseCudaMemcpy,
   ExploradorIndiceGlobal,
   LaboratorioReduccion,
   ModeloMentalGpu,
@@ -17,6 +18,7 @@ const theme: Theme = {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
+    app.component('ClaseCudaMemcpy', ClaseCudaMemcpy);
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
     app.component('ModeloMentalGpu', ModeloMentalGpu);
     app.component('LaboratorioReduccion', LaboratorioReduccion);

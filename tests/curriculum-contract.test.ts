@@ -96,7 +96,13 @@ describe('curriculum contract', () => {
 
   it('points every implemented module at its current page, route, and files', () => {
     const implemented = CURRICULUM_MODULES.filter((module) => module.status === 'implemented');
-    expect(implemented.map((module) => module.id)).toEqual(['class-0', 'primitive-a', 'class-1', 'class-2']);
+    expect(implemented.map((module) => module.id)).toEqual([
+      'class-0',
+      'primitive-a',
+      'class-1',
+      'primitive-b',
+      'class-2',
+    ]);
 
     const routes = implemented.map((module) => module.implementation?.route);
     expect(new Set(routes).size).toBe(routes.length);
