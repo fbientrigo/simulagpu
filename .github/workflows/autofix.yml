@@ -1,0 +1,65 @@
+name: Autofix mechanical style
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# This workflow can commit only mechanical changes back to the repository.
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  autofix:
+    # GITHUB_TOKEN pushes normally do not trigger another workflow run. Keep
+    # both explicit guards anyway so a bot commit cannot recurse if that policy
+    # changes or this workflow is started manually.
+    if: >-
+      github.actor != 'github-actions[bot]' &&
+      !contains(github.event.head_commit.message || '', 'ci: auto-fix lint and formatting')
+    name: Apply safe lint and formatting fixes
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply safe mechanical fixes
+        run: |
+          pnpm exec eslint . --fix
+          pnpm exec prettier . --write
+
+      - name: Commit and push actual tracked changes
+        shell: bash
+        run: |
+          if git diff --quiet --exit-code; then
+            echo "No tracked files changed; no autofix commit is needed."
+            exit 0
+          fi
+
+          echo "Tracked files changed by the safe autofix commands:"
+          git diff --name-only
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+
+          if git diff --cached --quiet --exit-code; then
+            echo "No staged tracked changes remain; no autofix commit is needed."
+            exit 0
+          fi
+
+          git commit -m 'ci: auto-fix lint and formatting'
+          git push

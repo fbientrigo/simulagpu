@@ -16,7 +16,9 @@
     "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json && pnpm --filter @simulagpu/docs run typecheck",
     "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint . --fix && prettier . --write",
     "format": "prettier --write .",
+    "prepare": "husky",
     "anki:build": "node anki/scripts/build-anki.mjs",
     "native:configure": "cmake -S native -B native/build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo",
     "native:build": "cmake --build native/build",
@@ -32,7 +34,9 @@
     "eslint-plugin-vue": "^10.10.0",
     "globals": "^17.9.0",
     "happy-dom": "^20.11.1",
+    "husky": "9.1.7",
     "js-yaml": "^4.1.0",
+    "lint-staged": "16.4.0",
     "prettier": "^3.9.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.65.0",
@@ -41,6 +45,15 @@
     "vue": "^3.5.40",
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.9"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,yaml,yml,css,scss,html}": [
+      "prettier --write"
+    ]
   },
   "pnpm": {
     "onlyBuiltDependencies": [

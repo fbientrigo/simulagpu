@@ -201,6 +201,20 @@ cmake -S native -B native/build-asan -G Ninja \
 
 `pnpm verify` is what CI runs. Run it before opening a pull request.
 
+### Automatic style fixes
+
+`pnpm install` activates the repository's Husky pre-commit hook. On every commit,
+`lint-staged` runs `eslint --fix` and then `prettier --write` only on staged
+JavaScript/TypeScript/Vue and supported configuration/style files. It re-stages
+the fixed files while preserving unrelated unstaged work. Markdown, native code,
+generated content and build output remain outside this hook through the existing
+ignore rules.
+
+`pnpm lint:fix` applies the same two mechanical fixes across the repository when
+a maintainer wants to repair more than the staged files. Neither path attempts
+to fix type errors, tests, builds or non-auto-fixable lint failures. CI continues
+to run strict `pnpm lint`, `pnpm typecheck`, `pnpm test` and the static build.
+
 ---
 
 ## Definition of done
