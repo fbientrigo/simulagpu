@@ -4,6 +4,7 @@ import {
   ClaseCudaMalloc,
   ClaseCudaMemcpy,
   ExploradorIndiceGlobal,
+  InteractiveAnkiReviewer,
   LaboratorioReduccion,
   ModeloMentalGpu,
 } from '@simulagpu/visuals';
@@ -20,6 +21,7 @@ const theme: Theme = {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
     app.component('ClaseCudaMemcpy', ClaseCudaMemcpy);
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
+    app.component('InteractiveAnkiReviewer', InteractiveAnkiReviewer);
     app.component('ModeloMentalGpu', ModeloMentalGpu);
     app.component('LaboratorioReduccion', LaboratorioReduccion);
     app.component('LandingHome', LandingHome);
