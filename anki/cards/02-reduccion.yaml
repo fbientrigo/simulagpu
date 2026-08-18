@@ -66,22 +66,6 @@ cards:
       aproximadamente a la mitad en cada nivel del árbol.
     etiquetas: [reduccion, lanzamiento]
 
-  - id: red-031
-    tipo: lanzamiento
-    anverso: '¿Puede `__syncthreads()` sincronizar bloques distintos?'
-    reverso: |
-      No. Solo es una barrera entre hilos del mismo bloque. Un nuevo lanzamiento
-      de kernel puede separar globalmente dos pasadas.
-    etiquetas: [reduccion, sincronizacion]
-
-  - id: red-040
-    tipo: memoria
-    anverso: '¿Para qué se usa memoria compartida en una reducción por bloque?'
-    reverso: |
-      Para reutilizar parciales dentro del bloque sin volver a memoria global en
-      cada nivel. Las etapas deben separarse con barreras correctamente ubicadas.
-    etiquetas: [reduccion, memoria, sincronizacion]
-
   - id: red-050
     tipo: medicion
     anverso: '¿Por qué una reducción GPU puede diferir algunos bits de una suma CPU secuencial?'
@@ -97,11 +81,3 @@ cards:
       Se usó `left = out`. Debe ser `left = 2 * out` para que los pares sean
       disjuntos: `(0,1), (2,3), (4,5)`.
     etiquetas: [reduccion, errores, indice]
-
-  - id: red-061
-    tipo: errores
-    anverso: '¿Por qué `atomicAdd` puede ser correcto pero lento para sumar millones de elementos?'
-    reverso: |
-      Todos los hilos compiten por una sola dirección y la actualización se
-      serializa. Es mejor reducir localmente y usar pocos atómicos sobre parciales.
-    etiquetas: [reduccion, errores, atomicos]
