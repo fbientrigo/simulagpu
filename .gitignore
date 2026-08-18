@@ -7,10 +7,11 @@ apps/docs/.vitepress/cache/
 *.tsbuildinfo
 
 # Generated content.
-# The Anki TSV is produced by `pnpm anki:build` from anki/cards/*.yaml. It is a
-# build artifact of the docs site, not a source file: committing it would mean
-# reviewing a generated diff on every card change.
+# The Anki TSV and web JSON are produced by `pnpm anki:build` from
+# anki/cards/*.yaml. They are build artifacts of the docs site, not sources:
+# committing them would mean reviewing generated diffs on every card change.
 apps/docs/public/descargas/*.tsv
+apps/docs/public/data/simulagpu-anki.json
 
 # Native build directories
 native/build*/

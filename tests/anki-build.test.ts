@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 // @ts-expect-error -- plain ESM script, intentionally not TypeScript.
-import { loadCards, renderTsv, toAnkiHtml } from '../anki/scripts/build-anki.mjs';
+import { loadCards, renderTsv, renderWebJson, toAnkiHtml } from '../anki/scripts/build-anki.mjs';
 
 interface Row {
   id: string;
@@ -10,6 +10,18 @@ interface Row {
   reverso: string;
   etiquetas: string;
   deck: string;
+}
+
+interface WebDeck {
+  version: 1;
+  deck: string;
+  cards: Array<{
+    id: string;
+    tipo: string;
+    frontHtml: string;
+    backHtml: string;
+    tags: string[];
+  }>;
 }
 
 const deck = loadCards() as { rows: Row[]; deck: string };
@@ -105,6 +117,26 @@ describe('renderTsv', () => {
     expect(tsv.endsWith('\n')).toBe(true);
     expect(tsv.endsWith('\n\n')).toBe(false);
     expect(tsv).not.toContain('\r');
+  });
+});
+
+describe('renderWebJson', () => {
+  it('is reproducible and exposes the same permanent cards as the TSV source', () => {
+    expect(renderWebJson(loadCards())).toBe(renderWebJson(loadCards()));
+
+    const webDeck = JSON.parse(renderWebJson(deck)) as WebDeck;
+    expect(webDeck.version).toBe(1);
+    expect(webDeck.deck).toBe(deck.deck);
+    expect(webDeck.cards).toHaveLength(deck.rows.length);
+    expect(webDeck.cards.map((card) => card.id)).toEqual(deck.rows.map((row) => row.id));
+  });
+
+  it('keeps rendered card HTML and permanent ids without creating a second authored source', () => {
+    const webDeck = JSON.parse(renderWebJson(deck)) as WebDeck;
+    const first = webDeck.cards[0];
+    expect(first?.frontHtml.length).toBeGreaterThan(0);
+    expect(first?.backHtml.length).toBeGreaterThan(0);
+    expect(first?.tags).toContain(first?.id);
   });
 });
 
