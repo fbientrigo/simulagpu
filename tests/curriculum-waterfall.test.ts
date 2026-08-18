@@ -5,8 +5,7 @@ const modulesById = new Map(CURRICULUM_MODULES.map((module) => [module.id, modul
 
 describe('curriculum waterfall contract', () => {
   it('uses unlocks only for the immediate next module in the frozen main sequence', () => {
-    for (let index = 0; index < CURRICULUM_SEQUENCE.length; index += 1) {
-      const moduleId = CURRICULUM_SEQUENCE[index];
+    for (const [index, moduleId] of CURRICULUM_SEQUENCE.entries()) {
       const module = modulesById.get(moduleId);
       expect(module, `${moduleId} is missing from the manifest`).toBeDefined();
       if (!module) continue;
@@ -34,12 +33,14 @@ describe('curriculum waterfall contract', () => {
   });
 
   it('keeps every numbered class after Clase 0 dependent on the immediately previous primitive', () => {
-    const numberedClasses = CURRICULUM_SEQUENCE.filter((id) => id.startsWith('class-'));
+    for (const [index, classId] of CURRICULUM_SEQUENCE.entries()) {
+      if (!classId.startsWith('class-') || classId === 'class-0') continue;
 
-    for (const classId of numberedClasses.slice(1)) {
-      const classIndex = CURRICULUM_SEQUENCE.indexOf(classId);
-      const previousId = CURRICULUM_SEQUENCE[classIndex - 1];
+      const previousId = CURRICULUM_SEQUENCE[index - 1];
       const module = modulesById.get(classId);
+
+      expect(previousId, `${classId} has no previous module`).toBeDefined();
+      if (!previousId) continue;
 
       expect(previousId.startsWith('primitive-')).toBe(true);
       expect(module?.prerequisites).toContain(previousId);
