@@ -1,8 +1,15 @@
 export type CurriculumKind = 'class' | 'primitive';
 export type CurriculumStatus = 'implemented' | 'planned';
-export type CurriculumTrack = 'numbered-class' | 'alphabetical-primitive' | 'reference-primitive';
+export type CurriculumTrack =
+  | 'numbered-class'
+  | 'alphabetical-primitive'
+  | 'reference-primitive';
 export type VisualGrammar =
-  'precise-2d' | 'restrained-2.5d' | 'mixed-2d-and-2.5d' | 'timeline' | 'reference-only';
+  | 'precise-2d'
+  | 'restrained-2.5d'
+  | 'mixed-2d-and-2.5d'
+  | 'timeline'
+  | 'reference-only';
 
 export interface CurriculumImplementation {
   docPath: string;
@@ -28,7 +35,13 @@ export interface CurriculumModule {
   scaffoldPath: string | null;
 }
 
-/** The only learner-facing interleaving in the first frozen curriculum pass. */
+/**
+ * Frozen first-course waterfall.
+ *
+ * `unlocks` always names the immediately next module in this sequence. A class
+ * closes a useful learner outcome before opening the next primitive; a primitive
+ * then supplies one operational tool needed by the following class.
+ */
 export const CURRICULUM_SEQUENCE = [
   'class-0',
   'primitive-a',
@@ -47,8 +60,13 @@ export const CURRICULUM_SEQUENCE = [
   'class-7',
 ] as const;
 
-/** Reserved reference primitives; these are not interleaved into the first pass. */
-export const REFERENCE_PRIMITIVES = ['primitive-h', 'primitive-i', 'primitive-j', 'primitive-k'] as const;
+/** Reference modules stay outside the main waterfall and do not consume its next slot. */
+export const REFERENCE_PRIMITIVES = [
+  'primitive-h',
+  'primitive-i',
+  'primitive-j',
+  'primitive-k',
+] as const;
 
 export const CURRICULUM_MODULES = [
   {
@@ -58,7 +76,8 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 1,
     status: 'implemented',
-    centralQuestionOrSkill: 'How is work divided between data, threads, blocks, and the GPU?',
+    centralQuestionOrSkill:
+      'How is work divided between data, threads, blocks, and the GPU?',
     prerequisites: [],
     concepts: [
       'host and device',
@@ -70,15 +89,24 @@ export const CURRICULUM_MODULES = [
       'bounds',
       'partial final block',
     ],
-    deferred: ['warps', 'scheduling', 'memory hierarchy', 'occupancy', 'timing and performance'],
+    deferred: [
+      'warps',
+      'scheduling',
+      'memory hierarchy',
+      'occupancy',
+      'timing and performance',
+    ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
       'Explain the grid/block/thread hierarchy and identify inactive threads in a partial final block.',
-    unlocks: ['primitive-a', 'class-1'],
+    unlocks: ['primitive-a'],
     implementation: {
       docPath: 'apps/docs/clase-0/modelo-mental-gpu.md',
       route: '/clase-0/modelo-mental-gpu',
-      references: ['packages/visuals/src/ModeloMentalGpu.vue', 'packages/core/src/chunk-flow'],
+      references: [
+        'packages/visuals/src/ModeloMentalGpu.vue',
+        'packages/core/src/chunk-flow',
+      ],
     },
     scaffoldPath: null,
   },
@@ -89,7 +117,8 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 2,
     status: 'implemented',
-    centralQuestionOrSkill: 'Understand exactly what cudaMalloc changes and what it does not change.',
+    centralQuestionOrSkill:
+      'Understand exactly what cudaMalloc changes and what it does not change.',
     prerequisites: ['class-0'],
     concepts: [
       'device allocation',
@@ -98,7 +127,12 @@ export const CURRICULUM_MODULES = [
       'uninitialized memory',
       'allocation is not data movement',
     ],
-    deferred: ['cudaFree', 'memory initialization', 'kernel execution', 'addresses and timing'],
+    deferred: [
+      'cudaFree',
+      'memory initialization',
+      'kernel execution',
+      'addresses and timing',
+    ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
       'Predict the before/action/after state of a successful allocation and distinguish reserved space from initialized data.',
@@ -123,14 +157,27 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 3,
     status: 'implemented',
-    centralQuestionOrSkill: 'How does each thread determine which data element belongs to it?',
+    centralQuestionOrSkill:
+      'How does each thread determine which data element belongs to it?',
     prerequisites: ['class-0', 'primitive-a'],
-    concepts: ['blockIdx.x', 'blockDim.x', 'threadIdx.x', 'global index', 'bounds guard', 'vector addition'],
-    deferred: ['coalescing analysis', 'shared-memory reuse', 'asynchronous transfers', 'performance claims'],
+    concepts: [
+      'blockIdx.x',
+      'blockDim.x',
+      'threadIdx.x',
+      'global index',
+      'bounds guard',
+      'vector addition',
+    ],
+    deferred: [
+      'coalescing analysis',
+      'shared-memory reuse',
+      'asynchronous transfers',
+      'performance claims',
+    ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
       'Derive blockIdx.x * blockDim.x + threadIdx.x, guard the tail, and verify vector addition against a CPU oracle.',
-    unlocks: ['primitive-b', 'class-2'],
+    unlocks: ['primitive-b'],
     implementation: {
       docPath: 'apps/docs/leccion/indice-global-suma-vectores.md',
       route: '/leccion/indice-global-suma-vectores',
@@ -151,7 +198,8 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 4,
     status: 'implemented',
-    centralQuestionOrSkill: 'Understand explicit host-to-device and device-to-host movement.',
+    centralQuestionOrSkill:
+      'Understand explicit host-to-device and device-to-host movement.',
     prerequisites: ['class-1'],
     concepts: [
       'source',
@@ -161,7 +209,12 @@ export const CURRICULUM_MODULES = [
       'values before and after',
       'movement is not allocation',
     ],
-    deferred: ['cudaMemcpyAsync', 'streams', 'overlap', 'peer-to-peer transfers'],
+    deferred: [
+      'cudaMemcpyAsync',
+      'streams',
+      'overlap',
+      'peer-to-peer transfers',
+    ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
       'Name the source, destination, direction, and byte count of a synchronous copy and predict which values change.',
@@ -185,21 +238,32 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 5,
     status: 'implemented',
-    centralQuestionOrSkill: 'How do N values become one without using one shared serial accumulator?',
+    centralQuestionOrSkill:
+      'How do N values become one without using one shared serial accumulator?',
     prerequisites: ['class-1', 'primitive-b'],
     concepts: [
+      'data race in one shared accumulator',
       'disjoint pair assignment',
       'reduction passes',
       'tree structure',
       'odd tails',
+      'shrinking active data',
+      'floating-point order',
+      'CPU-oracle verification',
       'correctness before performance',
-      'reduction result',
     ],
-    deferred: ['warp shuffle', 'bank-conflict tuning', 'library reductions', 'benchmark comparisons'],
+    deferred: [
+      '__syncthreads() barrier semantics',
+      '__shared__ staging and block-local reduction',
+      'atomic updates',
+      'warp shuffle',
+      'library reductions',
+      'benchmark comparisons',
+    ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
-      'Trace a pairwise reduction, handle odd tails, and explain why a shared serial accumulator is a correctness problem.',
-    unlocks: ['primitive-c', 'class-3'],
+      'Trace a complete pairwise reduction, handle odd tails, explain why one shared serial accumulator races, and verify the result against a CPU oracle.',
+    unlocks: ['primitive-c'],
     implementation: {
       docPath: 'apps/docs/leccion/reduccion-paralela.md',
       route: '/leccion/reduccion-paralela',
@@ -220,16 +284,19 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 6,
     status: 'planned',
-    centralQuestionOrSkill: 'Understand what a block-wide barrier guarantees and what it does not guarantee.',
+    centralQuestionOrSkill:
+      'Understand what a block-wide barrier guarantees and what it does not guarantee.',
     prerequisites: ['class-2'],
     concepts: [
       'threads reaching a barrier',
+      'waiting for the same block',
       'same-block scope',
       'no inter-block synchronization',
       'divergent barrier use',
-      'before, waiting, and released states',
+      'before, waiting, released, and after states',
     ],
     deferred: [
+      '__shared__ storage semantics',
       'cooperative groups',
       'grid-wide barriers',
       'warp-level synchronization',
@@ -237,40 +304,46 @@ export const CURRICULUM_MODULES = [
     ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
-      'State which threads may proceed after __syncthreads() and reject invalid or divergent barrier assumptions.',
+      'Predict who waits and who may proceed at __syncthreads(), state its block-local scope, and reject invalid divergent participation.',
     unlocks: ['class-3'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/primitive-c-syncthreads.md',
   },
   {
     id: 'class-3',
-    title: 'Clase 3 — Memoria de GPU y patrones de acceso',
+    title: 'Clase 3 — Cooperación, memoria y patrones de acceso',
     kind: 'class',
     track: 'numbered-class',
     sequencePosition: 7,
     status: 'planned',
-    centralQuestionOrSkill: 'Why does where and how threads access memory matter?',
+    centralQuestionOrSkill:
+      'How does a GPU algorithm change when threads need related data and the memory-access pattern becomes part of the reasoning?',
     prerequisites: ['class-2', 'primitive-c'],
     concepts: [
-      'registers',
-      'shared memory',
-      'global memory',
-      'access patterns',
+      'independent versus cooperative work',
+      'per-thread/private values',
+      'global device memory',
+      'cross-thread data dependencies',
+      'block-local synchronization boundaries',
       'contiguous access',
       'strided access',
-      'introductory coalescing',
-      'data reuse',
+      'introductory coalescing intuition',
+      'repeated reads',
+      'data-reuse opportunities',
+      'block-local reusable storage as a motivation',
     ],
     deferred: [
+      '__shared__ declaration and operational semantics',
+      'shared-memory bank conflicts',
       'advanced occupancy tuning',
-      'detailed cache policy',
-      'bank-conflict optimization',
+      'detailed cache or transaction simulation',
       'architecture-specific performance claims',
+      'measured speedups without native evidence',
     ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
-      'Compare contiguous and strided access, identify the role of registers/shared/global memory, and describe simple reuse.',
-    unlocks: ['primitive-d', 'class-4'],
+      'Given a small cooperative GPU pattern, identify data dependencies and a block-local synchronization boundary, compare contiguous and strided accesses, and identify repeated values that create a reuse opportunity.',
+    unlocks: ['primitive-d'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/class-3-memory-access.md',
   },
@@ -281,14 +354,15 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 8,
     status: 'planned',
-    centralQuestionOrSkill: 'Understand how threads in one block cooperatively stage reusable data.',
+    centralQuestionOrSkill:
+      'Understand how threads in one block cooperatively stage reusable data.',
     prerequisites: ['class-3'],
     concepts: [
       'shared allocation',
       'block scope',
-      'global-to-shared movement',
+      'global-to-shared staging',
       'reuse',
-      'synchronization where relevant',
+      'interaction with __syncthreads()',
     ],
     deferred: [
       'bank-conflict tuning',
@@ -298,7 +372,7 @@ export const CURRICULUM_MODULES = [
     ],
     visualGrammar: 'precise-2d',
     learnerOutcome:
-      'Explain what shared storage is scoped to, what data must be staged, and when cooperation needs synchronization.',
+      'Explain the scope of shared storage, what data is staged there, what is reused, and where synchronization is required.',
     unlocks: ['class-4'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/primitive-d-shared.md',
@@ -332,7 +406,7 @@ export const CURRICULUM_MODULES = [
     visualGrammar: 'mixed-2d-and-2.5d',
     learnerOutcome:
       'Trace one output element through tiled loads and compute phases, explain reuse, and identify synchronization boundaries.',
-    unlocks: ['primitive-e', 'class-5'],
+    unlocks: ['primitive-e'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/class-4-tiled-matrix-multiplication.md',
   },
@@ -343,10 +417,12 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 10,
     status: 'planned',
-    centralQuestionOrSkill: 'Understand how multiple threads safely update one shared location.',
+    centralQuestionOrSkill:
+      'Understand how multiple threads safely update one shared location.',
     prerequisites: ['class-4'],
     concepts: [
       'race condition',
+      'lost update',
       'atomic update',
       'correctness',
       'contention',
@@ -372,13 +448,15 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 11,
     status: 'planned',
-    centralQuestionOrSkill: 'What happens when many threads need the same output location?',
+    centralQuestionOrSkill:
+      'What happens when many threads need the same output location?',
     prerequisites: ['class-4', 'primitive-e'],
     concepts: [
       'histogram-style updates',
       'conflicting writes',
       'atomic correctness',
       'contention',
+      'hot versus distributed bins',
       'per-block strategies conceptually',
       'correctness versus scalability',
     ],
@@ -391,7 +469,7 @@ export const CURRICULUM_MODULES = [
     visualGrammar: 'precise-2d',
     learnerOutcome:
       'Diagnose conflicting writes, choose atomics for correctness, and reason about contention and per-block aggregation.',
-    unlocks: ['primitive-f', 'class-6'],
+    unlocks: ['primitive-f'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/class-5-atomics-histograms.md',
   },
@@ -402,13 +480,15 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 12,
     status: 'planned',
-    centralQuestionOrSkill: 'Understand what it means to initiate a transfer asynchronously.',
+    centralQuestionOrSkill:
+      'Understand what it means to initiate a transfer asynchronously.',
     prerequisites: ['class-5'],
     concepts: [
       'enqueueing work',
       'completion is not immediate',
+      'pending transfer',
       'stream ordering',
-      'synchronization before dependent use',
+      'dependency before consuming data',
     ],
     deferred: [
       'multi-stream overlap strategies',
@@ -418,7 +498,7 @@ export const CURRICULUM_MODULES = [
     ],
     visualGrammar: 'timeline',
     learnerOutcome:
-      'Separate enqueueing from completion and identify the synchronization needed before consuming transferred data.',
+      'Separate enqueueing from completion and identify the dependency that must be satisfied before consuming transferred data.',
     unlocks: ['class-6'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/primitive-f-cuda-memcpy-async.md',
@@ -430,18 +510,19 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 13,
     status: 'planned',
-    centralQuestionOrSkill: 'How can independent GPU work and transfers be organized as a pipeline?',
+    centralQuestionOrSkill:
+      'How can independent GPU work and transfers be organized as a pipeline?',
     prerequisites: ['class-5', 'primitive-f'],
     concepts: [
       'stream ordering',
       'independent streams',
       'host-device transfer timeline',
       'kernel timeline',
-      'overlap concept',
+      'potential overlap',
       'dependencies',
-      'explicit waiting',
     ],
     deferred: [
+      'explicit synchronization API choice',
       'CUDA graphs',
       'multi-device scheduling',
       'throughput benchmarks',
@@ -449,8 +530,8 @@ export const CURRICULUM_MODULES = [
     ],
     visualGrammar: 'timeline',
     learnerOutcome:
-      'Draw a dependency-aware stream timeline and explain which work may overlap without claiming automatic concurrency.',
-    unlocks: ['primitive-g', 'class-7'],
+      'Read and construct a dependency-aware stream timeline and explain which operations may overlap without claiming guaranteed hardware concurrency.',
+    unlocks: ['primitive-g'],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/class-6-streams-overlap.md',
   },
@@ -461,12 +542,14 @@ export const CURRICULUM_MODULES = [
     track: 'alphabetical-primitive',
     sequencePosition: 14,
     status: 'planned',
-    centralQuestionOrSkill: 'Know what scope is being waited on and when synchronization is actually needed.',
+    centralQuestionOrSkill:
+      'Know what scope the host is waiting for and when synchronization is actually needed.',
     prerequisites: ['class-6'],
     concepts: [
       'stream-local waiting',
       'device-wide waiting',
       'dependency boundaries',
+      'completion versus enqueueing',
       'avoiding unnecessary global synchronization',
     ],
     deferred: [
@@ -489,7 +572,8 @@ export const CURRICULUM_MODULES = [
     track: 'numbered-class',
     sequencePosition: 15,
     status: 'planned',
-    centralQuestionOrSkill: 'How do we reason systematically about improving a correct GPU implementation?',
+    centralQuestionOrSkill:
+      'How do we reason systematically about improving a correct GPU implementation?',
     prerequisites: ['class-6', 'primitive-g'],
     concepts: [
       'correct naive implementation',
@@ -497,8 +581,10 @@ export const CURRICULUM_MODULES = [
       'shared-memory reuse',
       'synchronization',
       'appropriate atomics',
-      'appropriate overlap',
+      'appropriate asynchronous movement',
+      'appropriate waiting',
       'tradeoff reasoning',
+      'evidence for performance claims',
     ],
     deferred: [
       'new API catalogues',
@@ -508,7 +594,7 @@ export const CURRICULUM_MODULES = [
     ],
     visualGrammar: 'mixed-2d-and-2.5d',
     learnerOutcome:
-      'Explain what changed, why correctness remains valid, which bottleneck is addressed, and what tradeoff was introduced.',
+      'For each change, explain what changed, why correctness remains valid, which resource/problem is addressed, what tradeoff was introduced, and whether performance evidence exists.',
     unlocks: [],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/class-7-correct-to-efficient.md',
@@ -523,8 +609,16 @@ export const CURRICULUM_MODULES = [
     centralQuestionOrSkill:
       'Reserve the release operation as a future reference module for allocation lifetime.',
     prerequisites: ['primitive-a'],
-    concepts: ['allocation lifetime', 'release operation', 'pointer ownership boundary'],
-    deferred: ['allocator performance', 'memory pools', 'unified-memory policy'],
+    concepts: [
+      'allocation lifetime',
+      'release operation',
+      'pointer ownership boundary',
+    ],
+    deferred: [
+      'allocator performance',
+      'memory pools',
+      'unified-memory policy',
+    ],
     visualGrammar: 'reference-only',
     learnerOutcome:
       'Future module: explain when an allocation is released and what lifetime obligation follows cudaMalloc.',
@@ -539,12 +633,22 @@ export const CURRICULUM_MODULES = [
     track: 'reference-primitive',
     sequencePosition: 17,
     status: 'planned',
-    centralQuestionOrSkill: 'Reserve the byte-pattern initialization operation as a future reference module.',
+    centralQuestionOrSkill:
+      'Reserve the byte-pattern initialization operation as a future reference module.',
     prerequisites: ['primitive-a'],
-    concepts: ['device memory initialization', 'byte pattern', 'allocation versus initialization'],
-    deferred: ['typed fill semantics', 'performance comparisons', 'large-scale initialization strategies'],
+    concepts: [
+      'device memory initialization',
+      'byte pattern',
+      'allocation versus initialization',
+    ],
+    deferred: [
+      'typed fill semantics',
+      'performance comparisons',
+      'large-scale initialization strategies',
+    ],
     visualGrammar: 'reference-only',
-    learnerOutcome: 'Future module: distinguish writing a byte pattern from writing typed numeric values.',
+    learnerOutcome:
+      'Future module: distinguish writing a byte pattern from writing typed numeric values.',
     unlocks: [],
     implementation: null,
     scaffoldPath: 'docs/curriculum/modules/primitive-i-cuda-memset.md',
@@ -556,10 +660,19 @@ export const CURRICULUM_MODULES = [
     track: 'reference-primitive',
     sequencePosition: 18,
     status: 'planned',
-    centralQuestionOrSkill: 'Reserve post-launch error inspection as a future reference module.',
+    centralQuestionOrSkill:
+      'Reserve post-launch error inspection as a future reference module.',
     prerequisites: ['class-1'],
-    concepts: ['error state inspection', 'launch-error boundary', 'explicit error handling'],
-    deferred: ['complete CUDA error taxonomy', 'debugger workflows', 'fault injection'],
+    concepts: [
+      'error state inspection',
+      'launch-error boundary',
+      'explicit error handling',
+    ],
+    deferred: [
+      'complete CUDA error taxonomy',
+      'debugger workflows',
+      'fault injection',
+    ],
     visualGrammar: 'reference-only',
     learnerOutcome:
       'Future module: identify what an error query can reveal and where it belongs in a checked launch path.',
@@ -577,8 +690,16 @@ export const CURRICULUM_MODULES = [
     centralQuestionOrSkill:
       'Reserve event recording and elapsed-time measurement as a future reference module.',
     prerequisites: ['primitive-f', 'class-6'],
-    concepts: ['event placement', 'elapsed-time interval', 'measurement boundary'],
-    deferred: ['published benchmarks', 'statistical benchmarking methodology', 'cross-device comparisons'],
+    concepts: [
+      'event placement',
+      'elapsed-time interval',
+      'measurement boundary',
+    ],
+    deferred: [
+      'published benchmarks',
+      'statistical benchmarking methodology',
+      'cross-device comparisons',
+    ],
     visualGrammar: 'timeline',
     learnerOutcome:
       'Future module: define a measured interval and keep kernel timing separate from transfer timing.',
