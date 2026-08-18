@@ -1,6 +1,6 @@
 ---
 title: Tarjetas Anki — Clases 01 y 02
-description: Mazo de 40 tarjetas para repasar cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
+description: Mazo de 37 tarjetas para repasar cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
 ---
 
 <script setup>
@@ -24,12 +24,12 @@ Mazo de repaso espaciado para:
 
 ## Qué contiene
 
-40 tarjetas:
+37 tarjetas:
 
 | Lección | Tarjetas | Conceptos principales |
 | --- | ---: | --- |
 | Índice global y suma de vectores | 18 | grilla, bloque, guard, transferencias, errores y medición |
-| Reducción paralela | 12 | carreras, árbol, cola impar, barreras, memoria compartida y punto flotante |
+| Reducción paralela | 9 | carreras, árbol, cola impar, reducción por pasadas y punto flotante |
 | `cudaMalloc` | 4 | reserva, contenido indefinido, punteros y liberación |
 | `cudaMemcpy` | 6 | origen y destino, dirección, bytes vs elementos, copiar no es mover |
 
