@@ -1,6 +1,6 @@
 ---
 title: De una suma secuencial a una reducción paralela
-description: 'Clase 02 de SimulaGPU: carreras de datos, reducción en árbol, tamaños impares, sincronización, memoria compartida y punto flotante.'
+description: 'Clase 02 de SimulaGPU: carreras de datos, reducción en árbol, tamaños impares, verificación y punto flotante.'
 ---
 
 # De una suma secuencial a una reducción paralela
@@ -11,15 +11,14 @@ Esta es la segunda clase de SimulaGPU. En la primera, cada hilo escribía un ele
 float suma = x[0] + x[1] + ... + x[n - 1];
 ```
 
-Ese cambio parece pequeño, pero introduce casi todos los problemas centrales de la programación paralela: trabajo compartido, carreras de datos, sincronización, reducción de resultados parciales y diferencias de punto flotante.
+Ese cambio introduce una pregunta nueva: **¿cómo transformamos muchos valores en uno sin hacer que todos los hilos compitan por la misma escritura?**
 
 Al terminar podrás:
 
 - explicar por qué `sum += input[i]` no se vuelve correcto por ejecutarlo con muchos hilos;
 - transformar una suma en una reducción por pares;
+- seguir el origen de cada valor intermedio a través del árbol;
 - escribir una pasada que funcione con tamaños pares, impares y unitarios;
-- distinguir una barrera de sincronización de una operación atómica;
-- explicar para qué sirve la memoria compartida en una reducción por bloque;
 - comprobar el resultado contra un oráculo CPU con una tolerancia justificada.
 
 **Requisito:** haber completado [Clase 01 — Índice global y suma de vectores](./indice-global-suma-vectores).
@@ -75,25 +74,9 @@ Eso es una **carrera de datos**: el resultado depende del orden temporal de oper
 Probar el kernel una sola vez no demuestra nada. Una carrera puede producir el resultado esperado por accidente, cambiar entre ejecuciones o aparecer solo con entradas grandes.
 :::
 
-## 2. ¿Por qué no usar `atomicAdd` para todo?
+La solución de esta clase no consiste en proteger ese único acumulador. Cambiaremos la forma del algoritmo para que, en cada pasada, cada hilo escriba una salida distinta. Más adelante estudiaremos herramientas específicas para coordinar hilos o resolver escrituras concurrentes cuando un algoritmo realmente las necesite.
 
-Una operación atómica hace indivisible la actualización:
-
-```cpp
-atomicAdd(sum, input[i]);
-```
-
-Eso corrige la carrera, pero obliga a miles de hilos a competir por una sola dirección. La operación queda serializada alrededor de ese punto caliente.
-
-Los atómicos son útiles cuando:
-
-- hay pocas colisiones;
-- el cálculo por hilo es mucho más costoso que la actualización;
-- se acumulan pocos resultados parciales, no millones de elementos individuales.
-
-Para una suma masiva, la estrategia habitual es reducir primero localmente y usar muy pocas actualizaciones globales al final.
-
-## 3. La idea central: reducir por pares
+## 2. La idea central: reducir por pares
 
 En lugar de que todos escriban el mismo acumulador, cada hilo produce una salida independiente:
 
@@ -127,9 +110,11 @@ Tres líneas contienen la mayor parte de la lección:
 
 1. `left = 2 * out`: los pares son disjuntos: `(0,1)`, `(2,3)`, `(4,5)`…;
 2. `left + 1 < n ? ... : 0`: un elemento sin pareja no se pierde;
-3. `output[out]`: la salida es compacta, sin huecos.
+3. `output[out]`: la salida es compacta, sin huecos y cada hilo escribe una posición distinta.
 
-## 4. El tamaño de la siguiente pasada
+La propiedad importante es fácil de comprobar: **cada salida de una pasada depende solo de su par de entrada**. Eso permite seguir el árbol completo sin depender de un orden arbitrario entre hilos.
+
+## 3. El tamaño de la siguiente pasada
 
 Una pasada sobre `n` valores produce:
 
@@ -139,7 +124,7 @@ next_n = n / 2 + (n % 2 != 0 ? 1 : 0);
 
 Es decir, `ceil(n / 2)`.
 
-El host debe repetir el proceso y recalcular la grilla en cada paso:
+El host repite el proceso y recalcula la grilla en cada paso:
 
 ```cpp
 int current_n = n;
@@ -154,9 +139,11 @@ while (current_n > 1) {
 }
 ```
 
-No se puede conservar la grilla inicial: el trabajo cae a la mitad en cada iteración.
+No se puede conservar la grilla inicial: el trabajo cae aproximadamente a la mitad en cada iteración.
 
-## 5. El caso impar no es un detalle
+En esta versión introductoria, **cada pasada es un lanzamiento separado** y consume un buffer para producir el siguiente. Así podemos razonar sobre una transformación completa a la vez sin introducir todavía cooperación entre hilos dentro de un mismo kernel.
+
+## 4. El caso impar no es un detalle
 
 Con siete valores:
 
@@ -170,7 +157,7 @@ los primeros seis forman tres pares. El `6` final debe sobrevivir:
 [5+1, 4+2, 8+3, 6+0] = [6, 6, 11, 6]
 ```
 
-Duplicarlo (`6 + 6`) cambia la suma. Descartarlo pierde información. Leer `input[left + 1]` sin guard accede fuera del arreglo.
+Duplicarlo (`6 + 6`) cambia la suma. Descartarlo pierde información. Leer `input[left + 1]` sin guarda accede fuera del arreglo.
 
 Por eso las pruebas mínimas deben incluir:
 
@@ -180,70 +167,26 @@ Por eso las pruebas mínimas deben incluir:
 - un tamaño justo por encima de un bloque;
 - una entrada grande que no sea potencia de dos.
 
-## 6. Barrera, atómico y lanzamiento nuevo no son lo mismo
+## 5. De una pasada a un árbol completo
 
-### `__syncthreads()`
+El árbol no necesita una operación nueva en cada nivel. Repite la misma regla sobre una entrada cada vez más pequeña:
 
-Es una barrera **dentro de un bloque**. Ningún hilo del bloque puede pasar hasta que todos los hilos activos del bloque hayan llegado.
-
-Sirve cuando una etapa escribe valores en memoria compartida y la siguiente etapa debe leerlos:
-
-```cpp
-shared[tid] = value;
-__syncthreads();
-
-if (tid < stride) {
-  shared[tid] += shared[tid + stride];
-}
-__syncthreads();
+```text
+8 valores → 4 → 2 → 1
+7 valores → 4 → 2 → 1
+1 valor   → 1
 ```
 
-No sincroniza bloques distintos.
+Para verificar una ejecución completa, pregunta en cada nivel:
 
-### `atomicAdd`
+1. ¿qué índices consume cada salida?;
+2. ¿qué valor produce?;
+3. ¿qué pasa con la cola impar?;
+4. ¿cuántas salidas tendrá la siguiente pasada?
 
-Protege una actualización concreta de memoria. No obliga a todos los hilos a llegar al mismo punto ni hace visible una fase completa por sí sola.
+Si puedes responder esas cuatro preguntas, puedes reconstruir el resultado final sin depender de la animación.
 
-### Un nuevo lanzamiento
-
-El final de un kernel separa globalmente una pasada de la siguiente cuando el host respeta el orden de ejecución y comprueba los errores. Por eso la versión introductoria usa un lanzamiento por pasada: es más fácil razonar sobre su corrección.
-
-## 7. Memoria compartida: reducir dentro del bloque
-
-La versión anterior lee y escribe memoria global en cada nivel. Una mejora habitual es:
-
-1. cada bloque carga una porción de la entrada a memoria compartida;
-2. sus hilos reducen esa porción en árbol, con barreras entre niveles;
-3. el bloque escribe un solo parcial en memoria global;
-4. una etapa posterior reduce los parciales.
-
-La memoria compartida es pequeña, está situada cerca de los núcleos del multiprocesador y puede ser usada por todos los hilos del bloque. Su ventaja no es que sea “mágicamente rápida”, sino que permite reutilizar datos sin volver a memoria global en cada nivel.
-
-Un esquema clásico es:
-
-```cpp
-extern __shared__ float shared[];
-const int tid = threadIdx.x;
-const int global = blockIdx.x * blockDim.x + tid;
-
-shared[tid] = global < n ? input[global] : 0.0f;
-__syncthreads();
-
-for (int stride = blockDim.x / 2; stride > 0; stride /= 2) {
-  if (tid < stride) {
-    shared[tid] += shared[tid + stride];
-  }
-  __syncthreads();
-}
-
-if (tid == 0) {
-  partials[blockIdx.x] = shared[0];
-}
-```
-
-Esta forma exige bloques con tamaño potencia de dos o lógica adicional para otros tamaños. También exige que **todos** los hilos del bloque alcancen cada barrera; poner `__syncthreads()` dentro de una rama que no toman todos puede bloquear el kernel.
-
-## 8. Punto flotante: el orden cambia el resultado
+## 6. Punto flotante: el orden cambia el resultado
 
 La suma de números reales es asociativa:
 
@@ -260,14 +203,14 @@ secuencial: (((a + b) + c) + d)
 
 Por eso no debes exigir igualdad bit a bit para una reducción general. La validación necesita:
 
-- una referencia CPU más estable, por ejemplo suma de Kahan o acumulación en `double`;
+- una referencia CPU más estable, por ejemplo acumulación en `double`;
 - tolerancia absoluta y relativa justificadas por magnitud y tamaño;
 - pruebas explícitas con cancelación y valores muy distintos;
 - rechazo explícito de `NaN` e infinito inesperado.
 
 No basta con usar una tolerancia enorme: eso solo oculta errores de índices.
 
-## 9. Laboratorio interactivo {#laboratorio-interactivo}
+## 7. Laboratorio interactivo {#laboratorio-interactivo}
 
 Primero cambia la entrada y recorre las pasadas del árbol. Luego rompe deliberadamente la asignación de pares o descarta la cola impar y observa dónde deja de conservarse la suma.
 
@@ -279,7 +222,7 @@ En la segunda mitad hay un editor guiado. Los tres `select` modifican líneas re
 El laboratorio no contiene `nvcc` ni acceso a una GPU. Ejecuta un modelo aritmético determinista y un conjunto de pruebas CPU. La ejecución CUDA real está en el árbol `native/` y requiere CUDA Toolkit más una GPU NVIDIA.
 :::
 
-## 10. Ejecutar el ejemplo nativo
+## 8. Ejecutar el ejemplo nativo
 
 Configuración solo CPU:
 
@@ -300,15 +243,28 @@ cmake --build native/build-cuda
 
 La parte CPU siempre se compila. La unidad CUDA solo se añade si CMake encontró `nvcc`; el repositorio no afirma que ese código haya sido compilado o ejecutado en CI.
 
-## 11. Criterio de dominio
+## 9. Criterio de dominio
 
 Has terminado esta clase cuando puedes responder sin memorizar código:
 
-1. ¿qué dirección escribiría cada hilo en una pasada?;
-2. ¿qué sucede con el último valor cuando `n` es impar?;
-3. ¿por qué una barrera dentro del bloque no sincroniza toda la grilla?;
-4. ¿por qué `atomicAdd` puede ser correcto y aun así ser una mala reducción?;
-5. ¿por qué el resultado GPU puede diferir algunos bits del bucle CPU?;
-6. ¿qué prueba concreta detectaría cada fallo?
+1. ¿por qué un único acumulador compartido produce una carrera?;
+2. ¿qué entradas procesa cada hilo en una pasada?;
+3. ¿de dónde proviene cada valor intermedio del árbol?;
+4. ¿qué sucede con el último valor cuando `n` es impar?;
+5. ¿por qué hay que reducir también el tamaño de la siguiente grilla?;
+6. ¿por qué el resultado GPU puede diferir algunos bits del bucle CPU?;
+7. ¿qué prueba concreta detectaría cada fallo de índices o frontera?
+
+::: tip Lo que ya puedes hacer
+Ya puedes seguir cómo muchos valores se transforman en uno mediante etapas y verificar que cada etapa conserva la suma esperada.
+:::
+
+### La siguiente pregunta
+
+Hasta ahora cada pasada vive en un lanzamiento separado. Pero muchos algoritmos necesitan que **varios hilos de un mismo bloque completen una fase antes de que alguno empiece una fase dependiente**.
+
+¿Cómo expresamos esa frontera de cooperación sin asumir que los hilos llegan al mismo tiempo?
+
+Esa es la pregunta de la siguiente primitiva.
 
 Continúa con el [Ejercicio 02 — Implementar una pasada de reducción](./ejercicio-02-reduccion).
