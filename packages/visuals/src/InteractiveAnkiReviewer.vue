@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import '@simulagpu/theme/tokens.css';
 
 interface WebCard {
   id: string;
@@ -54,7 +55,12 @@ const progressText = computed(() => {
 });
 
 const shellStyle = computed(() => ({
-  transform: `translate3d(${dragX.value}px, ${dragY.value}px, 0) rotateX(${tiltX.value}deg) rotateY(${tiltY.value}deg) rotateZ(${rotationZ.value}deg)`,
+  transform: [
+    `translate3d(${dragX.value}px, ${dragY.value}px, 0)`,
+    `rotateX(${tiltX.value}deg)`,
+    `rotateY(${tiltY.value}deg)`,
+    `rotateZ(${rotationZ.value}deg)`,
+  ].join(' '),
 }));
 
 const leftHintStyle = computed(() => ({
@@ -70,7 +76,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isWebDeck(value: unknown): value is WebDeck {
-  if (!isRecord(value) || value.version !== 1 || typeof value.deck !== 'string' || !Array.isArray(value.cards)) {
+  if (
+    !isRecord(value) ||
+    value.version !== 1 ||
+    typeof value.deck !== 'string' ||
+    !Array.isArray(value.cards)
+  ) {
     return false;
   }
 
@@ -220,7 +231,7 @@ function onCardClick(): void {
       </div>
       <div class="review-progress" aria-live="polite">
         <strong>{{ progressText }}</strong>
-        <span v-if="cards.length">{{ known }} supe · {{ missed }} repasar</span>
+        <span v-if="cards.length">{{ known }} recordadas · {{ missed }} repasar</span>
       </div>
     </header>
 
@@ -318,9 +329,10 @@ function onCardClick(): void {
   --card-radius: 24px;
   margin: 1.5rem 0 2rem;
   padding: clamp(1rem, 3vw, 1.5rem);
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid var(--sgpu-border);
   border-radius: 20px;
-  background: color-mix(in srgb, var(--vp-c-bg-soft) 82%, transparent);
+  background: color-mix(in srgb, var(--sgpu-surface-muted) 82%, transparent);
+  color: var(--sgpu-text);
   overflow: hidden;
 }
 
@@ -343,7 +355,7 @@ function onCardClick(): void {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--vp-c-brand-1);
+  color: var(--sgpu-selected-border);
 }
 
 .review-progress {
@@ -362,7 +374,7 @@ function onCardClick(): void {
 .keyboard-hint,
 .card-action,
 .review-complete p {
-  color: var(--vp-c-text-2);
+  color: var(--sgpu-text-muted);
 }
 
 .review-progress span {
@@ -385,7 +397,7 @@ function onCardClick(): void {
 }
 
 .review-error {
-  color: var(--vp-c-danger-1);
+  color: var(--sgpu-invalid-border);
 }
 
 .review-stage {
@@ -421,7 +433,7 @@ function onCardClick(): void {
 
 .card-shell:focus-visible {
   border-radius: var(--card-radius);
-  box-shadow: 0 0 0 3px var(--vp-c-brand-1);
+  box-shadow: 0 0 0 3px var(--sgpu-selected-border);
 }
 
 .card-shell.dragging {
@@ -452,18 +464,18 @@ function onCardClick(): void {
   justify-content: space-between;
   gap: 1.25rem;
   padding: clamp(1.25rem, 5vw, 2rem);
-  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 34%, var(--vp-c-divider));
+  border: 1px solid color-mix(in srgb, var(--sgpu-selected-border) 34%, var(--sgpu-border));
   border-radius: var(--card-radius);
   background:
     radial-gradient(
       circle at 22% 12%,
-      color-mix(in srgb, var(--vp-c-brand-1) 14%, transparent),
+      color-mix(in srgb, var(--sgpu-selected-border) 14%, transparent),
       transparent 34%
     ),
-    var(--vp-c-bg);
+    var(--sgpu-surface);
   box-shadow:
-    0 24px 60px color-mix(in srgb, var(--vp-c-black) 24%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--vp-c-white) 9%, transparent);
+    0 24px 60px color-mix(in srgb, #000000 24%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 9%, transparent);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -473,10 +485,10 @@ function onCardClick(): void {
   background:
     radial-gradient(
       circle at 78% 12%,
-      color-mix(in srgb, var(--vp-c-brand-2) 18%, transparent),
+      color-mix(in srgb, var(--sgpu-device-border) 18%, transparent),
       transparent 36%
     ),
-    var(--vp-c-bg);
+    var(--sgpu-surface);
 }
 
 .card-meta {
@@ -488,7 +500,7 @@ function onCardClick(): void {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--vp-c-text-2);
+  color: var(--sgpu-text-muted);
 }
 
 .card-meta code {
@@ -526,11 +538,11 @@ function onCardClick(): void {
 
 .review-button {
   min-height: 46px;
-  border: 1px solid var(--vp-c-divider);
+  border: 1px solid var(--sgpu-border);
   border-radius: 12px;
   padding: 0.7rem 1rem;
-  background: var(--vp-c-bg-soft);
-  color: var(--vp-c-text-1);
+  background: var(--sgpu-surface-muted);
+  color: var(--sgpu-text);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -538,18 +550,18 @@ function onCardClick(): void {
 
 .review-button:hover:not(:disabled),
 .review-button:focus-visible {
-  border-color: var(--vp-c-brand-1);
+  border-color: var(--sgpu-selected-border);
 }
 
 .review-button:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--vp-c-brand-1) 35%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--sgpu-selected-border) 35%, transparent);
   outline-offset: 2px;
 }
 
 .review-button.primary {
-  border-color: var(--vp-c-brand-1);
-  background: var(--vp-c-brand-1);
-  color: var(--vp-c-white);
+  border-color: var(--sgpu-selected-border);
+  background: var(--sgpu-selected-border);
+  color: #ffffff;
 }
 
 .review-button:disabled {
@@ -573,13 +585,13 @@ function onCardClick(): void {
 
 .swipe-left {
   left: max(0.5rem, calc(50% - 255px));
-  color: var(--vp-c-danger-1);
+  color: var(--sgpu-invalid-border);
   transform: rotate(-8deg);
 }
 
 .swipe-right {
   right: max(0.5rem, calc(50% - 255px));
-  color: var(--vp-c-brand-1);
+  color: var(--sgpu-selected-border);
   transform: rotate(8deg);
 }
 
