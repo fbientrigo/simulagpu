@@ -1,45 +1,57 @@
 # Identity
 - **Stable id:** `class-3`
-- **Title:** `Clase 3 — Memoria de GPU y patrones de acceso`
+- **Title:** `Clase 3 — Cooperación, memoria y patrones de acceso`
 - **Kind:** numbered class track
 - **Sequence position:** 7
 
 # Central question / skill
-Why does where and how threads access memory matter?
+How does a GPU algorithm change when threads need related data and the memory-access pattern becomes part of the reasoning?
 
 # Prerequisites
-- `class-2` — independent work, reduction passes, and correctness-first reasoning
-- `primitive-c` — block cooperation and barrier scope
+- `class-2` — independent pairwise work, reduction passes, and correctness-first reasoning
+- `primitive-c` — block-local barrier semantics and safe participation
 
 # Concepts in scope
-- registers, shared memory, and global memory
+- independent versus cooperative work
+- per-thread/private values and global device memory
+- block-local reuse as a motivation, without teaching `__shared__` yet
+- synchronization boundaries between dependent phases
 - contiguous versus strided access
-- introductory coalescing
-- access patterns
-- data reuse
+- introductory access/coalescing intuition without hardware simulation
+- repeated reads and data-reuse opportunities
 
 # Explicitly out of scope
+- `__shared__` declaration or operational semantics (Primitive D)
+- shared-memory bank conflicts
 - advanced occupancy tuning
-- detailed cache policy
-- bank-conflict optimization
+- detailed cache policy or transaction simulation
 - architecture-specific performance claims
+- measured speedups without native evidence
 
 # Intended interaction
-Compare a small set of deterministic contiguous and strided requests, then
-identify where reuse could occur. The interaction explains an access model; it
-does not predict measured throughput.
+Use one stable 2D thread-to-data scene with progressive states: familiar independent
+mapping, a small neighborhood/repeated-read pattern, a dependent cooperative phase
+that applies Primitive C, contiguous versus strided address mappings, and a final
+reuse opportunity. Keep the storage used for future reuse conceptual; the class
+should end by asking where a block could stage those values, not by teaching
+`__shared__`.
 
 # Intended visual grammar
-Precise 2D addresses, lanes, and memory regions. Use 2.5D only if a structural
-relationship cannot be made clear in 2D.
+Precise 2D indexed cells, thread lanes, memory-region labels, and explicit arrows.
+Keep index/address distinct from stored value. Geometry remains stable while the
+mapping or semantic state changes. Do not use 2.5D or fake timing.
 
 # Definition of learned
-The learner can compare contiguous and strided access, name the role of the
-three memory regions, and describe simple reuse without claiming a speedup.
+Given a small unfamiliar GPU pattern, the learner can identify cross-thread data
+dependencies, place a block-local synchronization boundary, distinguish contiguous
+from strided thread-to-address mappings, and identify repeated values that create a
+reuse opportunity without claiming a measured speedup.
 
 # Dependencies / prerequisites for implementation
-Specify the simplified access/coalescing model and its assumptions in the
-contract before drawing it. Keep all timing and hardware claims out of the
-browser model; add native correctness work separately.
+Define the simplified deterministic access model and its assumptions before drawing
+it. Reuse Primitive C as known vocabulary rather than reteaching barrier mechanics.
+Do not expose `__shared__` syntax or make block-local storage operational until
+Primitive D. Preserve browser-model determinism and keep all performance/timing
+claims qualitative unless native measurement exists.
 
 # Status: PLANNED
