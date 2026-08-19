@@ -236,8 +236,8 @@ function onCardClick(): void {
     </header>
 
     <p class="review-instruction">
-      Intenta responder antes de revelar. En escritorio puedes mover la tarjeta; en móvil, revela y desliza
-      a la derecha si la supiste o a la izquierda si quieres repasarla.
+      Intenta responder antes de revelar. En escritorio puedes mover la tarjeta; en móvil, revela y desliza a
+      la derecha si la supiste o a la izquierda si quieres repasarla.
     </p>
 
     <div v-if="loadState === 'loading'" class="review-state" role="status">Cargando tarjetas…</div>

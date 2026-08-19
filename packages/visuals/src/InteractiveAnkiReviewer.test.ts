@@ -64,7 +64,7 @@ describe('InteractiveAnkiReviewer', () => {
     expect(wrapper.get('.card-flip').classes()).toContain('revealed');
     expect(wrapper.get('.card-front').attributes('aria-hidden')).toBe('true');
     expect(wrapper.get('.card-back').attributes('aria-hidden')).toBe('false');
-    expect(wrapper.get('[data-test="rating-actions"]').exists()).toBe(true);
+    expect(wrapper.find('[data-test="rating-actions"]').exists()).toBe(true);
   });
 
   it('supports keyboard reveal and native rating buttons', async () => {
@@ -82,7 +82,7 @@ describe('InteractiveAnkiReviewer', () => {
     await nextTick();
 
     expect(wrapper.get('.review-progress strong').text()).toBe('2 / 2');
-    expect(wrapper.get('.review-progress').text()).toContain('1 supe');
+    expect(wrapper.get('.review-progress').text()).toContain('1 recordadas');
     expect(wrapper.get('.card-meta code').text()).toBe('idx-002');
   });
 
@@ -113,10 +113,10 @@ describe('InteractiveAnkiReviewer', () => {
     vi.runAllTimers();
     await nextTick();
 
-    expect(wrapper.get('.review-progress').text()).toContain('1 supe');
+    expect(wrapper.get('.review-progress').text()).toContain('1 recordadas');
 
     card = wrapper.get('[data-test="interactive-card"]');
-    await card.trigger('click');
+    await card.trigger('keydown', { key: 'Enter' });
     await card.trigger('pointerdown', {
       pointerId: 2,
       pointerType: 'touch',
