@@ -212,11 +212,8 @@ describe('lección 02', () => {
   it('teaches the high-value reduction concepts', () => {
     const topics: Array<[string, RegExp]> = [
       ['data race', /carrera de datos/i],
-      ['atomics', /atomicAdd/],
       ['adjacent-pair tree', /left = 2 \* out/],
       ['odd tail', /tamaño es impar|tamaño impar/i],
-      ['barrier', /__syncthreads/],
-      ['shared memory', /memoria compartida/i],
       ['floating-point associativity', /no siempre lo es|no es asociativa/i],
       ['CPU oracle', /oráculo CPU/i],
     ];
@@ -278,6 +275,6 @@ describe('página de tarjetas', () => {
     expect(read('anki/cards/01-indice-global.yaml')).toContain('idx-001');
     expect(read('anki/cards/02-reduccion.yaml')).toContain('red-001');
     expect(read('anki/cards/03-cuda-memcpy.yaml')).toContain('memcpy-001');
-    expect(page).toContain('40 tarjetas');
+    expect(page).toContain('37 tarjetas');
   });
 });

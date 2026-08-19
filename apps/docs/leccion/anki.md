@@ -1,6 +1,6 @@
 ---
 title: Tarjetas Anki — repaso interactivo
-description: Repasa en la web las 40 tarjetas de cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
+description: Repasa en la web las 37 tarjetas de cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
 ---
 
 <script setup>
@@ -18,7 +18,7 @@ mismo mazo canónico que la exportación de Anki.
 
 ## Qué contiene
 
-40 tarjetas para:
+37 tarjetas para:
 
 - [Clase 01 — Del índice global a la suma de vectores](./indice-global-suma-vectores);
 - [Clase 02 — De una suma secuencial a una reducción paralela](./reduccion-paralela);
@@ -28,7 +28,7 @@ mismo mazo canónico que la exportación de Anki.
 | Lección | Tarjetas | Conceptos principales |
 | --- | ---: | --- |
 | Índice global y suma de vectores | 18 | grilla, bloque, guard, transferencias, errores y medición |
-| Reducción paralela | 12 | carreras, árbol, cola impar, barreras, memoria compartida y punto flotante |
+| Reducción paralela | 9 | carreras, árbol, cola impar, reducción por pasadas y punto flotante |
 | `cudaMalloc` | 4 | reserva, contenido indefinido, punteros y liberación |
 | `cudaMemcpy` | 6 | origen y destino, dirección, bytes vs elementos, copiar no es mover |
 
