@@ -1,11 +1,12 @@
 /**
- * Build the importable Anki TSV from the YAML sources in anki/cards/.
+ * Build the importable Anki TSV and the web-review JSON from the YAML sources
+ * in anki/cards/.
  *
- *   node anki/scripts/build-anki.mjs            # write the TSV
- *   node anki/scripts/build-anki.mjs --check    # fail if the TSV is stale
+ *   node anki/scripts/build-anki.mjs            # write both generated files
+ *   node anki/scripts/build-anki.mjs --check    # fail if either file is stale
  *
  * Determinism is the point: the same sources must always produce byte-identical
- * output, so the file can be regenerated in CI and compared. That means no
+ * output, so the files can be regenerated in CI and compared. That means no
  * timestamps, no filesystem ordering, and an explicit sort by card id.
  *
  * Validation is hand-written against anki/schema/card.schema.json rather than
@@ -25,6 +26,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '..', '..');
 const CARDS_DIR = join(REPO_ROOT, 'anki', 'cards');
 const OUTPUT_PATH = join(REPO_ROOT, 'apps', 'docs', 'public', 'descargas', 'simulagpu-anki.tsv');
+const WEB_OUTPUT_PATH = join(REPO_ROOT, 'apps', 'docs', 'public', 'data', 'simulagpu-anki.json');
 
 const NOTETYPES = ['Basic'];
 const TIPOS = ['conceptual', 'calculo', 'frontera', 'lanzamiento', 'memoria', 'medicion', 'errores'];
@@ -186,6 +188,48 @@ function renderTsv({ rows, deck }) {
   return `${lines.join('\n')}\n`;
 }
 
+/**
+ * Browser review consumes the same validated rows as the TSV. This JSON is a
+ * generated transport format, not a second authored card source.
+ */
+function renderWebJson({ rows, deck }) {
+  const payload = {
+    version: 1,
+    deck,
+    cards: rows.map((row) => ({
+      id: row.id,
+      tipo: row.tipo,
+      frontHtml: row.anverso,
+      backHtml: row.reverso,
+      tags: row.etiquetas.split(' '),
+    })),
+  };
+  return `${JSON.stringify(payload, null, 2)}\n`;
+}
+
+function assertGeneratedCurrent(path, expected) {
+  let existing = null;
+  try {
+    existing = readFileSync(path, 'utf8');
+  } catch {
+    console.error(`anki:build --check failed — ${path} does not exist. Run "pnpm anki:build".`);
+    process.exit(1);
+  }
+  if (existing !== expected) {
+    console.error(`anki:build --check failed — ${path} is out of date. Run "pnpm anki:build".`);
+    process.exit(1);
+  }
+}
+
+function writeGenerated(path, content) {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, content, 'utf8');
+}
+
+function shortDigest(content) {
+  return createHash('sha256').update(content).digest('hex').slice(0, 12);
+}
+
 function main() {
   const check = process.argv.includes('--check');
 
@@ -201,26 +245,19 @@ function main() {
   }
 
   const tsv = renderTsv(deckData);
-  const digest = createHash('sha256').update(tsv).digest('hex').slice(0, 12);
+  const webJson = renderWebJson(deckData);
 
   if (check) {
-    let existing = null;
-    try {
-      existing = readFileSync(OUTPUT_PATH, 'utf8');
-    } catch {
-      console.error(`anki:build --check failed — ${OUTPUT_PATH} does not exist. Run "pnpm anki:build".`);
-      process.exit(1);
-    }
-    if (existing !== tsv) {
-      console.error('anki:build --check failed — the generated TSV is out of date. Run "pnpm anki:build".');
-      process.exit(1);
-    }
-    console.log(`anki:build --check ok (${deckData.rows.length} tarjetas, sha256:${digest})`);
+    assertGeneratedCurrent(OUTPUT_PATH, tsv);
+    assertGeneratedCurrent(WEB_OUTPUT_PATH, webJson);
+    console.log(
+      `anki:build --check ok (${deckData.rows.length} tarjetas, tsv:${shortDigest(tsv)}, web:${shortDigest(webJson)})`,
+    );
     return;
   }
 
-  mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
-  writeFileSync(OUTPUT_PATH, tsv, 'utf8');
+  writeGenerated(OUTPUT_PATH, tsv);
+  writeGenerated(WEB_OUTPUT_PATH, webJson);
 
   const porTipo = new Map();
   for (const row of deckData.rows) {
@@ -232,7 +269,8 @@ function main() {
     .join(' ');
 
   console.log(`anki:build → ${deckData.rows.length} tarjetas  [${resumen}]`);
-  console.log(`             ${OUTPUT_PATH}  sha256:${digest}`);
+  console.log(`             ${OUTPUT_PATH}  sha256:${shortDigest(tsv)}`);
+  console.log(`             ${WEB_OUTPUT_PATH}  sha256:${shortDigest(webJson)}`);
 }
 
 // Only act when run as a program. Importing this module (from the tests) must
@@ -241,4 +279,4 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   main();
 }
 
-export { loadCards, renderTsv, toAnkiHtml, OUTPUT_PATH };
+export { loadCards, renderTsv, renderWebJson, toAnkiHtml, OUTPUT_PATH, WEB_OUTPUT_PATH };

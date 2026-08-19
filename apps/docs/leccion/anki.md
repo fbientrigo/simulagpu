@@ -1,30 +1,29 @@
 ---
-title: Tarjetas Anki — Clases 01 y 02
-description: Mazo de 37 tarjetas para repasar cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
+title: Tarjetas Anki — repaso interactivo
+description: Repasa en la web las 37 tarjetas de cudaMalloc, cudaMemcpy, índice global, suma de vectores y reducción paralela.
 ---
 
 <script setup>
-// withBase respects the site's base path, so the link keeps working when the
-// site is served from a subdirectory such as /simulagpu/.
+// withBase respects the site's base path, so both the reviewer and download keep
+// working when the site is served from a subdirectory such as /simulagpu/.
 import { withBase } from 'vitepress';
 </script>
 
-# Tarjetas Anki — Clases 01 y 02
+# Tarjetas Anki — repaso interactivo
 
-Mazo de repaso espaciado para:
+No necesitas descargar nada para repasar. Las tarjetas que ves aquí salen del
+mismo mazo canónico que la exportación de Anki.
 
-- [Clase 01 — Del índice global a la suma de vectores](./indice-global-suma-vectores);
-- [Clase 02 — De una suma secuencial a una reducción paralela](./reduccion-paralela).
-- [Clase complementaria — `cudaMalloc`](../clases/cuda-malloc).
-- [Clase complementaria — `cudaMemcpy`](../clases/cuda-memcpy).
-
-<a :href="withBase('/descargas/simulagpu-anki.tsv')" download class="descarga-anki">
-  Descargar simulagpu-anki.tsv
-</a>
+<InteractiveAnkiReviewer :source="withBase('/data/simulagpu-anki.json')" />
 
 ## Qué contiene
 
-37 tarjetas:
+37 tarjetas para:
+
+- [Clase 01 — Del índice global a la suma de vectores](./indice-global-suma-vectores);
+- [Clase 02 — De una suma secuencial a una reducción paralela](./reduccion-paralela);
+- [Clase complementaria — `cudaMalloc`](../clases/cuda-malloc);
+- [Clase complementaria — `cudaMemcpy`](../clases/cuda-memcpy).
 
 | Lección | Tarjetas | Conceptos principales |
 | --- | ---: | --- |
@@ -33,39 +32,49 @@ Mazo de repaso espaciado para:
 | `cudaMalloc` | 4 | reserva, contenido indefinido, punteros y liberación |
 | `cudaMemcpy` | 6 | origen y destino, dirección, bytes vs elementos, copiar no es mover |
 
-Cada tarjeta tiene un identificador permanente: `idx-*` para la Clase 01 y `red-*` para la Clase 02.
-Las cuatro tarjetas de `cudaMalloc` usan identificadores permanentes `malloc-*` y las seis de `cudaMemcpy`
-usan `memcpy-*`.
+Cada tarjeta mantiene un identificador permanente. Ese identificador es la base
+para que una futura capa de repetición espaciada pueda conservar historial sin
+crear otro conjunto de tarjetas.
 
-## Cómo importarlo
+## ¿Prefieres Anki?
 
-1. Descarga el archivo con el botón de arriba.
+La descarga sigue disponible como opción. Es exactamente el mismo contenido en
+formato TSV para importar en la aplicación de Anki.
+
+<a :href="withBase('/descargas/simulagpu-anki.tsv')" download class="descarga-anki">
+  Descargar simulagpu-anki.tsv
+</a>
+
+1. Descarga el archivo.
 2. En Anki: **Archivo → Importar…** y elige el `.tsv`.
 3. Deja marcado **Permitir HTML en los campos**.
 4. El mazo aparece, por compatibilidad con la primera versión, como `SimulaGPU::01 Índice global`.
 
-El nombre histórico del mazo se conserva temporalmente para no duplicar notas a quienes ya importaron la versión anterior. Las tarjetas de reducción llevan las etiquetas `reduccion` y `red-*`, por lo que pueden filtrarse o moverse a otro submazo dentro de Anki.
+El nombre histórico del mazo se conserva temporalmente para no duplicar notas a
+quienes ya importaron la versión anterior.
 
-## Cómo usarlo
+## Cómo usar estas tarjetas
 
-Estas tarjetas sirven para **recordar**, no para reemplazar los ejercicios. Completa primero la lección y ejecuta sus pruebas. Después, cinco minutos diarios son suficientes para mantener fórmulas, invariantes y errores comunes accesibles.
+Sirven para **recordar**, no para reemplazar los ejercicios. Intenta formular la
+respuesta antes de revelar. Después califica el recuerdo, no la dificultad de la
+pregunta: **La supe** si pudiste recuperarla; **No la supe** si necesitaste ver la
+respuesta.
 
 ## Para quien contribuye
 
-Las tarjetas se escriben en YAML bajo `anki/cards/`. El TSV se genera de forma determinista con:
-
-```bash
-pnpm anki:build
-```
+Las tarjetas se escriben una sola vez en YAML bajo `anki/cards/`. `pnpm
+anki:build` genera tanto el TSV descargable como el JSON que consume este
+reviewer. Ninguno de los dos archivos generados se versiona.
 
 El formato está documentado en
 [`anki/README.md`](https://github.com/fbientrigo/simulagpu/blob/main/anki/README.md).
-La generación de `.apkg` sigue aplazada para evitar dependencias y plantillas binarias.
+La generación de `.apkg` sigue aplazada para evitar dependencias y plantillas
+binarias.
 
 <style>
 .descarga-anki {
   display: inline-block;
-  margin: 1rem 0 1.5rem;
+  margin: 0.75rem 0 1rem;
   padding: 0.6rem 1.1rem;
   border-radius: 8px;
   background: var(--vp-c-brand-1);
@@ -73,6 +82,7 @@ La generación de `.apkg` sigue aplazada para evitar dependencias y plantillas b
   font-weight: 600;
   text-decoration: none;
 }
+
 .descarga-anki:hover {
   background: var(--vp-c-brand-2);
 }

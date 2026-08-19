@@ -183,6 +183,26 @@ implementation with its own tests and explanation.
 
 ---
 
+## Interaction references
+
+### S-30 — Tactile card motion inspired by Balatro
+
+- **Sources consulted:** Balatro's card interaction as the product reference;
+  [`faketut/godot-handrow`](https://github.com/faketut/godot-handrow), whose
+  README describes cursor-directed tilt, drag/velocity tilt, hover lift and
+  elastic snap-back; and Clovis's
+  [Balatro-like prototype](https://clovisindo.itch.io/balatro-like), which
+  documents click selection, dragging, inertial rotation and return-to-position
+  behavior.
+- **Reused:** interaction vocabulary only: pointer-reactive tilt, drag rotation,
+  explicit reveal/select state, and elastic snap-back.
+- **Status:** concept only. `InteractiveAnkiReviewer.vue` is an original Vue
+  implementation. No Balatro art, card assets, shaders, sounds, code, or visual
+  identity were copied. Mobile left/right recall grading is SimulaGPU's own
+  retention interaction, not a gameplay mechanic copied from Balatro.
+
+---
+
 ## Original to SimulaGPU
 
 Written for this repository with no source-level counterpart copied from either
