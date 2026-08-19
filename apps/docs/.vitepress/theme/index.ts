@@ -1,4 +1,5 @@
 import type { Theme } from 'vitepress';
+import { h } from 'vue';
 import DefaultTheme from 'vitepress/theme';
 import {
   ClaseCudaMalloc,
@@ -9,6 +10,7 @@ import {
   ModeloMentalGpu,
 } from '@simulagpu/visuals';
 import LandingHome from './components/landing/LandingHome.vue';
+import ResponsiveSidebarToggle from './components/ResponsiveSidebarToggle.vue';
 import './landing.css';
 
 /**
@@ -17,6 +19,10 @@ import './landing.css';
  */
 const theme: Theme = {
   extends: DefaultTheme,
+  Layout: () =>
+    h(DefaultTheme.Layout, null, {
+      'layout-top': () => h(ResponsiveSidebarToggle),
+    }),
   enhanceApp({ app }) {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
     app.component('ClaseCudaMemcpy', ClaseCudaMemcpy);
