@@ -1,0 +1,142 @@
+/*
+ * Global mobile reading rules.
+ *
+ * VitePress already provides responsive structure; these overrides make lesson
+ * content use the available viewport deliberately and keep typography readable
+ * on phones, tablets and coarse-pointer devices that report a wider CSS viewport.
+ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 767px), (pointer: coarse) and (max-width: 1100px) {
+  :root {
+    --sgpu-mobile-gutter: clamp(14px, 4vw, 22px);
+  }
+
+  html {
+    font-size: clamp(16px, 2.25vw, 20px);
+  }
+
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .VPDoc {
+    padding: clamp(20px, 5vw, 32px) var(--sgpu-mobile-gutter) 72px !important;
+  }
+
+  .VPDoc .container,
+  .VPDoc .content,
+  .VPDoc .content-container {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .VPDoc .container {
+    margin-inline: auto !important;
+  }
+
+  .VPDoc .content {
+    padding: 0 !important;
+  }
+
+  .VPDocAside {
+    display: none !important;
+  }
+
+  .vp-doc {
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .vp-doc h1 {
+    margin-top: 0;
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+  }
+
+  .vp-doc h2 {
+    font-size: clamp(1.35rem, 5.4vw, 1.7rem);
+    line-height: 1.2;
+  }
+
+  .vp-doc h3 {
+    font-size: clamp(1.15rem, 4.6vw, 1.4rem);
+    line-height: 1.25;
+  }
+
+  .vp-doc p,
+  .vp-doc li {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .vp-doc code {
+    font-size: 0.9em;
+  }
+
+  .vp-doc pre {
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.84rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vp-doc table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vp-doc th,
+  .vp-doc td {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .vp-doc img,
+  .vp-doc video,
+  .vp-doc canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .vp-doc .custom-block {
+    font-size: 0.95rem;
+  }
+
+  html.sgpu-focus-mode .VPNav,
+  html.sgpu-focus-mode .VPLocalNav,
+  html.sgpu-focus-mode .VPSidebar,
+  html.sgpu-focus-mode .VPDocAside,
+  html.sgpu-focus-mode .VPDocFooter,
+  html.sgpu-focus-mode .VPFooter {
+    display: none !important;
+  }
+
+  html.sgpu-focus-mode .VPContent,
+  html.sgpu-focus-mode .VPContent.has-sidebar {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html.sgpu-focus-mode .VPDoc {
+    min-height: 100dvh;
+    padding-top: max(18px, env(safe-area-inset-top)) !important;
+    padding-right: max(var(--sgpu-mobile-gutter), env(safe-area-inset-right)) !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+    padding-left: max(var(--sgpu-mobile-gutter), env(safe-area-inset-left)) !important;
+  }
+
+  html.sgpu-focus-mode .VPDoc .container {
+    max-width: 48rem !important;
+  }
+}

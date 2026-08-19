@@ -12,6 +12,7 @@ import {
 import LandingHome from './components/landing/LandingHome.vue';
 import ResponsiveSidebarToggle from './components/ResponsiveSidebarToggle.vue';
 import './landing.css';
+import './mobile.css';
 
 /**
  * The documentation application is the only layer allowed to wire
