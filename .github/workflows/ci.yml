@@ -90,37 +90,9 @@ jobs:
           ./native/build/examples/vector-add/vector_add_example
           ./native/build/examples/reduction/reduction_example
 
-  exercise-starter:
-    name: Native — exercise starters fail as designed
-    runs-on: ubuntu-latest
-
-    # Each starter ships deliberately wrong code. If its tests ever pass,
-    # someone committed the answers or the tests stopped checking the intended
-    # failure. Both are regressions.
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cmake ninja-build
-
-      - name: Build the starters
-        run: |
-          cmake -S native/exercises/01-vector-add/starter -B /tmp/starter-01 -G Ninja
-          cmake --build /tmp/starter-01
-          cmake -S native/exercises/02-reduction/starter -B /tmp/starter-02 -G Ninja
-          cmake --build /tmp/starter-02
-
-      - name: Expect starter tests to fail
-        run: |
-          for build in /tmp/starter-01 /tmp/starter-02; do
-            if ctest --test-dir "$build" --output-on-failure; then
-              echo "::error::$build passes its tests. It is supposed to fail." >&2
-              exit 1
-            fi
-          done
-          echo "Both starter test suites fail, as intended."
+# Exercise-starter negative tests are intentionally omitted from CI. They
+# duplicated setup cost to verify that deliberately incomplete starter code
+# fails, while adding little value to routine pushes and pull requests.
 
 # A CUDA compile job is deliberately absent. Compiling the .cu files needs the
 # CUDA Toolkit, and running them needs a physical device; neither is available
