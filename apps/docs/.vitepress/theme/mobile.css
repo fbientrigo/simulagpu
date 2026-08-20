@@ -139,4 +139,84 @@ html {
   html.sgpu-focus-mode .VPDoc .container {
     max-width: 48rem !important;
   }
+
+  /*
+   * The Anki route is a study session on mobile, not a documentation page.
+   * Keep only the session controls and cards; desktop keeps the normal docs shell.
+   */
+  html.sgpu-anki-session .VPNav,
+  html.sgpu-anki-session .VPLocalNav,
+  html.sgpu-anki-session .VPSidebar,
+  html.sgpu-anki-session .VPDocAside,
+  html.sgpu-anki-session .VPDocFooter,
+  html.sgpu-anki-session .VPFooter,
+  html.sgpu-anki-session .sgpu-sidebar-toggle,
+  html.sgpu-anki-session .sgpu-focus-toggle {
+    display: none !important;
+  }
+
+  html.sgpu-anki-session .VPContent,
+  html.sgpu-anki-session .VPContent.has-sidebar {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html.sgpu-anki-session .VPDoc {
+    min-height: 100dvh;
+    padding-top: max(8px, env(safe-area-inset-top)) !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+  }
+
+  html.sgpu-anki-session .VPDoc .container,
+  html.sgpu-anki-session .VPDoc .content,
+  html.sgpu-anki-session .VPDoc .content-container,
+  html.sgpu-anki-session .vp-doc {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html.sgpu-anki-session .anki-reviewer {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  html.sgpu-anki-session .anki-reviewer .reviewer-head {
+    justify-content: center;
+    margin: 0 0 0.65rem;
+  }
+
+  html.sgpu-anki-session .anki-reviewer .reviewer-head > div:first-child,
+  html.sgpu-anki-session .anki-reviewer .review-instruction,
+  html.sgpu-anki-session .anki-reviewer .keyboard-hint,
+  html.sgpu-anki-session .anki-reviewer .card-meta,
+  html.sgpu-anki-session .anki-reviewer .card-action {
+    display: none !important;
+  }
+
+  html.sgpu-anki-session .anki-reviewer .review-progress {
+    width: 100%;
+    justify-items: center;
+  }
+
+  html.sgpu-anki-session .anki-reviewer .review-progress strong {
+    font-size: 0.9rem;
+    color: var(--sgpu-text-muted);
+  }
+
+  html.sgpu-anki-session .anki-reviewer .review-stage {
+    min-height: 0;
+  }
+
+  html.sgpu-anki-session .anki-reviewer .card-shell,
+  html.sgpu-anki-session .anki-reviewer .rating-actions {
+    width: min(92vw, 380px);
+  }
 }

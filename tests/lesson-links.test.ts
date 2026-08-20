@@ -262,19 +262,27 @@ describe('página del ejercicio 02', () => {
   });
 });
 
-describe('página de tarjetas', () => {
-  const page = read('apps/docs/leccion/anki.md');
+describe('páginas de tarjetas', () => {
+  const reviewPage = read('apps/docs/leccion/anki.md');
+  const downloadPage = read('apps/docs/leccion/descarga-anki.md');
 
-  it('offers the generated TSV as a download', () => {
-    expect(page).toContain('simulagpu-anki.tsv');
-    // withBase keeps the link correct when the site is served from /simulagpu/.
-    expect(page).toContain('withBase');
+  it('keeps the interactive review focused and links to download details', () => {
+    expect(reviewPage).toContain('<InteractiveAnkiReviewer');
+    expect(reviewPage).toContain("withBase('/data/simulagpu-anki.json')");
+    expect(reviewPage).toContain("withBase('/leccion/descarga-anki')");
+    expect(reviewPage).toContain('sgpu-anki-session');
   });
 
-  it('covers every lesson card source', () => {
+  it('offers the generated TSV from the download page', () => {
+    expect(downloadPage).toContain('simulagpu-anki.tsv');
+    // withBase keeps the link correct when the site is served from /simulagpu/.
+    expect(downloadPage).toContain('withBase');
+  });
+
+  it('covers every lesson card source in the download details', () => {
     expect(read('anki/cards/01-indice-global.yaml')).toContain('idx-001');
     expect(read('anki/cards/02-reduccion.yaml')).toContain('red-001');
     expect(read('anki/cards/03-cuda-memcpy.yaml')).toContain('memcpy-001');
-    expect(page).toContain('37 tarjetas');
+    expect(downloadPage).toContain('37 tarjetas');
   });
 });
