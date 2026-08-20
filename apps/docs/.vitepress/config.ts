@@ -81,7 +81,10 @@ export default defineConfig({
       },
       {
         text: 'Repaso',
-        items: [{ text: 'Tarjetas Anki — Clases 01 y 02', link: '/leccion/anki' }],
+        items: [
+          { text: 'Tarjetas interactivas', link: '/leccion/anki' },
+          { text: 'Descarga Anki', link: '/leccion/descarga-anki' },
+        ],
       },
       {
         text: 'Referencia',
