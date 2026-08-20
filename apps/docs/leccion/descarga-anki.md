@@ -26,12 +26,13 @@ El nombre histórico del mazo se conserva temporalmente para no duplicar notas a
 
 ## Qué contiene
 
-37 tarjetas para:
+43 tarjetas para:
 
 - [Clase 01 — Del índice global a la suma de vectores](./indice-global-suma-vectores);
 - [Clase 02 — De una suma secuencial a una reducción paralela](./reduccion-paralela);
 - [Clase complementaria — `cudaMalloc`](../clases/cuda-malloc);
-- [Clase complementaria — `cudaMemcpy`](../clases/cuda-memcpy).
+- [Clase complementaria — `cudaMemcpy`](../clases/cuda-memcpy);
+- [Clase complementaria — `__syncthreads()`](../clases/syncthreads).
 
 | Lección | Tarjetas | Conceptos principales |
 | --- | ---: | --- |
@@ -39,6 +40,7 @@ El nombre histórico del mazo se conserva temporalmente para no duplicar notas a
 | Reducción paralela | 9 | carreras, árbol, cola impar, reducción por pasadas y punto flotante |
 | `cudaMalloc` | 4 | reserva, contenido indefinido, punteros y liberación |
 | `cudaMemcpy` | 6 | origen y destino, dirección, bytes vs elementos, copiar no es mover |
+| `__syncthreads()` | 6 | esperar vs cruzar, alcance de bloque, liberación, participación divergente |
 
 Cada tarjeta mantiene un identificador permanente. Ese identificador permite que una futura capa de repetición espaciada conserve historial sin crear otro conjunto de tarjetas.
 

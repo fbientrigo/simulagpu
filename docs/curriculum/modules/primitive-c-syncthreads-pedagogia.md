@@ -3,11 +3,17 @@
 
 > Este documento es un complemento detallado del esqueleto congelado
 > `primitive-c-syncthreads.md` (que el manifiesto y los tests de contrato
-> siguen usando tal cual). Aquí se desarrolla la pedagogía completa que un
-> agente de codificación deberá seguir cuando esta primitiva pase de
-> `PLANNED` a implementación real. No se ha escrito ni se debe escribir
-> código, componentes Vue, contratos TS ni el prompt de implementación en
-> este documento.
+> siguen usando tal cual). Recoge la pedagogía completa que guió la
+> implementación de esta primitiva.
+>
+> **Estado: implementada.** La primitiva ya es una lección vertical completa
+> (`status: implemented` en `docs/curriculum/manifest.ts`). Este documento se
+> conserva como justificación de diseño; la lección publicada vive en
+> `apps/docs/clases/syncthreads.md`, el modelo en `packages/core/src/syncthreads`,
+> la visualización en `packages/visuals/src/ClaseSyncthreads.vue`, el ejemplo en
+> `native/examples/syncthreads`, el ejercicio en `native/exercises/03-syncthreads`
+> y las tarjetas en `anki/cards/04-syncthreads.yaml`. No dupliques aquí la prosa
+> final de la lección.
 
 ---
 

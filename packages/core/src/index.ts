@@ -18,6 +18,9 @@ export { decodeCudaMallocConfig, encodeCudaMallocConfig } from './cuda-malloc/se
 export { DEFAULT_CUDA_MEMCPY_CONFIG, normalizeCudaMemcpyConfig } from './cuda-memcpy/config.js';
 export { buildCudaMemcpySnapshot } from './cuda-memcpy/snapshot.js';
 export { decodeCudaMemcpyConfig, encodeCudaMemcpyConfig } from './cuda-memcpy/serialize.js';
+export { DEFAULT_SYNCTHREADS_CONFIG, normalizeSyncthreadsConfig } from './syncthreads/config.js';
+export { buildSyncthreadsSnapshot } from './syncthreads/snapshot.js';
+export { decodeSyncthreadsConfig, encodeSyncthreadsConfig } from './syncthreads/serialize.js';
 export { DEFAULT_CHUNK_FLOW_CONFIG, normalizeChunkFlowConfig } from './chunk-flow/config.js';
 
 export { buildChunkFlowSnapshot } from './chunk-flow/snapshot.js';

@@ -4,6 +4,7 @@ import DefaultTheme from 'vitepress/theme';
 import {
   ClaseCudaMalloc,
   ClaseCudaMemcpy,
+  ClaseSyncthreads,
   ExploradorIndiceGlobal,
   InteractiveAnkiReviewer,
   LaboratorioReduccion,
@@ -27,6 +28,7 @@ const theme: Theme = {
   enhanceApp({ app }) {
     app.component('ClaseCudaMalloc', ClaseCudaMalloc);
     app.component('ClaseCudaMemcpy', ClaseCudaMemcpy);
+    app.component('ClaseSyncthreads', ClaseSyncthreads);
     app.component('ExploradorIndiceGlobal', ExploradorIndiceGlobal);
     app.component('InteractiveAnkiReviewer', InteractiveAnkiReviewer);
     app.component('ModeloMentalGpu', ModeloMentalGpu);

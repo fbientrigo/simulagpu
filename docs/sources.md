@@ -130,6 +130,23 @@ implementation with its own tests and explanation.
   framing, the pedagogical sequence, and every line of the `chunk-flow` model
   and component were designed from scratch for this repository.
 
+### S-12 — Primitiva C: `__syncthreads()` as a block-wide barrier
+
+- **Source paths:** `2-reduction/reduction.cu` (the `__syncthreads()` call
+  between shared-memory reduction levels) and the standard CUDA terminology of
+  S-10.
+- **Reused:** the fact that `__syncthreads()` is a block-scoped barrier that
+  separates cooperative phases, and that divergent participation is unsafe.
+  These are standard CUDA facts named, not code, from the reference.
+- **Status:** concept only; **written from scratch**. The four-state model
+  (`antes → esperando → liberado → después`), the fixed teaching arrival order,
+  the two-block scope scene, the invalid-participation representation, the
+  `syncthreads` core model, the `ClaseSyncthreads` visualization, the
+  block-local reversal example, and exercise 03 are all original to SimulaGPU.
+  The block-local reversal is a generic two-phase pattern chosen to make the
+  barrier's phase dependency host-testable; it is not copied from either
+  reference.
+
 ---
 
 ## From `csc2026_e1`
@@ -225,6 +242,9 @@ reference:
   and `ClaseCudaMemcpy` interactions, local learner cache, and four-card mini-reviews;
 - the `cudaMalloc` and `cudaMemcpy` lessons, their Spanish explanatory content,
   and the native examples under `native/examples/`.
+- the deterministic `__syncthreads()` barrier model (`packages/core/src/syncthreads`),
+  the `ClaseSyncthreads` visualization, the `/clases/syncthreads` lesson, the
+  block-local barrier example (`native/examples/syncthreads`) and exercise 03.
 
 ## Third-party runtime and build dependencies
 
@@ -243,7 +263,8 @@ outside the gating build:
 
 - `native/examples/vector-add/vector_add_cuda.cu`;
 - `native/examples/reduction/reduction_cuda.cu`;
-- both starter and solution CUDA files under exercises 01 and 02.
+- `native/examples/syncthreads/syncthreads_phase_cuda.cu`;
+- both starter and solution CUDA files under exercises 01, 02 and 03.
 
 They are isolated behind optional CUDA detection, use the documented runtime
 API, and are reviewed as source, but no claim is made that CI compiled or ran

@@ -58,6 +58,7 @@ export default defineConfig({
         items: [
           { text: 'Primitiva A: cudaMalloc', link: '/clases/cuda-malloc' },
           { text: 'Primitiva B: cudaMemcpy', link: '/clases/cuda-memcpy' },
+          { text: 'Primitiva C: __syncthreads()', link: '/clases/syncthreads' },
         ],
       },
       {
