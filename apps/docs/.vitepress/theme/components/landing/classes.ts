@@ -55,6 +55,14 @@ export const landingClasses: LandingClass[] = [
     href: '/clases/cuda-memcpy',
   },
   {
+    id: 'syncthreads',
+    eyebrow: 'Clase complementaria',
+    title: '__syncthreads()',
+    description:
+      'Predice quién espera y quién cruza una barrera de bloque, su alcance y por qué la participación divergente es inválida.',
+    href: '/clases/syncthreads',
+  },
+  {
     id: 'reduccion-paralela',
     eyebrow: 'Clase 02',
     title: 'Reducción paralela',

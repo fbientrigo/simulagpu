@@ -14,9 +14,11 @@ const read = (path: string) => readFileSync(repoPath(path), 'utf8');
 const LESSON_01 = 'apps/docs/leccion/indice-global-suma-vectores.md';
 const CUDA_MALLOC_CLASS = 'apps/docs/clases/cuda-malloc.md';
 const CUDA_MEMCPY_CLASS = 'apps/docs/clases/cuda-memcpy.md';
+const SYNCTHREADS_CLASS = 'apps/docs/clases/syncthreads.md';
 const lesson01 = read(LESSON_01);
 const cudaMallocClass = read(CUDA_MALLOC_CLASS);
 const cudaMemcpyClass = read(CUDA_MEMCPY_CLASS);
+const syncthreadsClass = read(SYNCTHREADS_CLASS);
 
 const LESSON_02 = 'apps/docs/leccion/reduccion-paralela.md';
 const lesson02 = read(LESSON_02);
@@ -67,6 +69,48 @@ describe('clase cudaMemcpy', () => {
     expect(cudaMemcpyClass).toMatch(/copiar no es mover|copiar no es reservar/i);
     expect(cudaMemcpyClass).toContain('cudaMemcpyHostToDevice');
     expect(cudaMemcpyClass).toContain('cudaMemcpyDeviceToHost');
+  });
+});
+
+describe('clase syncthreads', () => {
+  it('embeds the focused interactive class and registers it in VitePress', () => {
+    expect(syncthreadsClass).toContain('<ClaseSyncthreads');
+    expect(read('apps/docs/.vitepress/theme/index.ts')).toContain("app.component('ClaseSyncthreads'");
+  });
+
+  it('links to a runnable native example and exercise that exist', () => {
+    expect(syncthreadsClass).toContain('native/examples/syncthreads');
+    expect(syncthreadsClass).toContain('native/exercises/03-syncthreads');
+    expect(existsSync(repoPath('native/examples/syncthreads')), 'el ejemplo nativo no existe').toBe(true);
+    expect(existsSync(repoPath('native/examples/syncthreads/syncthreads_phase_cuda.cu'))).toBe(true);
+    expect(existsSync(repoPath('native/exercises/03-syncthreads')), 'el ejercicio no existe').toBe(true);
+    expect(existsSync(repoPath('native/exercises/03-syncthreads/tests/test_barrier_phase.cpp'))).toBe(true);
+    expect(existsSync(repoPath('native/exercises/03-syncthreads/solution/src/barrier_phase.cpp'))).toBe(true);
+  });
+
+  it('links to the downloadable Anki review', () => {
+    expect(syncthreadsClass).toContain('../leccion/anki');
+  });
+
+  it('states the model boundary and the block-scope, arrive-is-not-cross ideas', () => {
+    expect(syncthreadsClass).toMatch(/No ejecuta CUDA|no ejecuta CUDA/);
+    expect(syncthreadsClass).toMatch(/llegar.*no.*cruzar|no es cruzarla/i);
+    expect(syncthreadsClass).toContain('__syncthreads()');
+    expect(syncthreadsClass).toMatch(/alcance.*bloque|bloque.*alcance/i);
+  });
+
+  it('keeps the six permanent card ids in the card source', () => {
+    const cards = read('anki/cards/04-syncthreads.yaml');
+    expect(cards).toContain('syncthreads-001');
+    expect(cards).toContain('syncthreads-006');
+    expect(cards).toContain('/clases/syncthreads');
+  });
+
+  it('keeps the starter TODOs numbered 1..5 across the C++ and CUDA files', () => {
+    const cpu = read('native/exercises/03-syncthreads/starter/src/barrier_phase.cpp');
+    const cuda = read('native/exercises/03-syncthreads/starter/src/barrier_phase.cu');
+    const todos = [...`${cpu}${cuda}`.matchAll(/TODO (\d+):/g)].map((match) => match[1]);
+    expect(todos).toEqual(['1', '2', '3', '4', '5']);
   });
 });
 
@@ -283,6 +327,7 @@ describe('páginas de tarjetas', () => {
     expect(read('anki/cards/01-indice-global.yaml')).toContain('idx-001');
     expect(read('anki/cards/02-reduccion.yaml')).toContain('red-001');
     expect(read('anki/cards/03-cuda-memcpy.yaml')).toContain('memcpy-001');
-    expect(downloadPage).toContain('37 tarjetas');
+    expect(read('anki/cards/04-syncthreads.yaml')).toContain('syncthreads-001');
+    expect(downloadPage).toContain('43 tarjetas');
   });
 });

@@ -235,7 +235,7 @@ export const CURRICULUM_MODULES = [
     kind: 'primitive',
     track: 'alphabetical-primitive',
     sequencePosition: 6,
-    status: 'planned',
+    status: 'implemented',
     centralQuestionOrSkill: 'Understand what a block-wide barrier guarantees and what it does not guarantee.',
     prerequisites: ['class-2'],
     concepts: [
@@ -257,7 +257,17 @@ export const CURRICULUM_MODULES = [
     learnerOutcome:
       'Predict who waits and who may proceed at __syncthreads(), state its block-local scope, and reject invalid divergent participation.',
     unlocks: ['class-3'],
-    implementation: null,
+    implementation: {
+      docPath: 'apps/docs/clases/syncthreads.md',
+      route: '/clases/syncthreads',
+      references: [
+        'packages/visuals/src/ClaseSyncthreads.vue',
+        'packages/core/src/syncthreads',
+        'native/examples/syncthreads',
+        'native/exercises/03-syncthreads',
+        'anki/cards/04-syncthreads.yaml',
+      ],
+    },
     scaffoldPath: 'docs/curriculum/modules/primitive-c-syncthreads.md',
   },
   {

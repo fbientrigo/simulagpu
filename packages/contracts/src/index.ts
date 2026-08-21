@@ -49,6 +49,22 @@ export type {
   CudaMemcpyScene,
   CudaMemcpySnapshot,
 } from './cuda-memcpy.js';
+export {
+  SYNCTHREADS_ARRIVAL_ORDER,
+  SYNCTHREADS_LANE_COUNT,
+  SYNCTHREADS_SCENARIOS,
+  SYNCTHREADS_THREAD_STATES,
+} from './syncthreads.js';
+export type {
+  SyncthreadsBlockSnapshot,
+  SyncthreadsConfig,
+  SyncthreadsConfigInput,
+  SyncthreadsScenario,
+  SyncthreadsSnapshot,
+  SyncthreadsStageSnapshot,
+  SyncthreadsThreadSnapshot,
+  SyncthreadsThreadState,
+} from './syncthreads.js';
 export type {
   BlockSnapshot as ChunkFlowBlockSnapshot,
   ThreadSnapshot as ChunkFlowThreadSnapshot,

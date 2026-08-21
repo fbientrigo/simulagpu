@@ -27,12 +27,13 @@ interface WebDeck {
 const deck = loadCards() as { rows: Row[]; deck: string };
 
 describe('anki deck sources', () => {
-  it('builds the 37 cards promised by the lesson pages', () => {
-    expect(deck.rows).toHaveLength(37);
+  it('builds the 43 cards promised by the lesson pages', () => {
+    expect(deck.rows).toHaveLength(43);
     expect(deck.rows.filter((row) => row.id.startsWith('idx-'))).toHaveLength(18);
     expect(deck.rows.filter((row) => row.id.startsWith('red-'))).toHaveLength(9);
     expect(deck.rows.filter((row) => row.id.startsWith('malloc-'))).toHaveLength(4);
     expect(deck.rows.filter((row) => row.id.startsWith('memcpy-'))).toHaveLength(6);
+    expect(deck.rows.filter((row) => row.id.startsWith('syncthreads-'))).toHaveLength(6);
   });
 
   it('covers every required area', () => {
@@ -67,6 +68,17 @@ describe('anki deck sources', () => {
       'memcpy-004',
       'memcpy-005',
       'memcpy-006',
+    ]);
+  });
+
+  it('includes exactly the six permanent __syncthreads() class cards', () => {
+    expect(deck.rows.filter((row) => row.id.startsWith('syncthreads-')).map((row) => row.id)).toEqual([
+      'syncthreads-001',
+      'syncthreads-002',
+      'syncthreads-003',
+      'syncthreads-004',
+      'syncthreads-005',
+      'syncthreads-006',
     ]);
   });
 

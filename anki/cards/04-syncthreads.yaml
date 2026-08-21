@@ -1,0 +1,43 @@
+# Repaso corto de la Primitiva C — __syncthreads().
+# Estos ids también identifican las tarjetas de la minisession local.
+
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /clases/syncthreads
+
+cards:
+  - id: syncthreads-001
+    tipo: memoria
+    anverso: '¿Qué hace un hilo que llega a `__syncthreads()` antes que los demás hilos de su bloque?'
+    reverso: 'Espera. No puede cruzar la barrera hasta que el bloque completo la alcance: llegar no es cruzar.'
+    etiquetas: [syncthreads, sincronizacion, espera]
+
+  - id: syncthreads-002
+    tipo: memoria
+    anverso: '¿`__syncthreads()` sincroniza distintos bloques de hilos?'
+    reverso: 'No. Su alcance de sincronización es el bloque de hilos, no la grid completa.'
+    etiquetas: [syncthreads, sincronizacion, alcance]
+
+  - id: syncthreads-003
+    tipo: memoria
+    anverso: '¿Qué evento libera la barrera de un bloque?'
+    reverso: 'Que todos los hilos participantes del bloque hayan llegado al mismo `__syncthreads()`. Entonces el bloque puede continuar y el trabajo previo queda disponible.'
+    etiquetas: [syncthreads, sincronizacion, cooperacion]
+
+  - id: syncthreads-004
+    tipo: errores
+    anverso: '¿Por qué puede ser inseguro poner `__syncthreads()` dentro de `if (i < N)` en un bloque parcial?'
+    reverso: 'Porque algunos hilos del bloque saltan la barrera mientras otros la alcanzan: la participación queda divergente.'
+    etiquetas: [syncthreads, errores, bloque-parcial]
+
+  - id: syncthreads-005
+    tipo: memoria
+    anverso: '¿`__syncthreads()` obliga a que todos los hilos ejecuten cada instrucción al mismo tiempo (lockstep)?'
+    reverso: 'No. Establece una frontera de sincronización de bloque; los hilos pueden llegar a ella en momentos lógicos distintos.'
+    etiquetas: [syncthreads, sincronizacion, misconcepcion]
+
+  - id: syncthreads-006
+    tipo: errores
+    anverso: 'Un kernel se comporta mal o se cuelga solo con ciertos tamaños de entrada, cerca de una barrera. ¿Qué se debe revisar primero?'
+    reverso: 'Si todos los hilos requeridos de cada bloque alcanzan el mismo `__syncthreads()`, sobre todo alrededor de condiciones divergentes o guardas de rango.'
+    etiquetas: [syncthreads, errores, depuracion]
