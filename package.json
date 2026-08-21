@@ -20,11 +20,14 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "anki:build": "node anki/scripts/build-anki.mjs",
+    "roadmap:status": "node scripts/roadmap/roadmap.mjs status",
+    "roadmap:next": "node scripts/roadmap/roadmap.mjs next",
+    "roadmap:validate": "node scripts/roadmap/roadmap.mjs validate",
     "native:configure": "cmake -S native -B native/build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo",
     "native:build": "cmake --build native/build",
     "native:test": "ctest --test-dir native/build --output-on-failure",
     "native:verify": "pnpm run native:configure && pnpm run native:build && pnpm run native:test",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run native:verify"
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run roadmap:validate && pnpm run test && pnpm run build && pnpm run native:verify"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

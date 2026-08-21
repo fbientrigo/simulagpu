@@ -75,4 +75,11 @@ export default tseslint.config(
     files: ['anki/scripts/**/*.mjs'],
     rules: { 'no-console': 'off' },
   },
+
+  {
+    // The roadmap resolver is a CLI: printing the status board and next item is
+    // its whole purpose.
+    files: ['scripts/roadmap/**/*.mjs'],
+    rules: { 'no-console': 'off' },
+  },
 );

@@ -148,7 +148,8 @@ El CI estándar no instala `nvcc` ni tiene GPU. Por tanto, los `.cu` no forman p
 Lee [`AGENTS.md`](AGENTS.md) antes de modificar el repositorio. Define la arquitectura, la política de idioma, el contrato de ejercicios y la condición de terminado.
 
 - [`docs/architecture.md`](docs/architecture.md) — capas y límites
-- [`docs/roadmap.md`](docs/roadmap.md) — siguiente progresión
+- [`docs/curriculum/manifest.ts`](docs/curriculum/manifest.ts) — orden pedagógico congelado
+- [`docs/project/roadmap.json`](docs/project/roadmap.json) — estado de ejecución del proyecto (`pnpm roadmap:status`)
 - [`docs/sources.md`](docs/sources.md) — atribución exacta
 - [`docs/adr/`](docs/adr/) — decisiones de arquitectura
 

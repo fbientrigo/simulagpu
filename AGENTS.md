@@ -7,6 +7,43 @@ Spanish.** See [Language policy](#language-policy).
 
 ---
 
+## Entry protocol — read this first
+
+**Never guess the next task.** Determine it from the repository, not from memory,
+chat history, or markdown prose.
+
+1. Read this file (`AGENTS.md`).
+2. Run `pnpm roadmap:status`.
+3. If a resumable **WIP** item exists, resume it using its `handoff` block.
+4. Otherwise run `pnpm roadmap:next` to get exactly one work item.
+5. Read that item's `contract` (its curriculum scaffold or referenced files).
+6. Implement **only** that work item.
+7. Run all required verification (`pnpm verify` at minimum).
+8. Record evidence (inspectable paths, tests) in the ledger entry.
+9. Only then transition the item to **DONE**.
+10. Do **not** start the next item in the same change.
+
+When a genuine owner decision blocks correctness (licensing, adding a backend,
+another learner-facing language, changing the frozen curriculum, promoting a
+reference primitive H–K into the main waterfall), do not invent policy — leave
+or record the item as **BLOCKED** with a reason. `owner decision required` is a
+valid, useful outcome.
+
+Two sources of truth, never merged:
+
+- **Pedagogy** — [`docs/curriculum/manifest.ts`](docs/curriculum/manifest.ts):
+  learning order, concepts, learner outcomes, the frozen A–G waterfall.
+- **Execution** — [`docs/project/roadmap.json`](docs/project/roadmap.json):
+  done / ready / wip / blocked, evidence, and the next actionable item.
+
+**DONE** means objectively complete per the item's Definition of Done, backed by
+inspectable evidence — never "someone said it is finished". **BLOCKED** means
+work cannot proceed and carries a concrete reason. Never bypass curriculum
+dependencies, and never publish a planned curriculum entry. Full detail:
+[`docs/project/README.md`](docs/project/README.md).
+
+---
+
 ## Repository purpose
 
 SimulaGPU teaches GPU and parallel programming in Spanish through five things
@@ -178,6 +215,9 @@ No i18n infrastructure. Spanish is written directly into the content.
 | `pnpm lint` | ESLint + Prettier in check mode |
 | `pnpm format` | apply Prettier |
 | `pnpm anki:build` | regenerate the Anki TSV |
+| `pnpm roadmap:status` | print the project execution board and the next item |
+| `pnpm roadmap:next` | resolve exactly one deterministic next work item |
+| `pnpm roadmap:validate` | fail if the execution ledger is internally inconsistent |
 | `pnpm verify` | **everything**, including the native build and CTest |
 
 Native equivalents:

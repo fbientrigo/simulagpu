@@ -1,0 +1,594 @@
+{
+  "version": 1,
+  "about": "SimulaGPU project execution ledger. Engineering truth for autonomous agents: what is done, ready, wip, blocked, and what is next. This file is NOT the pedagogical source of truth. Learning order, concepts, and learner outcomes live in docs/curriculum/manifest.ts. Curriculum-track items here reference a curriculumId and MUST NOT fork curriculum truth. See docs/project/README.md.",
+  "states": ["planned", "ready", "wip", "blocked", "done", "superseded"],
+  "tracks": ["curriculum", "retention", "ux", "tooling", "platform", "future"],
+  "legalTransitions": [
+    ["planned", "ready"],
+    ["planned", "superseded"],
+    ["ready", "wip"],
+    ["ready", "blocked"],
+    ["ready", "superseded"],
+    ["wip", "done"],
+    ["wip", "blocked"],
+    ["blocked", "ready"],
+    ["blocked", "wip"],
+    ["done", "superseded"]
+  ],
+  "globalDefinitionOfDone": "AGENTS.md § Definition of done. In short: pnpm verify passes; learner-facing text is Spanish with accents; engineering text is English; new teaching models are pure, frozen, JSON-serializable and unit-tested; no generated file is committed; no unmeasured performance or CUDA claim; no reference repository is modified.",
+  "items": [
+    {
+      "id": "class-0",
+      "track": "curriculum",
+      "curriculumId": "class-0",
+      "title": "Clase 0 — El modelo mental de una GPU",
+      "status": "done",
+      "priority": 1,
+      "dependsOn": [],
+      "contract": "apps/docs/clase-0/modelo-mental-gpu.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Deliberately a reduced vertical slice: prerequisite-free, code-free conceptual introduction. No native code, no exercise, no Anki cards by design (see AGENTS.md and the lesson scope note)."
+      ],
+      "verification": ["pnpm test", "pnpm build"],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/clase-0/modelo-mental-gpu.md",
+        "packages/visuals/src/ModeloMentalGpu.vue",
+        "packages/core/src/chunk-flow",
+        "tests/curriculum-contract.test.ts"
+      ],
+      "unlocks": ["primitive-a"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-a",
+      "track": "curriculum",
+      "curriculumId": "primitive-a",
+      "title": "Primitiva A — cudaMalloc",
+      "status": "done",
+      "priority": 2,
+      "dependsOn": ["class-0"],
+      "contract": "apps/docs/clases/cuda-malloc.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Single-primitive interactive class per docs/class-methodology.md.",
+        "Reuses the vector-add native context; allocation has no useful standalone CPU oracle, so no dedicated native core is required (documented)."
+      ],
+      "verification": ["pnpm test", "pnpm build"],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/clases/cuda-malloc.md",
+        "packages/visuals/src/ClaseCudaMalloc.vue",
+        "packages/core/src/cuda-malloc",
+        "anki/cards/01-cuda-malloc.yaml",
+        "tests/curriculum-contract.test.ts"
+      ],
+      "unlocks": ["class-1"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-1",
+      "track": "curriculum",
+      "curriculumId": "class-1",
+      "title": "Clase 1 — Índice global y suma de vectores",
+      "status": "done",
+      "priority": 3,
+      "dependsOn": ["class-0", "primitive-a"],
+      "contract": "apps/docs/leccion/indice-global-suma-vectores.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Full vertical slice: lesson, model, visualization, native example, exercise, Anki."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/leccion/indice-global-suma-vectores.md",
+        "packages/visuals/src/ExploradorIndiceGlobal.vue",
+        "packages/core/src/thread-index",
+        "native/examples/vector-add",
+        "native/exercises/01-vector-add",
+        "anki/cards/01-indice-global.yaml",
+        "tests/curriculum-contract.test.ts"
+      ],
+      "unlocks": ["primitive-b"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-b",
+      "track": "curriculum",
+      "curriculumId": "primitive-b",
+      "title": "Primitiva B — cudaMemcpy",
+      "status": "done",
+      "priority": 4,
+      "dependsOn": ["class-1"],
+      "contract": "apps/docs/clases/cuda-memcpy.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Single-primitive interactive class per docs/class-methodology.md."
+      ],
+      "verification": ["pnpm test", "pnpm build"],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/clases/cuda-memcpy.md",
+        "packages/visuals/src/ClaseCudaMemcpy.vue",
+        "packages/core/src/cuda-memcpy",
+        "native/examples/cuda-memcpy",
+        "anki/cards/03-cuda-memcpy.yaml",
+        "tests/curriculum-contract.test.ts"
+      ],
+      "unlocks": ["class-2"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-2",
+      "track": "curriculum",
+      "curriculumId": "class-2",
+      "title": "Clase 2 — Reducción paralela",
+      "status": "done",
+      "priority": 5,
+      "dependsOn": ["class-1", "primitive-b"],
+      "contract": "apps/docs/leccion/reduccion-paralela.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Full vertical slice: lesson, model + guided runner, laboratory visualization, native example, exercise, Anki."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/leccion/reduccion-paralela.md",
+        "packages/visuals/src/LaboratorioReduccion.vue",
+        "packages/core/src/reduction",
+        "native/examples/reduction",
+        "native/exercises/02-reduction",
+        "anki/cards/02-reduccion.yaml",
+        "tests/curriculum-contract.test.ts"
+      ],
+      "unlocks": ["primitive-c"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-c",
+      "track": "curriculum",
+      "curriculumId": "primitive-c",
+      "title": "Primitiva C — __syncthreads()",
+      "status": "ready",
+      "priority": 6,
+      "dependsOn": ["class-2"],
+      "contract": "docs/curriculum/modules/primitive-c-syncthreads.md",
+      "definitionOfDone": [
+        "Global DoD (pnpm verify green).",
+        "Spanish learner-facing lesson under apps/docs/ with a scope note: it is a deterministic explanatory model, not a CUDA executor or hardware scheduler.",
+        "Deterministic, frozen, JSON-serializable core model in packages/core with determinism, serialization, immutability, normalization, URL round-trip, and boundary unit tests.",
+        "Vue visualization in packages/visuals showing before/waiting/released barrier states, explicit block-local scope, and an invalid divergent-participation case; accessible and mobile-first per AGENTS.md interactive primitive contract.",
+        "Anki cards under anki/cards for retention.",
+        "Native material only if the primitive contract requires it; __syncthreads() has no useful standalone CPU oracle, so a dedicated native example is not mandatory — document this explicitly, mirroring Primitive A.",
+        "Update docs/curriculum/manifest.ts: set primitive-c status to 'implemented' with implementation references (docPath, route, references); the publishing rule forbids a public route until then.",
+        "Add link coverage for the new module (tests/lesson-links.test.ts or equivalent)."
+      ],
+      "verification": ["pnpm verify", "pnpm test", "pnpm typecheck", "pnpm lint"],
+      "evidence": [],
+      "unlocks": ["class-3"],
+      "blocker": null,
+      "handoff": null,
+      "note": "Not started on main. An exploratory branch 'class/primitves' exists but is not integrated into main and its completeness is unverified; treat primitive-c as not started. Do NOT record DONE without inspectable evidence on the committed branch."
+    },
+    {
+      "id": "class-3",
+      "track": "curriculum",
+      "curriculumId": "class-3",
+      "title": "Clase 3 — Cooperación, memoria y patrones de acceso",
+      "status": "planned",
+      "priority": 7,
+      "dependsOn": ["class-2", "primitive-c"],
+      "contract": "docs/curriculum/modules/class-3-memory-access.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract at docs/curriculum/modules/class-3-memory-access.md. Full vertical slice. Not executable until primitive-c is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["primitive-d"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-d",
+      "track": "curriculum",
+      "curriculumId": "primitive-d",
+      "title": "Primitiva D — __shared__",
+      "status": "planned",
+      "priority": 8,
+      "dependsOn": ["class-3"],
+      "contract": "docs/curriculum/modules/primitive-d-shared.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-3 is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["class-4"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-4",
+      "track": "curriculum",
+      "curriculumId": "class-4",
+      "title": "Clase 4 — Multiplicación de matrices con tiles",
+      "status": "planned",
+      "priority": 9,
+      "dependsOn": ["class-3", "primitive-d"],
+      "contract": "docs/curriculum/modules/class-4-tiled-matrix-multiplication.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-d is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["primitive-e"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-e",
+      "track": "curriculum",
+      "curriculumId": "primitive-e",
+      "title": "Primitiva E — atomicAdd",
+      "status": "planned",
+      "priority": 10,
+      "dependsOn": ["class-4"],
+      "contract": "docs/curriculum/modules/primitive-e-atomic-add.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-4 is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["class-5"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-5",
+      "track": "curriculum",
+      "curriculumId": "class-5",
+      "title": "Clase 5 — Atomics, histogramas y contención",
+      "status": "planned",
+      "priority": 11,
+      "dependsOn": ["class-4", "primitive-e"],
+      "contract": "docs/curriculum/modules/class-5-atomics-histograms.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-e is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["primitive-f"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-f",
+      "track": "curriculum",
+      "curriculumId": "primitive-f",
+      "title": "Primitiva F — cudaMemcpyAsync",
+      "status": "planned",
+      "priority": 12,
+      "dependsOn": ["class-5"],
+      "contract": "docs/curriculum/modules/primitive-f-cuda-memcpy-async.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-5 is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["class-6"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-6",
+      "track": "curriculum",
+      "curriculumId": "class-6",
+      "title": "Clase 6 — Streams y solapamiento",
+      "status": "planned",
+      "priority": 13,
+      "dependsOn": ["class-5", "primitive-f"],
+      "contract": "docs/curriculum/modules/class-6-streams-overlap.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-f is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["primitive-g"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-g",
+      "track": "curriculum",
+      "curriculumId": "primitive-g",
+      "title": "Primitiva G — sincronización de stream y device",
+      "status": "planned",
+      "priority": 14,
+      "dependsOn": ["class-6"],
+      "contract": "docs/curriculum/modules/primitive-g-stream-device-synchronization.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-6 is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": ["class-7"],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "class-7",
+      "track": "curriculum",
+      "curriculumId": "class-7",
+      "title": "Clase 7 — De correcto a eficiente",
+      "status": "planned",
+      "priority": 15,
+      "dependsOn": ["class-6", "primitive-g"],
+      "contract": "docs/curriculum/modules/class-7-correct-to-efficient.md",
+      "definitionOfDone": [
+        "Global DoD and the scaffold contract. Full vertical slice; closes the frozen first-course waterfall. Not executable until primitive-g is done."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "primitive-h",
+      "track": "future",
+      "curriculumId": "primitive-h",
+      "title": "Primitiva H — cudaFree",
+      "status": "planned",
+      "priority": 16,
+      "dependsOn": ["primitive-a"],
+      "contract": "docs/curriculum/modules/primitive-h-cuda-free.md",
+      "definitionOfDone": [
+        "Reference primitive outside the A–G waterfall. Owner decision required to promote it into the main sequence before it becomes executable curriculum work."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": "Reserved reference primitive. Does not consume the main waterfall's remaining primitive slot. Never returned as next work while status is planned."
+    },
+    {
+      "id": "primitive-i",
+      "track": "future",
+      "curriculumId": "primitive-i",
+      "title": "Primitiva I — cudaMemset",
+      "status": "planned",
+      "priority": 17,
+      "dependsOn": ["primitive-a"],
+      "contract": "docs/curriculum/modules/primitive-i-cuda-memset.md",
+      "definitionOfDone": [
+        "Reference primitive outside the A–G waterfall. Owner decision required to promote."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": "Reserved reference primitive."
+    },
+    {
+      "id": "primitive-j",
+      "track": "future",
+      "curriculumId": "primitive-j",
+      "title": "Primitiva J — cudaGetLastError",
+      "status": "planned",
+      "priority": 18,
+      "dependsOn": ["class-1"],
+      "contract": "docs/curriculum/modules/primitive-j-cuda-get-last-error.md",
+      "definitionOfDone": [
+        "Reference primitive outside the A–G waterfall. Owner decision required to promote."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": "Reserved reference primitive."
+    },
+    {
+      "id": "primitive-k",
+      "track": "future",
+      "curriculumId": "primitive-k",
+      "title": "Primitiva K — cudaEventRecord y medición de tiempo",
+      "status": "planned",
+      "priority": 19,
+      "dependsOn": ["primitive-f", "class-6"],
+      "contract": "docs/curriculum/modules/primitive-k-cuda-events.md",
+      "definitionOfDone": [
+        "Reference primitive outside the A–G waterfall. Owner decision required to promote."
+      ],
+      "verification": ["pnpm verify"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": "Reserved reference primitive."
+    },
+    {
+      "id": "native-cpu-foundation",
+      "track": "platform",
+      "curriculumId": null,
+      "title": "CPU-only native foundation with optional CUDA detection",
+      "status": "done",
+      "priority": 140,
+      "dependsOn": [],
+      "contract": "native/CMakeLists.txt",
+      "definitionOfDone": [
+        "Global DoD.",
+        "native/ builds and runs CTest with no CUDA installed; CUDA is optional and detected, never assumed.",
+        "CI runs the CPU-only path with SIMULAGPU_CUDA=OFF and no GPU hardware."
+      ],
+      "verification": ["pnpm native:verify"],
+      "evidence": ["native/CMakeLists.txt", "native/common", ".github/workflows/ci.yml"],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "anki-pipeline",
+      "track": "tooling",
+      "curriculumId": null,
+      "title": "Deterministic Anki build pipeline (TSV + web JSON)",
+      "status": "done",
+      "priority": 130,
+      "dependsOn": [],
+      "contract": "anki/scripts/build-anki.mjs",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Two runs produce byte-identical output (verified in CI via --check).",
+        "Sources validated against anki/schema/card.schema.json; card ids unique and permanent."
+      ],
+      "verification": ["pnpm anki:build", "pnpm test"],
+      "evidence": ["anki/scripts/build-anki.mjs", "anki/schema/card.schema.json", "tests/anki-build.test.ts"],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "interactive-anki-reviewer",
+      "track": "retention",
+      "curriculumId": null,
+      "title": "Interactive Anki card reviewer in the browser",
+      "status": "done",
+      "priority": 110,
+      "dependsOn": ["anki-pipeline"],
+      "contract": "packages/visuals/src/InteractiveAnkiReviewer.vue",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Deterministic reviewer consuming the generated web JSON; local-only progress under simulagpu:v1:learner; unit tested."
+      ],
+      "verification": ["pnpm test"],
+      "evidence": [
+        "packages/visuals/src/InteractiveAnkiReviewer.vue",
+        "packages/visuals/src/InteractiveAnkiReviewer.test.ts"
+      ],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "mobile-ux",
+      "track": "ux",
+      "curriculumId": null,
+      "title": "Mobile-first reading, fullscreen focus, and responsive sidebar",
+      "status": "done",
+      "priority": 120,
+      "dependsOn": [],
+      "contract": "apps/docs/.vitepress/theme/mobile.css",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Primary reading and Anki review paths work down to ~360 px without horizontal page scroll; responsive course sidebar toggle; no interaction requires hover."
+      ],
+      "verification": ["pnpm build", "pnpm test"],
+      "evidence": [
+        "apps/docs/.vitepress/theme/mobile.css",
+        "apps/docs/.vitepress/theme/components/ResponsiveSidebarToggle.vue"
+      ],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "landing-page",
+      "track": "ux",
+      "curriculumId": null,
+      "title": "Landing page and class selector",
+      "status": "done",
+      "priority": 100,
+      "dependsOn": [],
+      "contract": "apps/docs/.vitepress/theme/components/landing",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Landing exposes only real, implemented routes; planned curriculum ids and titles never leak into landing or VitePress config (guarded by tests)."
+      ],
+      "verification": ["pnpm build", "pnpm test"],
+      "evidence": [
+        "apps/docs/.vitepress/theme/components/landing",
+        "tests/landing-classes.test.ts",
+        "tests/landing-components.test.ts"
+      ],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": null
+    },
+    {
+      "id": "project-execution-layer",
+      "track": "tooling",
+      "curriculumId": null,
+      "title": "Project execution layer: roadmap ledger, resolver CLI, and tests",
+      "status": "done",
+      "priority": 150,
+      "dependsOn": [],
+      "contract": "docs/project/README.md",
+      "definitionOfDone": [
+        "Global DoD.",
+        "Deterministic roadmap.json ledger, dependency-free resolver CLI (roadmap:status / roadmap:next / roadmap:validate) with --json, and tests/project-roadmap.test.ts enforcing structural, lifecycle, resolver, and curriculum-integration invariants.",
+        "AGENTS.md documents the mandatory entry protocol; docs/roadmap.md no longer duplicates pedagogical sequencing."
+      ],
+      "verification": ["pnpm test", "pnpm run roadmap:validate"],
+      "evidence": [
+        "docs/project/README.md",
+        "docs/project/roadmap.json",
+        "scripts/roadmap/roadmap.mjs",
+        "tests/project-roadmap.test.ts"
+      ],
+      "unlocks": [],
+      "blocker": null,
+      "handoff": null,
+      "note": "This ledger entry describes the infrastructure created by this change. It is DONE on the committed branch that contains these files."
+    },
+    {
+      "id": "license-decision",
+      "track": "platform",
+      "curriculumId": null,
+      "title": "Choose and add a repository LICENSE",
+      "status": "blocked",
+      "priority": 500,
+      "dependsOn": [],
+      "contract": null,
+      "definitionOfDone": [
+        "A LICENSE file exists at the repository root and docs/sources.md / README reflect the chosen terms."
+      ],
+      "verification": ["manual review by the owner"],
+      "evidence": [],
+      "unlocks": [],
+      "blocker": {
+        "reason": "Choosing a software license is a repository-owner decision. v0.1 intentionally ships with no LICENSE (all rights reserved). An agent must not select a license autonomously.",
+        "unblockedBy": "The repository owner selects a license and adds a LICENSE file at the repository root."
+      },
+      "handoff": null,
+      "note": "Owner decision required. Recorded here so agents surface it instead of silently choosing."
+    }
+  ]
+}
