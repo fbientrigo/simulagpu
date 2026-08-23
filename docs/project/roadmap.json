@@ -162,7 +162,7 @@
       "track": "curriculum",
       "curriculumId": "primitive-c",
       "title": "Primitiva C — __syncthreads()",
-      "status": "ready",
+      "status": "done",
       "priority": 6,
       "dependsOn": ["class-2"],
       "contract": "docs/curriculum/modules/primitive-c-syncthreads.md",
@@ -177,18 +177,28 @@
         "Add link coverage for the new module (tests/lesson-links.test.ts or equivalent)."
       ],
       "verification": ["pnpm verify", "pnpm test", "pnpm typecheck", "pnpm lint"],
-      "evidence": [],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/clases/syncthreads.md",
+        "packages/visuals/src/ClaseSyncthreads.vue",
+        "packages/core/src/syncthreads",
+        "native/examples/syncthreads",
+        "native/exercises/03-syncthreads",
+        "anki/cards/04-syncthreads.yaml",
+        "tests/lesson-links.test.ts",
+        "tests/curriculum-contract.test.ts"
+      ],
       "unlocks": ["class-3"],
       "blocker": null,
       "handoff": null,
-      "note": "Not started on main. An exploratory branch 'class/primitves' exists but is not integrated into main and its completeness is unverified; treat primitive-c as not started. Do NOT record DONE without inspectable evidence on the committed branch."
+      "note": "Implemented on origin/main by PR #10 (merge 020e5af, implementation 53bc7bb); reconciled after rebase."
     },
     {
       "id": "class-3",
       "track": "curriculum",
       "curriculumId": "class-3",
       "title": "Clase 3 — Cooperación, memoria y patrones de acceso",
-      "status": "planned",
+      "status": "ready",
       "priority": 7,
       "dependsOn": ["class-2", "primitive-c"],
       "contract": "docs/curriculum/modules/class-3-memory-access.md",

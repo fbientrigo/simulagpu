@@ -112,9 +112,9 @@ describe('roadmap ledger — lifecycle invariants', () => {
 });
 
 describe('roadmap resolver — determinism and ordering', () => {
-  it('returns primitive-c as the deterministic next item', () => {
+  it('returns class-3 as the deterministic next item after Primitive C is done', () => {
     const result = resolveNext(roadmap);
-    expect(result.item?.id).toBe('primitive-c');
+    expect(result.item?.id).toBe('class-3');
     expect(result.reason).toBe('ready');
   });
 
@@ -166,7 +166,7 @@ describe('roadmap resolver — determinism and ordering', () => {
     expect(result.item).toBeNull();
     expect(result.reason).toBe('no-executable-work');
     expect(result.blockers.length).toBeGreaterThan(0);
-    expect(result.blockers.some((b) => b.id === 'class-3')).toBe(true);
+    expect(result.blockers.some((b) => b.id === 'primitive-c')).toBe(true);
   });
 
   it('does not return planned items even when their dependencies are done', () => {
@@ -210,11 +210,10 @@ describe('roadmap ledger — curriculum integration', () => {
     }
   });
 
-  it('does not let the next curriculum candidate skip an unfinished prerequisite', () => {
-    // primitive-c is next; class-3 sits behind it and must stay non-eligible.
+  it('unlocks Class 3 only after the completed Primitive C dependency', () => {
     const eligibility = deriveEligibility(roadmap);
-    expect(eligibility.find((e) => e.id === 'primitive-c')?.eligible).toBe(true);
-    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(false);
+    expect(eligibility.find((e) => e.id === 'primitive-c')?.eligible).toBe(false);
+    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(true);
   });
 });
 
