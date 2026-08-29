@@ -212,10 +212,30 @@
       "handoff": {
         "branch": "agent/class-3",
         "lastKnownGoodCommit": "1566530c1a8191c1bf6ae36a97f5bf7bc870451a",
-        "completed": ["claimed module after repository/PR/branch audit", "reviewed class-3 and primitive-d scope boundary"],
-        "remaining": ["implement deterministic access model", "implement visualization and Spanish lesson", "add native example and CPU-testable exercise", "add Anki and navigation/link integration", "run pnpm verify and CI", "finalize ledger evidence"],
-        "knownIssues": [],
-        "resumeFrom": ["docs/curriculum/modules/class-3-memory-access.md", "packages/core/src", "packages/visuals/src", "apps/docs/leccion", "native/examples", "native/exercises", "anki/cards"]
+        "completed": [
+          "claimed module after repository/PR/branch audit",
+          "reviewed class-3 and primitive-d scope boundary",
+          "implemented deterministic memory-access teaching model",
+          "added determinism, serialization, immutability, normalization, URL round-trip, boundary, access-pattern, and reuse tests",
+          "exported the model from packages/core"
+        ],
+        "remaining": [
+          "implement visualization and Spanish lesson",
+          "add native example and CPU-testable exercise",
+          "add Anki and navigation/link integration",
+          "run full pnpm verify and green CI after the complete vertical slice",
+          "finalize manifest and ledger evidence"
+        ],
+        "knownIssues": ["Current implementation is intentionally incomplete; Class 3 remains WIP."],
+        "resumeFrom": [
+          "packages/core/src/memory-access/model.ts",
+          "packages/core/src/memory-access/memory-access.test.ts",
+          "packages/visuals/src",
+          "apps/docs/leccion",
+          "native/examples",
+          "native/exercises",
+          "anki/cards"
+        ]
       },
       "note": null
     },
