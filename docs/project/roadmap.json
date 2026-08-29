@@ -198,7 +198,7 @@
       "track": "curriculum",
       "curriculumId": "class-3",
       "title": "Clase 3 — Cooperación, memoria y patrones de acceso",
-      "status": "ready",
+      "status": "wip",
       "priority": 7,
       "dependsOn": ["class-2", "primitive-c"],
       "contract": "docs/curriculum/modules/class-3-memory-access.md",
@@ -209,7 +209,14 @@
       "evidence": [],
       "unlocks": ["primitive-d"],
       "blocker": null,
-      "handoff": null,
+      "handoff": {
+        "branch": "agent/class-3",
+        "lastKnownGoodCommit": "1566530c1a8191c1bf6ae36a97f5bf7bc870451a",
+        "completed": ["claimed module after repository/PR/branch audit", "reviewed class-3 and primitive-d scope boundary"],
+        "remaining": ["implement deterministic access model", "implement visualization and Spanish lesson", "add native example and CPU-testable exercise", "add Anki and navigation/link integration", "run pnpm verify and CI", "finalize ledger evidence"],
+        "knownIssues": [],
+        "resumeFrom": ["docs/curriculum/modules/class-3-memory-access.md", "packages/core/src", "packages/visuals/src", "apps/docs/leccion", "native/examples", "native/exercises", "anki/cards"]
+      },
       "note": null
     },
     {
