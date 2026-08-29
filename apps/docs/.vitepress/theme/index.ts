@@ -7,6 +7,7 @@ import {
   ClaseSyncthreads,
   ExploradorIndiceGlobal,
   InteractiveAnkiReviewer,
+  LaboratorioAccesoMemoria,
   LaboratorioReduccion,
   ModeloMentalGpu,
 } from '@simulagpu/visuals';
@@ -33,6 +34,7 @@ const theme: Theme = {
     app.component('InteractiveAnkiReviewer', InteractiveAnkiReviewer);
     app.component('ModeloMentalGpu', ModeloMentalGpu);
     app.component('LaboratorioReduccion', LaboratorioReduccion);
+    app.component('LaboratorioAccesoMemoria', LaboratorioAccesoMemoria);
     app.component('LandingHome', LandingHome);
   },
 };
