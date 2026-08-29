@@ -1,0 +1,56 @@
+# Tarjetas Anki de la Clase 3 — Cooperación, memoria y patrones de acceso.
+deck: 'SimulaGPU::01 Índice global'
+notetype: Basic
+leccion: /leccion/cooperacion-memoria-acceso
+
+cards:
+  - id: mem-001
+    tipo: conceptual
+    anverso: '¿Qué diferencia hay entre un valor privado de un hilo y un valor en memoria global?'
+    reverso: |
+      El valor privado pertenece al trabajo local de ese hilo. Un arreglo en memoria
+      global se referencia mediante direcciones lógicas que pueden ser usadas por
+      varios hilos del programa.
+    etiquetas: [memoria, cooperacion]
+
+  - id: mem-002
+    tipo: sincronizacion
+    anverso: 'Una fase 2 lee valores que otros hilos del mismo bloque escriben en fase 1. ¿Qué frontera falta?'
+    reverso: |
+      Una barrera de bloque entre ambas fases. `__syncthreads()` impide que un hilo
+      continúe a la fase 2 antes de que los hilos participantes del bloque alcancen
+      la barrera.
+    etiquetas: [memoria, syncthreads, dependencia]
+
+  - id: mem-003
+    tipo: calculo
+    anverso: 'Cuatro hilos acceden con patrón contiguo. ¿Qué direcciones lógicas tocan?'
+    reverso: |
+      `0, 1, 2, 3`: la diferencia entre direcciones de hilos consecutivos es 1.
+    etiquetas: [memoria, acceso, contiguo]
+
+  - id: mem-004
+    tipo: calculo
+    anverso: 'Con `stride = 2`, ¿qué direcciones lógicas tocan los hilos 0, 1, 2 y 3 en un arreglo de 8 elementos?'
+    reverso: |
+      `0, 2, 4, 6`. Esto describe el mapeo lógico; por sí solo no dice cuántas
+      transacciones realizará un hardware real.
+    etiquetas: [memoria, acceso, stride]
+
+  - id: mem-005
+    tipo: conceptual
+    anverso: '¿Qué significa identificar una oportunidad de reutilización?'
+    reverso: |
+      Que el mismo dato es requerido más de una vez, por ejemplo por varios hilos
+      del bloque. Es una oportunidad algorítmica; no implica automáticamente una
+      aceleración medida.
+    etiquetas: [memoria, reutilizacion]
+
+  - id: mem-006
+    tipo: frontera
+    anverso: '¿Qué NO enseña todavía la Clase 3 sobre `__shared__`?'
+    reverso: |
+      No enseña su declaración ni su semántica operacional. Clase 3 solo motiva la
+      necesidad de almacenamiento block-local reutilizable; eso pertenece a la
+      Primitiva D.
+    etiquetas: [memoria, shared, frontera]
