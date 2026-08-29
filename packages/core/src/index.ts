@@ -39,3 +39,10 @@ export {
   renderReductionSubmission,
   sumFloat32Sequential,
 } from './reduction/model.js';
+export {
+  DEFAULT_MEMORY_ACCESS_CONFIG,
+  buildMemoryAccessSnapshot,
+  decodeMemoryAccessConfig,
+  encodeMemoryAccessConfig,
+  normalizeMemoryAccessConfig,
+} from './memory-access/model.js';
