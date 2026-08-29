@@ -13,9 +13,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE)
 endif()
 
-# ---------------------------------------------------------------------------
-# Options
-# ---------------------------------------------------------------------------
 set(SIMULAGPU_CUDA "AUTO" CACHE STRING
     "CUDA support: AUTO (use it if nvcc is found), ON (require it), OFF (never).")
 set_property(CACHE SIMULAGPU_CUDA PROPERTY STRINGS AUTO ON OFF)
@@ -23,9 +20,6 @@ set_property(CACHE SIMULAGPU_CUDA PROPERTY STRINGS AUTO ON OFF)
 option(SIMULAGPU_BUILD_TESTS "Build the CTest suite" ON)
 option(SIMULAGPU_ENABLE_SANITIZERS "Build with AddressSanitizer + UndefinedBehaviorSanitizer" OFF)
 
-# ---------------------------------------------------------------------------
-# Warnings, applied to our targets only
-# ---------------------------------------------------------------------------
 if(MSVC)
   set(SIMULAGPU_WARNINGS /W4 /permissive-)
 else()
@@ -41,12 +35,6 @@ if(SIMULAGPU_ENABLE_SANITIZERS)
   add_link_options(-fsanitize=address,undefined)
 endif()
 
-# ---------------------------------------------------------------------------
-# Optional CUDA detection
-#
-# SIMULAGPU_WITH_CUDA is the single flag the rest of the tree reads. When it is
-# OFF, no .cu file is compiled and no CUDA header is included anywhere.
-# ---------------------------------------------------------------------------
 set(SIMULAGPU_WITH_CUDA OFF)
 
 if(NOT SIMULAGPU_CUDA STREQUAL "OFF")
@@ -58,8 +46,6 @@ if(NOT SIMULAGPU_CUDA STREQUAL "OFF")
     set(CMAKE_CUDA_STANDARD 17)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
     if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-      # "native" needs CMake >= 3.24 and a visible device; fall back to a
-      # widely supported pair of architectures otherwise.
       if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
         set(CMAKE_CUDA_ARCHITECTURES native)
       else()
@@ -89,8 +75,10 @@ add_subdirectory(examples/vector-add)
 add_subdirectory(examples/cuda-memcpy)
 add_subdirectory(examples/reduction)
 add_subdirectory(examples/syncthreads)
+add_subdirectory(examples/memory-access)
 add_subdirectory(exercises/01-vector-add)
 add_subdirectory(exercises/02-reduction)
 add_subdirectory(exercises/03-syncthreads)
+add_subdirectory(exercises/04-memory-access)
 
 message(STATUS "simulagpu_native: build type = ${CMAKE_BUILD_TYPE}, CUDA = ${SIMULAGPU_WITH_CUDA}, tests = ${SIMULAGPU_BUILD_TESTS}")
