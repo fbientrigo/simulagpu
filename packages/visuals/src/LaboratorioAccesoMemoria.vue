@@ -83,7 +83,8 @@ function updateStride(event: Event): void {
       <p>
         Diferencias entre direcciones consecutivas:
         <code>{{ selectedPattern.adjacentDeltas.join(', ') || '—' }}</code>.
-        Aquí «contiguo» describe la relación entre índices; no afirma cuántas transacciones hará un hardware real.
+        Aquí «contiguo» describe la relación entre índices; no afirma cuántas transacciones hará un hardware
+        real.
       </p>
     </div>
 
@@ -93,7 +94,8 @@ function updateStride(event: Event): void {
         <article v-for="thread in snapshot.threads" :key="`reads-${thread.threadIdx}`">
           <strong>hilo {{ thread.threadIdx }}</strong>
           <span v-for="read in thread.phaseTwoReads" :key="`${thread.threadIdx}-${read.role}`">
-            {{ read.role }}: {{ read.address === null ? 'fuera del borde' : `[${read.address}] = ${read.value}` }}
+            {{ read.role }}:
+            {{ read.address === null ? 'fuera del borde' : `[${read.address}] = ${read.value}` }}
           </span>
         </article>
       </div>
@@ -113,9 +115,9 @@ function updateStride(event: Event): void {
         </li>
       </ul>
       <p>
-        Repetir una lectura crea una <strong>oportunidad de reutilización</strong>. La pregunta que queda abierta es:
-        ¿dónde podría un bloque guardar temporalmente esos valores para reutilizarlos? La primitiva siguiente responde
-        esa pregunta; aquí no declaramos ni operamos <code>__shared__</code>.
+        Repetir una lectura crea una <strong>oportunidad de reutilización</strong>. La pregunta que queda abierta
+        es: ¿dónde podría un bloque guardar temporalmente esos valores para reutilizarlos? La primitiva
+        siguiente responde esa pregunta; aquí no declaramos ni operamos <code>__shared__</code>.
       </p>
     </div>
   </section>
