@@ -1,57 +1,11 @@
-export interface MemoryAccessConfig {
-  threadCount: number;
-  elementCount: number;
-  stride: number;
-  neighborhoodRadius: number;
-}
-
-export type AccessPatternKind = 'contiguous' | 'strided';
-
-export interface MemoryAccessRead {
-  address: number | null;
-  value: number | null;
-  role: 'left' | 'self' | 'right';
-}
-
-export interface MemoryAccessThread {
-  threadIdx: number;
-  privateValue: number;
-  contiguousAddress: number;
-  stridedAddress: number;
-  phaseOneWriteAddress: number;
-  phaseOneValue: number;
-  phaseTwoReads: readonly MemoryAccessRead[];
-}
-
-export interface AccessPatternSummary {
-  kind: AccessPatternKind;
-  addresses: readonly number[];
-  adjacentDeltas: readonly number[];
-}
-
-export interface ReuseOpportunity {
-  address: number;
-  value: number;
-  readerThreads: readonly number[];
-}
-
-export interface MemoryAccessSnapshot {
-  config: Readonly<MemoryAccessConfig>;
-  globalInput: readonly number[];
-  phaseOneGlobalOutput: readonly number[];
-  threads: readonly MemoryAccessThread[];
-  accessPatterns: Readonly<{
-    contiguous: AccessPatternSummary;
-    strided: AccessPatternSummary;
-  }>;
-  cooperation: Readonly<{
-    phaseBoundaryRequiresBarrier: true;
-    reason: string;
-    scope: 'block';
-  }>;
-  reuseOpportunities: readonly ReuseOpportunity[];
-  assumptions: readonly string[];
-}
+import type {
+  AccessPatternSummary,
+  MemoryAccessConfig,
+  MemoryAccessRead,
+  MemoryAccessSnapshot,
+  MemoryAccessThread,
+  ReuseOpportunity,
+} from '@simulagpu/contracts';
 
 export const DEFAULT_MEMORY_ACCESS_CONFIG: Readonly<MemoryAccessConfig> = Object.freeze({
   threadCount: 6,
@@ -159,23 +113,23 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
       readerThreads,
     }));
 
+  const contiguous: AccessPatternSummary = {
+    kind: 'contiguous',
+    addresses: contiguousAddresses,
+    adjacentDeltas: buildDeltas(contiguousAddresses),
+  };
+  const strided: AccessPatternSummary = {
+    kind: 'strided',
+    addresses: stridedAddresses,
+    adjacentDeltas: buildDeltas(stridedAddresses),
+  };
+
   return deepFreeze({
     config,
     globalInput,
     phaseOneGlobalOutput,
     threads,
-    accessPatterns: {
-      contiguous: {
-        kind: 'contiguous',
-        addresses: contiguousAddresses,
-        adjacentDeltas: buildDeltas(contiguousAddresses),
-      },
-      strided: {
-        kind: 'strided',
-        addresses: stridedAddresses,
-        adjacentDeltas: buildDeltas(stridedAddresses),
-      },
-    },
+    accessPatterns: { contiguous, strided },
     cooperation: {
       phaseBoundaryRequiresBarrier: true,
       reason: 'Phase two reads values produced by other threads in the same block during phase one.',
