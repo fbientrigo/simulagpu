@@ -67,8 +67,18 @@ const clampInteger = (value: unknown, fallback: number, minimum: number, maximum
 
 export function normalizeMemoryAccessConfig(input: Partial<MemoryAccessConfig> = {}): MemoryAccessConfig {
   const elementCount = clampInteger(input.elementCount, DEFAULT_MEMORY_ACCESS_CONFIG.elementCount, 2, 8);
-  const threadCount = clampInteger(input.threadCount, DEFAULT_MEMORY_ACCESS_CONFIG.threadCount, 1, elementCount);
-  const stride = clampInteger(input.stride, DEFAULT_MEMORY_ACCESS_CONFIG.stride, 2, Math.max(2, elementCount - 1));
+  const threadCount = clampInteger(
+    input.threadCount,
+    DEFAULT_MEMORY_ACCESS_CONFIG.threadCount,
+    1,
+    elementCount,
+  );
+  const stride = clampInteger(
+    input.stride,
+    DEFAULT_MEMORY_ACCESS_CONFIG.stride,
+    2,
+    Math.max(2, elementCount - 1),
+  );
   const neighborhoodRadius = clampInteger(
     input.neighborhoodRadius,
     DEFAULT_MEMORY_ACCESS_CONFIG.neighborhoodRadius,
