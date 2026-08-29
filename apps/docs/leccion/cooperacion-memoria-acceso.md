@@ -21,6 +21,14 @@ Al terminar podrás:
 
 **Requisitos:** [Clase 02 — Reducción paralela](./reduccion-paralela) y [Primitiva C — `__syncthreads()`](../clases/syncthreads).
 
+| Pieza | Dónde |
+| --- | --- |
+| Explicación | esta página |
+| Laboratorio interactivo | [más abajo](#5-laboratorio-interactivo) |
+| Código CPU-testable | [`native/examples/memory-access/`](https://github.com/fbientrigo/simulagpu/tree/main/native/examples/memory-access) |
+| Ejercicio | [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria) |
+| Tarjetas de repaso | [Tarjetas Anki](./anki) |
+
 ::: warning Límite de esta clase
 Aquí motivamos almacenamiento reutilizable dentro de un bloque, pero **no enseñamos todavía a declarar ni usar `__shared__`**. Esa herramienta pertenece a la Primitiva D. Tampoco simulamos cachés, transacciones de memoria, warps, scheduling ni tiempos de ejecución.
 :::
@@ -144,7 +152,7 @@ El ejemplo en [`native/examples/memory-access/`](https://github.com/fbientrigo/s
 - qué vecinos consume cada salida;
 - qué posiciones son reutilizadas por más de un hilo.
 
-El [Ejercicio 03 — patrones de acceso](./ejercicio-03-acceso-memoria) usa el mismo núcleo CPU-testable para que puedas corregir índices y bordes sin necesitar CUDA instalado.
+El [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria) usa el mismo núcleo CPU-testable para que puedas corregir índices y bordes sin necesitar CUDA instalado.
 
 ## 7. Comprueba tu modelo mental
 
