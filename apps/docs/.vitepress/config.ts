@@ -40,6 +40,7 @@ export default defineConfig({
       { text: 'Clases', link: '/clases/cuda-malloc' },
       { text: 'Clases', link: '/leccion/indice-global-suma-vectores' },
       { text: 'Laboratorio de reducción', link: '/leccion/reduccion-paralela#laboratorio-interactivo' },
+      { text: 'Clase 3', link: '/leccion/cooperacion-memoria-acceso' },
       { text: 'Guía', link: '/guia/instalacion' },
       { text: 'Referencia', link: '/referencia/arquitectura' },
     ],
@@ -78,6 +79,14 @@ export default defineConfig({
           { text: 'De la suma a una reducción en árbol', link: '/leccion/reduccion-paralela' },
           { text: 'Laboratorio interactivo', link: '/leccion/reduccion-paralela#laboratorio-interactivo' },
           { text: 'Ejercicio 02: una pasada', link: '/leccion/ejercicio-02-reduccion' },
+        ],
+      },
+      {
+        text: 'Clase 03 — Cooperación y memoria',
+        items: [
+          { text: 'Cooperación, memoria y acceso', link: '/leccion/cooperacion-memoria-acceso' },
+          { text: 'Laboratorio interactivo', link: '/leccion/cooperacion-memoria-acceso#5-laboratorio-interactivo' },
+          { text: 'Ejercicio 04: patrones de acceso', link: '/leccion/ejercicio-04-acceso-memoria' },
         ],
       },
       {
