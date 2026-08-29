@@ -85,7 +85,10 @@ export default defineConfig({
         text: 'Clase 03 — Cooperación y memoria',
         items: [
           { text: 'Cooperación, memoria y acceso', link: '/leccion/cooperacion-memoria-acceso' },
-          { text: 'Laboratorio interactivo', link: '/leccion/cooperacion-memoria-acceso#5-laboratorio-interactivo' },
+          {
+            text: 'Laboratorio interactivo',
+            link: '/leccion/cooperacion-memoria-acceso#5-laboratorio-interactivo',
+          },
           { text: 'Ejercicio 04: patrones de acceso', link: '/leccion/ejercicio-04-acceso-memoria' },
         ],
       },
