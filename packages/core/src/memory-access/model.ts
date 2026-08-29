@@ -205,10 +205,10 @@ export function decodeMemoryAccessConfig(encoded: string): MemoryAccessConfig {
     if (Number.isFinite(value)) entries[key] = value;
   }
 
-  return normalizeMemoryAccessConfig({
-    threadCount: entries.threads,
-    elementCount: entries.elements,
-    stride: entries.stride,
-    neighborhoodRadius: entries.radius,
-  });
+  const decoded: Partial<MemoryAccessConfig> = {};
+  if (entries.threads !== undefined) decoded.threadCount = entries.threads;
+  if (entries.elements !== undefined) decoded.elementCount = entries.elements;
+  if (entries.stride !== undefined) decoded.stride = entries.stride;
+  if (entries.radius !== undefined) decoded.neighborhoodRadius = entries.radius;
+  return normalizeMemoryAccessConfig(decoded);
 }
