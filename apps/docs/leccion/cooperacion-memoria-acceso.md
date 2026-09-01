@@ -26,7 +26,7 @@ Al terminar podrás:
 | Explicación | esta página |
 | Laboratorio interactivo | [más abajo](#5-laboratorio-interactivo) |
 | Código CPU-testable | [`native/examples/memory-access/`](https://github.com/fbientrigo/simulagpu/tree/main/native/examples/memory-access) |
-| Ejercicio | [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria) |
+| Ejercicio | [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria) · [`native/exercises/04-memory-access/`](https://github.com/fbientrigo/simulagpu/tree/main/native/exercises/04-memory-access) |
 | Tarjetas de repaso | [Tarjetas Anki](./anki) |
 
 ::: warning Límite de esta clase
@@ -152,7 +152,7 @@ El ejemplo en [`native/examples/memory-access/`](https://github.com/fbientrigo/s
 - qué vecinos consume cada salida;
 - qué posiciones son reutilizadas por más de un hilo.
 
-El [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria) usa el mismo núcleo CPU-testable para que puedas corregir índices y bordes sin necesitar CUDA instalado.
+El [Ejercicio 04 — patrones de acceso](./ejercicio-04-acceso-memoria), cuyo proyecto independiente vive en [`native/exercises/04-memory-access/`](https://github.com/fbientrigo/simulagpu/tree/main/native/exercises/04-memory-access), usa el mismo núcleo CPU-testable para que puedas corregir índices y bordes sin necesitar CUDA instalado.
 
 ## 7. Comprueba tu modelo mental
 
