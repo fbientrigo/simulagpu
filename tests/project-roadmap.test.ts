@@ -112,10 +112,10 @@ describe('roadmap ledger — lifecycle invariants', () => {
 });
 
 describe('roadmap resolver — determinism and ordering', () => {
-  it('resumes class-3 as the deterministic WIP item after Primitive C is done', () => {
+  it('returns primitive-d as the deterministic next item after Class 3 is done', () => {
     const result = resolveNext(roadmap);
-    expect(result.item?.id).toBe('class-3');
-    expect(result.reason).toBe('resume-wip');
+    expect(result.item?.id).toBe('primitive-d');
+    expect(result.reason).toBe('ready');
   });
 
   it('returns the identical result on repeated calls against unchanged state', () => {
@@ -216,11 +216,11 @@ describe('roadmap ledger — curriculum integration', () => {
     }
   });
 
-  it('keeps Class 3 resumable only after the completed Primitive C dependency', () => {
+  it('unlocks Primitive D only after the completed Class 3 dependency', () => {
     const eligibility = deriveEligibility(roadmap);
-    expect(eligibility.find((e) => e.id === 'primitive-c')?.eligible).toBe(false);
-    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(true);
-    expect(eligibility.find((e) => e.id === 'class-3')?.kind).toBe('resume');
+    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(false);
+    expect(eligibility.find((e) => e.id === 'primitive-d')?.eligible).toBe(true);
+    expect(eligibility.find((e) => e.id === 'primitive-d')?.kind).toBe('ready');
   });
 });
 
