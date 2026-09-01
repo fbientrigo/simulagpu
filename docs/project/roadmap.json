@@ -1,63 +1,19 @@
 {
   "version": 1,
   "about": "SimulaGPU project execution ledger. Engineering truth for autonomous agents: what is done, ready, wip, blocked, and what is next. This file is NOT the pedagogical source of truth. Learning order, concepts, and learner outcomes live in docs/curriculum/manifest.ts. Curriculum-track items here reference a curriculumId and MUST NOT fork curriculum truth. See docs/project/README.md.",
-  "states": [
-    "planned",
-    "ready",
-    "wip",
-    "blocked",
-    "done",
-    "superseded"
-  ],
-  "tracks": [
-    "curriculum",
-    "retention",
-    "ux",
-    "tooling",
-    "platform",
-    "future"
-  ],
+  "states": ["planned", "ready", "wip", "blocked", "done", "superseded"],
+  "tracks": ["curriculum", "retention", "ux", "tooling", "platform", "future"],
   "legalTransitions": [
-    [
-      "planned",
-      "ready"
-    ],
-    [
-      "planned",
-      "superseded"
-    ],
-    [
-      "ready",
-      "wip"
-    ],
-    [
-      "ready",
-      "blocked"
-    ],
-    [
-      "ready",
-      "superseded"
-    ],
-    [
-      "wip",
-      "done"
-    ],
-    [
-      "wip",
-      "blocked"
-    ],
-    [
-      "blocked",
-      "ready"
-    ],
-    [
-      "blocked",
-      "wip"
-    ],
-    [
-      "done",
-      "superseded"
-    ]
+    ["planned", "ready"],
+    ["planned", "superseded"],
+    ["ready", "wip"],
+    ["ready", "blocked"],
+    ["ready", "superseded"],
+    ["wip", "done"],
+    ["wip", "blocked"],
+    ["blocked", "ready"],
+    ["blocked", "wip"],
+    ["done", "superseded"]
   ],
   "globalDefinitionOfDone": "AGENTS.md § Definition of done. In short: pnpm verify passes; learner-facing text is Spanish with accents; engineering text is English; new teaching models are pure, frozen, JSON-serializable and unit-tested; no generated file is committed; no unmeasured performance or CUDA claim; no reference repository is modified.",
   "items": [
@@ -74,10 +30,7 @@
         "Global DoD.",
         "Deliberately a reduced vertical slice: prerequisite-free, code-free conceptual introduction. No native code, no exercise, no Anki cards by design (see AGENTS.md and the lesson scope note)."
       ],
-      "verification": [
-        "pnpm test",
-        "pnpm build"
-      ],
+      "verification": ["pnpm test", "pnpm build"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/clase-0/modelo-mental-gpu.md",
@@ -85,9 +38,7 @@
         "packages/core/src/chunk-flow",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "primitive-a"
-      ],
+      "unlocks": ["primitive-a"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -99,19 +50,14 @@
       "title": "Primitiva A — cudaMalloc",
       "status": "done",
       "priority": 2,
-      "dependsOn": [
-        "class-0"
-      ],
+      "dependsOn": ["class-0"],
       "contract": "apps/docs/clases/cuda-malloc.md",
       "definitionOfDone": [
         "Global DoD.",
         "Single-primitive interactive class per docs/class-methodology.md.",
         "Reuses the vector-add native context; allocation has no useful standalone CPU oracle, so no dedicated native core is required (documented)."
       ],
-      "verification": [
-        "pnpm test",
-        "pnpm build"
-      ],
+      "verification": ["pnpm test", "pnpm build"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/clases/cuda-malloc.md",
@@ -120,9 +66,7 @@
         "anki/cards/01-cuda-malloc.yaml",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "class-1"
-      ],
+      "unlocks": ["class-1"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -134,18 +78,13 @@
       "title": "Clase 1 — Índice global y suma de vectores",
       "status": "done",
       "priority": 3,
-      "dependsOn": [
-        "class-0",
-        "primitive-a"
-      ],
+      "dependsOn": ["class-0", "primitive-a"],
       "contract": "apps/docs/leccion/indice-global-suma-vectores.md",
       "definitionOfDone": [
         "Global DoD.",
         "Full vertical slice: lesson, model, visualization, native example, exercise, Anki."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/leccion/indice-global-suma-vectores.md",
@@ -156,9 +95,7 @@
         "anki/cards/01-indice-global.yaml",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "primitive-b"
-      ],
+      "unlocks": ["primitive-b"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -170,18 +107,13 @@
       "title": "Primitiva B — cudaMemcpy",
       "status": "done",
       "priority": 4,
-      "dependsOn": [
-        "class-1"
-      ],
+      "dependsOn": ["class-1"],
       "contract": "apps/docs/clases/cuda-memcpy.md",
       "definitionOfDone": [
         "Global DoD.",
         "Single-primitive interactive class per docs/class-methodology.md."
       ],
-      "verification": [
-        "pnpm test",
-        "pnpm build"
-      ],
+      "verification": ["pnpm test", "pnpm build"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/clases/cuda-memcpy.md",
@@ -191,9 +123,7 @@
         "anki/cards/03-cuda-memcpy.yaml",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "class-2"
-      ],
+      "unlocks": ["class-2"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -205,18 +135,13 @@
       "title": "Clase 2 — Reducción paralela",
       "status": "done",
       "priority": 5,
-      "dependsOn": [
-        "class-1",
-        "primitive-b"
-      ],
+      "dependsOn": ["class-1", "primitive-b"],
       "contract": "apps/docs/leccion/reduccion-paralela.md",
       "definitionOfDone": [
         "Global DoD.",
         "Full vertical slice: lesson, model + guided runner, laboratory visualization, native example, exercise, Anki."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/leccion/reduccion-paralela.md",
@@ -227,9 +152,7 @@
         "anki/cards/02-reduccion.yaml",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "primitive-c"
-      ],
+      "unlocks": ["primitive-c"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -241,9 +164,7 @@
       "title": "Primitiva C — __syncthreads()",
       "status": "done",
       "priority": 6,
-      "dependsOn": [
-        "class-2"
-      ],
+      "dependsOn": ["class-2"],
       "contract": "docs/curriculum/modules/primitive-c-syncthreads.md",
       "definitionOfDone": [
         "Global DoD (pnpm verify green).",
@@ -255,12 +176,7 @@
         "Update docs/curriculum/manifest.ts: set primitive-c status to 'implemented' with implementation references (docPath, route, references); the publishing rule forbids a public route until then.",
         "Add link coverage for the new module (tests/lesson-links.test.ts or equivalent)."
       ],
-      "verification": [
-        "pnpm verify",
-        "pnpm test",
-        "pnpm typecheck",
-        "pnpm lint"
-      ],
+      "verification": ["pnpm verify", "pnpm test", "pnpm typecheck", "pnpm lint"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/clases/syncthreads.md",
@@ -272,9 +188,7 @@
         "tests/lesson-links.test.ts",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "class-3"
-      ],
+      "unlocks": ["class-3"],
       "blocker": null,
       "handoff": null,
       "note": "Implemented on origin/main by PR #10 (merge 020e5af, implementation 53bc7bb); reconciled after rebase."
@@ -286,17 +200,12 @@
       "title": "Clase 3 — Cooperación, memoria y patrones de acceso",
       "status": "done",
       "priority": 7,
-      "dependsOn": [
-        "class-2",
-        "primitive-c"
-      ],
+      "dependsOn": ["class-2", "primitive-c"],
       "contract": "docs/curriculum/modules/class-3-memory-access.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract at docs/curriculum/modules/class-3-memory-access.md. Full vertical slice. Not executable until primitive-c is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [
         "docs/curriculum/manifest.ts",
         "apps/docs/leccion/cooperacion-memoria-acceso.md",
@@ -309,9 +218,7 @@
         "tests/class-3-links.test.ts",
         "tests/curriculum-contract.test.ts"
       ],
-      "unlocks": [
-        "primitive-d"
-      ],
+      "unlocks": ["primitive-d"],
       "blocker": null,
       "handoff": null,
       "note": "Completed on agent/class-3 in PR #11 after green WIP web/native verification."
@@ -323,20 +230,14 @@
       "title": "Primitiva D — __shared__",
       "status": "ready",
       "priority": 8,
-      "dependsOn": [
-        "class-3"
-      ],
+      "dependsOn": ["class-3"],
       "contract": "docs/curriculum/modules/primitive-d-shared.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-3 is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "class-4"
-      ],
+      "unlocks": ["class-4"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -348,21 +249,14 @@
       "title": "Clase 4 — Multiplicación de matrices con tiles",
       "status": "planned",
       "priority": 9,
-      "dependsOn": [
-        "class-3",
-        "primitive-d"
-      ],
+      "dependsOn": ["class-3", "primitive-d"],
       "contract": "docs/curriculum/modules/class-4-tiled-matrix-multiplication.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-d is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "primitive-e"
-      ],
+      "unlocks": ["primitive-e"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -374,20 +268,14 @@
       "title": "Primitiva E — atomicAdd",
       "status": "planned",
       "priority": 10,
-      "dependsOn": [
-        "class-4"
-      ],
+      "dependsOn": ["class-4"],
       "contract": "docs/curriculum/modules/primitive-e-atomic-add.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-4 is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "class-5"
-      ],
+      "unlocks": ["class-5"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -399,21 +287,14 @@
       "title": "Clase 5 — Atomics, histogramas y contención",
       "status": "planned",
       "priority": 11,
-      "dependsOn": [
-        "class-4",
-        "primitive-e"
-      ],
+      "dependsOn": ["class-4", "primitive-e"],
       "contract": "docs/curriculum/modules/class-5-atomics-histograms.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-e is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "primitive-f"
-      ],
+      "unlocks": ["primitive-f"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -425,20 +306,14 @@
       "title": "Primitiva F — cudaMemcpyAsync",
       "status": "planned",
       "priority": 12,
-      "dependsOn": [
-        "class-5"
-      ],
+      "dependsOn": ["class-5"],
       "contract": "docs/curriculum/modules/primitive-f-cuda-memcpy-async.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-5 is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "class-6"
-      ],
+      "unlocks": ["class-6"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -450,21 +325,14 @@
       "title": "Clase 6 — Streams y solapamiento",
       "status": "planned",
       "priority": 13,
-      "dependsOn": [
-        "class-5",
-        "primitive-f"
-      ],
+      "dependsOn": ["class-5", "primitive-f"],
       "contract": "docs/curriculum/modules/class-6-streams-overlap.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Full vertical slice. Not executable until primitive-f is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "primitive-g"
-      ],
+      "unlocks": ["primitive-g"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -476,20 +344,14 @@
       "title": "Primitiva G — sincronización de stream y device",
       "status": "planned",
       "priority": 14,
-      "dependsOn": [
-        "class-6"
-      ],
+      "dependsOn": ["class-6"],
       "contract": "docs/curriculum/modules/primitive-g-stream-device-synchronization.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Single-primitive interactive class. Not executable until class-6 is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
-      "unlocks": [
-        "class-7"
-      ],
+      "unlocks": ["class-7"],
       "blocker": null,
       "handoff": null,
       "note": null
@@ -501,17 +363,12 @@
       "title": "Clase 7 — De correcto a eficiente",
       "status": "planned",
       "priority": 15,
-      "dependsOn": [
-        "class-6",
-        "primitive-g"
-      ],
+      "dependsOn": ["class-6", "primitive-g"],
       "contract": "docs/curriculum/modules/class-7-correct-to-efficient.md",
       "definitionOfDone": [
         "Global DoD and the scaffold contract. Full vertical slice; closes the frozen first-course waterfall. Not executable until primitive-g is done."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
       "unlocks": [],
       "blocker": null,
@@ -525,16 +382,12 @@
       "title": "Primitiva H — cudaFree",
       "status": "planned",
       "priority": 16,
-      "dependsOn": [
-        "primitive-a"
-      ],
+      "dependsOn": ["primitive-a"],
       "contract": "docs/curriculum/modules/primitive-h-cuda-free.md",
       "definitionOfDone": [
         "Reference primitive outside the A–G waterfall. Owner decision required to promote it into the main sequence before it becomes executable curriculum work."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
       "unlocks": [],
       "blocker": null,
@@ -548,16 +401,12 @@
       "title": "Primitiva I — cudaMemset",
       "status": "planned",
       "priority": 17,
-      "dependsOn": [
-        "primitive-a"
-      ],
+      "dependsOn": ["primitive-a"],
       "contract": "docs/curriculum/modules/primitive-i-cuda-memset.md",
       "definitionOfDone": [
         "Reference primitive outside the A–G waterfall. Owner decision required to promote."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
       "unlocks": [],
       "blocker": null,
@@ -571,16 +420,12 @@
       "title": "Primitiva J — cudaGetLastError",
       "status": "planned",
       "priority": 18,
-      "dependsOn": [
-        "class-1"
-      ],
+      "dependsOn": ["class-1"],
       "contract": "docs/curriculum/modules/primitive-j-cuda-get-last-error.md",
       "definitionOfDone": [
         "Reference primitive outside the A–G waterfall. Owner decision required to promote."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
       "unlocks": [],
       "blocker": null,
@@ -594,17 +439,12 @@
       "title": "Primitiva K — cudaEventRecord y medición de tiempo",
       "status": "planned",
       "priority": 19,
-      "dependsOn": [
-        "primitive-f",
-        "class-6"
-      ],
+      "dependsOn": ["primitive-f", "class-6"],
       "contract": "docs/curriculum/modules/primitive-k-cuda-events.md",
       "definitionOfDone": [
         "Reference primitive outside the A–G waterfall. Owner decision required to promote."
       ],
-      "verification": [
-        "pnpm verify"
-      ],
+      "verification": ["pnpm verify"],
       "evidence": [],
       "unlocks": [],
       "blocker": null,
@@ -625,14 +465,8 @@
         "native/ builds and runs CTest with no CUDA installed; CUDA is optional and detected, never assumed.",
         "CI runs the CPU-only path with SIMULAGPU_CUDA=OFF and no GPU hardware."
       ],
-      "verification": [
-        "pnpm native:verify"
-      ],
-      "evidence": [
-        "native/CMakeLists.txt",
-        "native/common",
-        ".github/workflows/ci.yml"
-      ],
+      "verification": ["pnpm native:verify"],
+      "evidence": ["native/CMakeLists.txt", "native/common", ".github/workflows/ci.yml"],
       "unlocks": [],
       "blocker": null,
       "handoff": null,
@@ -652,15 +486,8 @@
         "Two runs produce byte-identical output (verified in CI via --check).",
         "Sources validated against anki/schema/card.schema.json; card ids unique and permanent."
       ],
-      "verification": [
-        "pnpm anki:build",
-        "pnpm test"
-      ],
-      "evidence": [
-        "anki/scripts/build-anki.mjs",
-        "anki/schema/card.schema.json",
-        "tests/anki-build.test.ts"
-      ],
+      "verification": ["pnpm anki:build", "pnpm test"],
+      "evidence": ["anki/scripts/build-anki.mjs", "anki/schema/card.schema.json", "tests/anki-build.test.ts"],
       "unlocks": [],
       "blocker": null,
       "handoff": null,
@@ -673,17 +500,13 @@
       "title": "Interactive Anki card reviewer in the browser",
       "status": "done",
       "priority": 110,
-      "dependsOn": [
-        "anki-pipeline"
-      ],
+      "dependsOn": ["anki-pipeline"],
       "contract": "packages/visuals/src/InteractiveAnkiReviewer.vue",
       "definitionOfDone": [
         "Global DoD.",
         "Deterministic reviewer consuming the generated web JSON; local-only progress under simulagpu:v1:learner; unit tested."
       ],
-      "verification": [
-        "pnpm test"
-      ],
+      "verification": ["pnpm test"],
       "evidence": [
         "packages/visuals/src/InteractiveAnkiReviewer.vue",
         "packages/visuals/src/InteractiveAnkiReviewer.test.ts"
@@ -706,10 +529,7 @@
         "Global DoD.",
         "Primary reading and Anki review paths work down to ~360 px without horizontal page scroll; responsive course sidebar toggle; no interaction requires hover."
       ],
-      "verification": [
-        "pnpm build",
-        "pnpm test"
-      ],
+      "verification": ["pnpm build", "pnpm test"],
       "evidence": [
         "apps/docs/.vitepress/theme/mobile.css",
         "apps/docs/.vitepress/theme/components/ResponsiveSidebarToggle.vue"
@@ -732,10 +552,7 @@
         "Global DoD.",
         "Landing exposes only real, implemented routes; planned curriculum ids and titles never leak into landing or VitePress config (guarded by tests)."
       ],
-      "verification": [
-        "pnpm build",
-        "pnpm test"
-      ],
+      "verification": ["pnpm build", "pnpm test"],
       "evidence": [
         "apps/docs/.vitepress/theme/components/landing",
         "tests/landing-classes.test.ts",
@@ -760,10 +577,7 @@
         "Deterministic roadmap.json ledger, dependency-free resolver CLI (roadmap:status / roadmap:next / roadmap:validate) with --json, and tests/project-roadmap.test.ts enforcing structural, lifecycle, resolver, and curriculum-integration invariants.",
         "AGENTS.md documents the mandatory entry protocol; docs/roadmap.md no longer duplicates pedagogical sequencing."
       ],
-      "verification": [
-        "pnpm test",
-        "pnpm run roadmap:validate"
-      ],
+      "verification": ["pnpm test", "pnpm run roadmap:validate"],
       "evidence": [
         "docs/project/README.md",
         "docs/project/roadmap.json",
@@ -787,9 +601,7 @@
       "definitionOfDone": [
         "A LICENSE file exists at the repository root and docs/sources.md / README reflect the chosen terms."
       ],
-      "verification": [
-        "manual review by the owner"
-      ],
+      "verification": ["manual review by the owner"],
       "evidence": [],
       "unlocks": [],
       "blocker": {
