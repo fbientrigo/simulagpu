@@ -1,1 +1,1 @@
-Temporary trigger for finalized roadmap formatting. Remove before review.
+Temporary trigger for final Class 3 pnpm verify. Remove before review.
