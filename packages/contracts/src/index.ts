@@ -104,3 +104,13 @@ export type {
 } from './reduction.js';
 
 export { REDUCTION_LIMITS } from './reduction.js';
+
+export type {
+  AccessPatternKind,
+  AccessPatternSummary,
+  MemoryAccessConfig,
+  MemoryAccessRead,
+  MemoryAccessSnapshot,
+  MemoryAccessThread,
+  ReuseOpportunity,
+} from './memory-access.js';

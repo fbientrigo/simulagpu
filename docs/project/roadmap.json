@@ -198,7 +198,7 @@
       "track": "curriculum",
       "curriculumId": "class-3",
       "title": "Clase 3 — Cooperación, memoria y patrones de acceso",
-      "status": "ready",
+      "status": "done",
       "priority": 7,
       "dependsOn": ["class-2", "primitive-c"],
       "contract": "docs/curriculum/modules/class-3-memory-access.md",
@@ -206,18 +206,29 @@
         "Global DoD and the scaffold contract at docs/curriculum/modules/class-3-memory-access.md. Full vertical slice. Not executable until primitive-c is done."
       ],
       "verification": ["pnpm verify"],
-      "evidence": [],
+      "evidence": [
+        "docs/curriculum/manifest.ts",
+        "apps/docs/leccion/cooperacion-memoria-acceso.md",
+        "packages/contracts/src/memory-access.ts",
+        "packages/core/src/memory-access",
+        "packages/visuals/src/LaboratorioAccesoMemoria.vue",
+        "native/examples/memory-access",
+        "native/exercises/04-memory-access",
+        "anki/cards/05-memory-access.yaml",
+        "tests/class-3-links.test.ts",
+        "tests/curriculum-contract.test.ts"
+      ],
       "unlocks": ["primitive-d"],
       "blocker": null,
       "handoff": null,
-      "note": null
+      "note": "Completed on agent/class-3 in PR #11 after green WIP web/native verification."
     },
     {
       "id": "primitive-d",
       "track": "curriculum",
       "curriculumId": "primitive-d",
       "title": "Primitiva D — __shared__",
-      "status": "planned",
+      "status": "ready",
       "priority": 8,
       "dependsOn": ["class-3"],
       "contract": "docs/curriculum/modules/primitive-d-shared.md",
