@@ -11,36 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  format-final-roadmap:
-    if: github.event_name == 'pull_request' && github.head_ref == 'agent/class-3' && github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm exec prettier docs/project/roadmap.json --write
-      - shell: bash
-        run: |
-          if git diff --quiet --exit-code -- docs/project/roadmap.json; then
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/project/roadmap.json
-          git commit -m 'style(class-3): format finalized roadmap'
-          git push origin HEAD:agent/class-3
-
-  web:
-    name: Web — lint, types, tests, docs build
+  verify:
+    name: Class 3 — pnpm verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,44 +26,9 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint
-        run: pnpm lint
-      - name: Type check
-        run: pnpm typecheck
-      - name: Unit tests
-        run: pnpm test
-      - name: Build the Anki deck
-        run: pnpm anki:build
-      - name: Verify the Anki deck is reproducible
-        run: node anki/scripts/build-anki.mjs --check
-      - name: Build the static site
-        run: pnpm --filter @simulagpu/docs run build
-      - name: Upload the site
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs-site
-          path: apps/docs/.vitepress/dist
-          retention-days: 7
-
-  native:
-    name: Native — CPU-only build and CTest
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install build tools
+      - name: Install native build tools
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build
-      - name: Configure (CPU only)
-        run: |
-          cmake -S native -B native/build -G Ninja \
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-            -DSIMULAGPU_CUDA=OFF
-      - name: Build
-        run: cmake --build native/build -j"$(nproc)"
-      - name: Test
-        run: ctest --test-dir native/build --output-on-failure
-      - name: Run the lesson examples
-        run: |
-          ./native/build/examples/vector-add/vector_add_example
-          ./native/build/examples/reduction/reduction_example
+      - name: Repository-wide verification
+        run: pnpm verify
