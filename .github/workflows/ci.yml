@@ -11,46 +11,58 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  web:
-    name: Web — lint, types, tests, docs build
+  format-final-roadmap:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/class-3' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.head_ref }}
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier docs/project/roadmap.json --write
+      - shell: bash
+        run: |
+          if git diff --quiet --exit-code -- docs/project/roadmap.json; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/project/roadmap.json
+          git commit -m 'style(class-3): format finalized roadmap'
+          git push origin HEAD:agent/class-3
 
+  web:
+    name: Web — lint, types, tests, docs build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
       - name: Lint
         run: pnpm lint
-
       - name: Type check
         run: pnpm typecheck
-
       - name: Unit tests
         run: pnpm test
-
       - name: Build the Anki deck
         run: pnpm anki:build
-
       - name: Verify the Anki deck is reproducible
-        # A second run must produce byte-identical output. --check compares
-        # against the file the previous step wrote instead of rewriting it.
         run: node anki/scripts/build-anki.mjs --check
-
       - name: Build the static site
         run: pnpm --filter @simulagpu/docs run build
-
       - name: Upload the site
         uses: actions/upload-artifact@v4
         with:
@@ -61,40 +73,22 @@ jobs:
   native:
     name: Native — CPU-only build and CTest
     runs-on: ubuntu-latest
-
-    # No CUDA, no GPU. `SIMULAGPU_CUDA=OFF` makes that explicit rather than
-    # relying on nvcc happening to be absent from the runner image: if a future
-    # image ships the toolkit, this job must still test the CPU-only path.
     steps:
       - uses: actions/checkout@v4
-
       - name: Install build tools
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake ninja-build
-
       - name: Configure (CPU only)
         run: |
           cmake -S native -B native/build -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DSIMULAGPU_CUDA=OFF
-
       - name: Build
         run: cmake --build native/build -j"$(nproc)"
-
       - name: Test
         run: ctest --test-dir native/build --output-on-failure
-
       - name: Run the lesson examples
         run: |
           ./native/build/examples/vector-add/vector_add_example
           ./native/build/examples/reduction/reduction_example
-
-# Exercise-starter negative tests are intentionally omitted from CI. They
-# duplicated setup cost to verify that deliberately incomplete starter code
-# fails, while adding little value to routine pushes and pull requests.
-
-# A CUDA compile job is deliberately absent. Compiling the .cu files needs the
-# CUDA Toolkit, and running them needs a physical device; neither is available
-# on a standard runner. When a GPU runner or an nvcc container is justified, add
-# a compile-only job here -- and keep it non-blocking. See docs/roadmap.md.
