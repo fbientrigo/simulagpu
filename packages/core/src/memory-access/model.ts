@@ -159,7 +159,12 @@ export function decodeMemoryAccessConfig(encoded: string): MemoryAccessConfig {
     if (Number.isFinite(value)) entries[key] = value;
   }
 
-  const decoded: Partial<MemoryAccessConfig> = {};
+  const decoded: {
+    threadCount?: number;
+    elementCount?: number;
+    stride?: number;
+    neighborhoodRadius?: number;
+  } = {};
   if (entries.threads !== undefined) decoded.threadCount = entries.threads;
   if (entries.elements !== undefined) decoded.elementCount = entries.elements;
   if (entries.stride !== undefined) decoded.stride = entries.stride;
