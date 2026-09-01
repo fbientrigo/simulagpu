@@ -14,7 +14,7 @@ cards:
     etiquetas: [memoria, cooperacion]
 
   - id: mem-002
-    tipo: sincronizacion
+    tipo: frontera
     anverso: 'Una fase 2 lee valores que otros hilos del mismo bloque escriben en fase 1. ¿Qué frontera falta?'
     reverso: |
       Una barrera de bloque entre ambas fases. `__syncthreads()` impide que un hilo
