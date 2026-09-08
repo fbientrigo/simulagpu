@@ -47,7 +47,7 @@ export interface MemoryAccessSnapshot {
     strided: AccessPatternSummary;
   }>;
   readonly cooperation: Readonly<{
-    phaseBoundaryRequiresBarrier: true;
+    phaseBoundaryRequiresBarrier: boolean;
     reason: string;
     scope: 'block';
   }>;
