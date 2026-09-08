@@ -12,13 +12,27 @@ describe('LaboratorioAccesoMemoria', () => {
     expect(wrapper.get('[data-test="independent-stage"]').text()).toContain('hilo 1 → dirección lógica [1]');
   });
 
-  it('reveals the known block-local barrier at the cooperative stage', async () => {
+  it('shows a fixed strided mapping without modulo wrapping', async () => {
+    const wrapper = mount(LaboratorioAccesoMemoria);
+    await wrapper.findAll('button')[4]!.trigger('click');
+    await nextTick();
+    const stage = wrapper.get('[data-test="independent-stage"]');
+    expect(stage.text()).toContain('hilo 4 → dirección lógica [8] (fuera del rango)');
+    expect(stage.text()).toContain('hilo 5 → dirección lógica [10] (fuera del rango)');
+    expect(stage.text()).toContain('2, 2, 2, 2, 2');
+  });
+
+  it('reveals the known block-local barrier at the cooperative stage with Spanish role labels', async () => {
     const wrapper = mount(LaboratorioAccesoMemoria);
     await wrapper.findAll('button')[1]!.trigger('click');
     await nextTick();
     const stage = wrapper.get('[data-test="cooperative-stage"]');
     expect(stage.text()).toContain('__syncthreads()');
     expect(stage.text()).toContain('mismo bloque');
+    expect(stage.text()).toContain('izquierda:');
+    expect(stage.text()).toContain('propio:');
+    expect(stage.text()).toContain('derecha:');
+    expect(stage.text()).not.toMatch(/\b(left|self|right):/);
   });
 
   it('motivates reuse without teaching shared-memory operational semantics', async () => {
