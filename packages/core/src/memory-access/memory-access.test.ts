@@ -46,11 +46,13 @@ describe('memory access teaching model', () => {
     expect(decodeMemoryAccessConfig(encodeMemoryAccessConfig(config))).toEqual(config);
   });
 
-  it('keeps the smallest valid scene well-defined', () => {
+  it('keeps the smallest valid scene well-defined without inventing a cross-thread dependency', () => {
     const snapshot = buildMemoryAccessSnapshot({ threadCount: 1, elementCount: 2, stride: 2 });
     expect(snapshot.threads).toHaveLength(1);
-    expect(snapshot.threads[0]!.phaseTwoReads.map((read) => read.address)).toEqual([null, 0, 1]);
+    expect(snapshot.threads[0]!.phaseTwoReads.map((read) => read.address)).toEqual([null, 0, null]);
     expect(snapshot.cooperation.scope).toBe('block');
+    expect(snapshot.cooperation.phaseBoundaryRequiresBarrier).toBe(false);
+    expect(snapshot.cooperation.reason).toContain('No cross-thread');
   });
 
   it('separates contiguous and strided logical-address mappings', () => {
@@ -59,6 +61,19 @@ describe('memory access teaching model', () => {
     expect(snapshot.accessPatterns.contiguous.adjacentDeltas).toEqual([1, 1, 1]);
     expect(snapshot.accessPatterns.strided.addresses).toEqual([0, 2, 4, 6]);
     expect(snapshot.accessPatterns.strided.adjacentDeltas).toEqual([2, 2, 2]);
+  });
+
+  it('keeps a fixed stride linear instead of wrapping modulo the element count', () => {
+    const snapshot = buildMemoryAccessSnapshot(DEFAULT_MEMORY_ACCESS_CONFIG);
+    expect(snapshot.accessPatterns.strided.addresses).toEqual([0, 2, 4, 6, 8, 10]);
+    expect(snapshot.accessPatterns.strided.adjacentDeltas).toEqual([2, 2, 2, 2, 2]);
+    expect(snapshot.accessPatterns.strided.adjacentDeltas.every((delta) => delta > 0)).toBe(true);
+  });
+
+  it('derives the block-local barrier requirement from actual cross-thread reads', () => {
+    const snapshot = buildMemoryAccessSnapshot(DEFAULT_MEMORY_ACCESS_CONFIG);
+    expect(snapshot.cooperation.phaseBoundaryRequiresBarrier).toBe(true);
+    expect(snapshot.cooperation.reason).toContain('other threads');
   });
 
   it('makes cross-thread reuse opportunities inspectable without teaching shared memory', () => {
