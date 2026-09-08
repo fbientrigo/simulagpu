@@ -82,7 +82,10 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
   // Keep the teaching mapping linear. Out-of-range logical addresses stay
   // visible instead of wrapping modulo elementCount; wrapping would describe a
   // cyclic access pattern, not a fixed stride.
-  const stridedAddresses = Array.from({ length: config.threadCount }, (_, threadIdx) => threadIdx * config.stride);
+  const stridedAddresses = Array.from(
+    { length: config.threadCount },
+    (_, threadIdx) => threadIdx * config.stride,
+  );
 
   const threads: MemoryAccessThread[] = Array.from({ length: config.threadCount }, (_, threadIdx) => ({
     threadIdx,
@@ -92,19 +95,9 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
     phaseOneWriteAddress: threadIdx,
     phaseOneValue: phaseOneGlobalOutput[threadIdx]!,
     phaseTwoReads: [
-      boundedRead(
-        phaseOneGlobalOutput,
-        config.threadCount,
-        threadIdx - config.neighborhoodRadius,
-        'left',
-      ),
+      boundedRead(phaseOneGlobalOutput, config.threadCount, threadIdx - config.neighborhoodRadius, 'left'),
       boundedRead(phaseOneGlobalOutput, config.threadCount, threadIdx, 'self'),
-      boundedRead(
-        phaseOneGlobalOutput,
-        config.threadCount,
-        threadIdx + config.neighborhoodRadius,
-        'right',
-      ),
+      boundedRead(phaseOneGlobalOutput, config.threadCount, threadIdx + config.neighborhoodRadius, 'right'),
     ],
   }));
 
