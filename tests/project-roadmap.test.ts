@@ -112,9 +112,9 @@ describe('roadmap ledger — lifecycle invariants', () => {
 });
 
 describe('roadmap resolver — determinism and ordering', () => {
-  it('returns class-3 as the deterministic next item after Primitive C is done', () => {
+  it('returns primitive-d as the deterministic next item after Class 3 is done', () => {
     const result = resolveNext(roadmap);
-    expect(result.item?.id).toBe('class-3');
+    expect(result.item?.id).toBe('primitive-d');
     expect(result.reason).toBe('ready');
   });
 
@@ -125,7 +125,7 @@ describe('roadmap resolver — determinism and ordering', () => {
   it('resumes eligible WIP before starting new READY work', () => {
     const wipClone = clone();
     // Make class-2 a resumable WIP (its dependencies are done) while primitive-c
-    // stays READY. The resolver must prefer resuming the WIP.
+    // stays READY. The resolver must prefer resuming the higher-priority WIP.
     const class2 = wipClone.items.find((e) => e.id === 'class-2')!;
     class2.status = 'wip';
     class2.handoff = { branch: 'class/class-2', remaining: ['polish'], resumeFrom: ['packages/core'] };
@@ -146,8 +146,13 @@ describe('roadmap resolver — determinism and ordering', () => {
     expect(result.item?.id).not.toBe('primitive-c');
   });
 
-  it('orders eligible items by priority then id', () => {
+  it('orders eligible READY items by priority then id when no WIP exists', () => {
     const twoReady = clone();
+    const current = twoReady.items.find((e) => e.id === 'class-3')!;
+    current.status = 'done';
+    current.handoff = null;
+    current.evidence = ['docs/curriculum/manifest.ts'];
+
     const g = twoReady.items.find((e) => e.id === 'primitive-g')!;
     // Force two independent READY items; the lower priority must win.
     g.status = 'ready';
@@ -161,12 +166,13 @@ describe('roadmap resolver — determinism and ordering', () => {
 
   it('reports blockers when nothing is executable', () => {
     const stuck = clone();
-    stuck.items.find((e) => e.id === 'primitive-c')!.status = 'planned';
+    stuck.items.find((e) => e.id === 'class-3')!.status = 'planned';
+    stuck.items.find((e) => e.id === 'class-3')!.handoff = null;
     const result = resolveNext(stuck);
     expect(result.item).toBeNull();
     expect(result.reason).toBe('no-executable-work');
     expect(result.blockers.length).toBeGreaterThan(0);
-    expect(result.blockers.some((b) => b.id === 'primitive-c')).toBe(true);
+    expect(result.blockers.some((b) => b.id === 'class-3')).toBe(true);
   });
 
   it('does not return planned items even when their dependencies are done', () => {
@@ -210,10 +216,11 @@ describe('roadmap ledger — curriculum integration', () => {
     }
   });
 
-  it('unlocks Class 3 only after the completed Primitive C dependency', () => {
+  it('unlocks Primitive D only after the completed Class 3 dependency', () => {
     const eligibility = deriveEligibility(roadmap);
-    expect(eligibility.find((e) => e.id === 'primitive-c')?.eligible).toBe(false);
-    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(true);
+    expect(eligibility.find((e) => e.id === 'class-3')?.eligible).toBe(false);
+    expect(eligibility.find((e) => e.id === 'primitive-d')?.eligible).toBe(true);
+    expect(eligibility.find((e) => e.id === 'primitive-d')?.kind).toBe('ready');
   });
 });
 

@@ -103,6 +103,7 @@ describe('curriculum contract', () => {
       'primitive-b',
       'class-2',
       'primitive-c',
+      'class-3',
     ]);
 
     const routes = implemented.map((module) => module.implementation?.route);

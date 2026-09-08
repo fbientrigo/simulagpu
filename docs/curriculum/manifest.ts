@@ -276,7 +276,7 @@ export const CURRICULUM_MODULES = [
     kind: 'class',
     track: 'numbered-class',
     sequencePosition: 7,
-    status: 'planned',
+    status: 'implemented',
     centralQuestionOrSkill:
       'How does a GPU algorithm change when threads need related data and the memory-access pattern becomes part of the reasoning?',
     prerequisites: ['class-2', 'primitive-c'],
@@ -305,7 +305,18 @@ export const CURRICULUM_MODULES = [
     learnerOutcome:
       'Given a small cooperative GPU pattern, identify data dependencies and a block-local synchronization boundary, compare contiguous and strided accesses, and identify repeated values that create a reuse opportunity.',
     unlocks: ['primitive-d'],
-    implementation: null,
+    implementation: {
+      docPath: 'apps/docs/leccion/cooperacion-memoria-acceso.md',
+      route: '/leccion/cooperacion-memoria-acceso',
+      references: [
+        'packages/contracts/src/memory-access.ts',
+        'packages/core/src/memory-access',
+        'packages/visuals/src/LaboratorioAccesoMemoria.vue',
+        'native/examples/memory-access',
+        'native/exercises/04-memory-access',
+        'anki/cards/05-memory-access.yaml',
+      ],
+    },
     scaffoldPath: 'docs/curriculum/modules/class-3-memory-access.md',
   },
   {

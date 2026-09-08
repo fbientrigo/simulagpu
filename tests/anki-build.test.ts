@@ -27,13 +27,14 @@ interface WebDeck {
 const deck = loadCards() as { rows: Row[]; deck: string };
 
 describe('anki deck sources', () => {
-  it('builds the 43 cards promised by the lesson pages', () => {
-    expect(deck.rows).toHaveLength(43);
+  it('builds the 49 cards promised by the implemented lesson pages', () => {
+    expect(deck.rows).toHaveLength(49);
     expect(deck.rows.filter((row) => row.id.startsWith('idx-'))).toHaveLength(18);
     expect(deck.rows.filter((row) => row.id.startsWith('red-'))).toHaveLength(9);
     expect(deck.rows.filter((row) => row.id.startsWith('malloc-'))).toHaveLength(4);
     expect(deck.rows.filter((row) => row.id.startsWith('memcpy-'))).toHaveLength(6);
     expect(deck.rows.filter((row) => row.id.startsWith('syncthreads-'))).toHaveLength(6);
+    expect(deck.rows.filter((row) => row.id.startsWith('mem-'))).toHaveLength(6);
   });
 
   it('covers every required area', () => {
