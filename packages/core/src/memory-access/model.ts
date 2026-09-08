@@ -131,7 +131,9 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
     }));
 
   const phaseBoundaryRequiresBarrier = threads.some((thread) =>
-    thread.phaseTwoReads.some((read) => read.address !== null && read.address !== thread.phaseOneWriteAddress),
+    thread.phaseTwoReads.some(
+      (read) => read.address !== null && read.address !== thread.phaseOneWriteAddress,
+    ),
   );
 
   const contiguous: AccessPatternSummary = {
