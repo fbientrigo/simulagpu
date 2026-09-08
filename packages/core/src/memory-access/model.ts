@@ -56,13 +56,17 @@ const buildDeltas = (addresses: readonly number[]): number[] =>
 
 const boundedRead = (
   output: readonly number[],
+  producedCount: number,
   address: number,
   role: MemoryAccessRead['role'],
-): MemoryAccessRead => ({
-  address: address >= 0 && address < output.length ? address : null,
-  value: address >= 0 && address < output.length ? output[address]! : null,
-  role,
-});
+): MemoryAccessRead => {
+  const isProducedAddress = address >= 0 && address < producedCount;
+  return {
+    address: isProducedAddress ? address : null,
+    value: isProducedAddress ? output[address]! : null,
+    role,
+  };
+};
 
 export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {}): MemoryAccessSnapshot {
   const config = normalizeMemoryAccessConfig(input);
@@ -75,9 +79,12 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
   );
 
   const contiguousAddresses = Array.from({ length: config.threadCount }, (_, threadIdx) => threadIdx);
+  // Keep the teaching mapping linear. Out-of-range logical addresses stay
+  // visible instead of wrapping modulo elementCount; wrapping would describe a
+  // cyclic access pattern, not a fixed stride.
   const stridedAddresses = Array.from(
     { length: config.threadCount },
-    (_, threadIdx) => (threadIdx * config.stride) % config.elementCount,
+    (_, threadIdx) => threadIdx * config.stride,
   );
 
   const threads: MemoryAccessThread[] = Array.from({ length: config.threadCount }, (_, threadIdx) => ({
@@ -88,9 +95,19 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
     phaseOneWriteAddress: threadIdx,
     phaseOneValue: phaseOneGlobalOutput[threadIdx]!,
     phaseTwoReads: [
-      boundedRead(phaseOneGlobalOutput, threadIdx - config.neighborhoodRadius, 'left'),
-      boundedRead(phaseOneGlobalOutput, threadIdx, 'self'),
-      boundedRead(phaseOneGlobalOutput, threadIdx + config.neighborhoodRadius, 'right'),
+      boundedRead(
+        phaseOneGlobalOutput,
+        config.threadCount,
+        threadIdx - config.neighborhoodRadius,
+        'left',
+      ),
+      boundedRead(phaseOneGlobalOutput, config.threadCount, threadIdx, 'self'),
+      boundedRead(
+        phaseOneGlobalOutput,
+        config.threadCount,
+        threadIdx + config.neighborhoodRadius,
+        'right',
+      ),
     ],
   }));
 
@@ -113,6 +130,12 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
       readerThreads,
     }));
 
+  const phaseBoundaryRequiresBarrier = threads.some((thread) =>
+    thread.phaseTwoReads.some(
+      (read) => read.address !== null && read.address !== thread.phaseOneWriteAddress,
+    ),
+  );
+
   const contiguous: AccessPatternSummary = {
     kind: 'contiguous',
     addresses: contiguousAddresses,
@@ -131,8 +154,10 @@ export function buildMemoryAccessSnapshot(input: Partial<MemoryAccessConfig> = {
     threads,
     accessPatterns: { contiguous, strided },
     cooperation: {
-      phaseBoundaryRequiresBarrier: true,
-      reason: 'Phase two reads values produced by other threads in the same block during phase one.',
+      phaseBoundaryRequiresBarrier,
+      reason: phaseBoundaryRequiresBarrier
+        ? 'Phase two reads values produced by other threads in the same block during phase one.'
+        : 'No cross-thread producer/reader dependency exists in this configuration.',
       scope: 'block',
     },
     reuseOpportunities,
