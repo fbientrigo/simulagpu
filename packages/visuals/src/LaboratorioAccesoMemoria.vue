@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { AccessPatternKind, MemoryAccessConfig } from '@simulagpu/contracts';
+import type { AccessPatternKind, MemoryAccessConfig, MemoryAccessRead } from '@simulagpu/contracts';
 import {
   DEFAULT_MEMORY_ACCESS_CONFIG,
   buildMemoryAccessSnapshot,
@@ -13,6 +13,11 @@ const pattern = ref<AccessPatternKind>('contiguous');
 const stage = ref<'independent' | 'cooperative' | 'reuse'>('independent');
 const snapshot = computed(() => buildMemoryAccessSnapshot(config.value));
 const selectedPattern = computed(() => snapshot.value.accessPatterns[pattern.value]);
+const readRoleLabels: Readonly<Record<MemoryAccessRead['role'], string>> = Object.freeze({
+  left: 'izquierda',
+  self: 'propio',
+  right: 'derecha',
+});
 
 function updateStride(event: Event): void {
   const stride = Number((event.target as HTMLInputElement).value);
@@ -78,13 +83,15 @@ function updateStride(event: Event): void {
       <ol class="sgpu-memory__mapping">
         <li v-for="(address, threadIdx) in selectedPattern.addresses" :key="`${pattern}-${threadIdx}`">
           hilo {{ threadIdx }} → dirección lógica [{{ address }}]
+          <strong v-if="address >= snapshot.config.elementCount">(fuera del rango)</strong>
         </li>
       </ol>
       <p>
         Diferencias entre direcciones consecutivas:
         <code>{{ selectedPattern.adjacentDeltas.join(', ') || '—' }}</code
         >. Aquí «contiguo» describe la relación entre índices; no afirma cuántas transacciones hará un
-        hardware real.
+        hardware real. Una dirección fuera del rango del arreglo requiere el mismo razonamiento de límites
+        aprendido antes; no se envuelve de vuelta al inicio.
       </p>
     </div>
 
@@ -94,15 +101,19 @@ function updateStride(event: Event): void {
         <article v-for="thread in snapshot.threads" :key="`reads-${thread.threadIdx}`">
           <strong>hilo {{ thread.threadIdx }}</strong>
           <span v-for="read in thread.phaseTwoReads" :key="`${thread.threadIdx}-${read.role}`">
-            {{ read.role }}:
+            {{ readRoleLabels[read.role] }}:
             {{ read.address === null ? 'fuera del borde' : `[${read.address}] = ${read.value}` }}
           </span>
         </article>
       </div>
-      <p class="sgpu-memory__barrier">
+      <p v-if="snapshot.cooperation.phaseBoundaryRequiresBarrier" class="sgpu-memory__barrier">
         <code>fase 1 → __syncthreads() → fase 2</code><br />
         La barrera conocida es necesaria porque la fase 2 consume valores escritos por otros hilos del
         <strong>mismo bloque</strong>. No coordina bloques distintos.
+      </p>
+      <p v-else class="sgpu-memory__barrier">
+        En esta configuración no existe una dependencia productor/lector entre hilos distintos, por lo que
+        este límite de fases no necesita una barrera por esa razón.
       </p>
     </div>
 
